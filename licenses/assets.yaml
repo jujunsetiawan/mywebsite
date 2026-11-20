@@ -1,0 +1,27 @@
+# Licence record for the portfolio film pipeline.
+#
+# RULE: every audio, 3D, texture and font asset used in a render or a build
+# MUST be listed under `assets:` before it is used. Only legally licensed
+# assets are allowed (CC0 for 3D models, textures and HDRIs).
+#
+# Asset entry fields:
+#   id       - unique, stable identifier referenced by pipeline scripts
+#   source   - where the asset was obtained (URL)
+#   licence  - SPDX identifier or licence name (e.g. CC0-1.0)
+#   proof    - URL or repo path proving the licence (licence page, receipt, screenshot)
+#   used-in  - list of scenes / shots / builds that use the asset
+#
+# `tools:` records the software that produces renders; its version must match
+# pipeline/BLENDER_VERSION.
+
+assets: []
+
+tools:
+  - id: blender
+    name: Blender
+    version: "5.2.1"
+    licence: GPL-3.0-or-later
+    source: https://download.blender.org/release/Blender5.2/blender-5.2.1-windows-x64.msi
+    proof: https://www.blender.org/about/license/
+    used-in:
+      - pipeline/render_test.py

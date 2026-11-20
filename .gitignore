@@ -1,0 +1,25 @@
+# Rendered media never enters version control.
+pipeline/out/
+pipeline/**/*.png
+pipeline/**/*.jpg
+pipeline/**/*.jpeg
+pipeline/**/*.exr
+pipeline/**/*.hdr
+pipeline/**/*.gif
+pipeline/**/*.webm
+pipeline/**/*.tif
+pipeline/**/*.tiff
+pipeline/**/*.avif
+pipeline/**/*.webp
+pipeline/**/*.mp4
+pipeline/**/*.mov
+pipeline/**/*.mkv
+pipeline/**/*.bin
+
+# Blender backups
+*.blend1
+*.blend2
+
+# Python
+__pycache__/
+*.pyc
