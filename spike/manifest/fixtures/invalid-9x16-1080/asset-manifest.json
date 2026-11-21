@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "mediaVersion": "spike-2026-11-21",
+  "shots": [
+    {
+      "id": "ii-03-clock",
+      "act": "II",
+      "frameCount": 5,
+      "authoringFps": 24,
+      "chunkSize": 2,
+      "chunkCount": 3,
+      "urlPattern": "<media-base>/<mediaVersion>/<shot-id>/<aspect>/<tier>/chunk-NNNN.bin",
+      "aspects": [
+        {
+          "aspect": "16x9",
+          "frameCount": 5,
+          "tiers": [
+            {
+              "tier": "1080",
+              "width": 1920,
+              "height": 1080,
+              "totalBytes": 6000,
+              "chunkBytes": [
+                2100,
+                2500,
+                1400
+              ]
+            },
+            {
+              "tier": "720",
+              "width": 1280,
+              "height": 720,
+              "totalBytes": 2600,
+              "chunkBytes": [
+                1010,
+                1050,
+                540
+              ]
+            }
+          ]
+        },
+        {
+          "aspect": "9x16",
+          "frameCount": 5,
+          "tiers": [
+            {
+              "tier": "1080",
+              "width": 1080,
+              "height": 1920,
+              "totalBytes": 3000,
+              "chunkBytes": [
+                1000,
+                1000,
+                1000
+              ]
+            },
+            {
+              "tier": "720",
+              "width": 720,
+              "height": 1280,
+              "totalBytes": 3100,
+              "chunkBytes": [
+                1210,
+                1250,
+                640
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

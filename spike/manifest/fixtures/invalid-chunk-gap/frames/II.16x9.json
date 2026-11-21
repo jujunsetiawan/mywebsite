@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 1,
+  "mediaVersion": "spike-2026-11-21",
+  "act": "II",
+  "aspect": "16x9",
+  "shots": [
+    {
+      "id": "ii-03-clock",
+      "frameCount": 5,
+      "frames": [
+        {
+          "index": 0,
+          "quad": [
+            [
+              0.3,
+              0.4
+            ],
+            [
+              0.62,
+              0.41
+            ],
+            [
+              0.61,
+              0.72
+            ],
+            [
+              0.31,
+              0.7
+            ]
+          ],
+          "slices": [
+            {
+              "tier": "1080",
+              "chunk": 0,
+              "offset": 0,
+              "length": 1000
+            },
+            {
+              "tier": "720",
+              "chunk": 0,
+              "offset": 0,
+              "length": 500
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "quad": [
+            [
+              0.2,
+              0.45
+            ],
+            [
+              0.52,
+              0.46
+            ],
+            [
+              0.51,
+              0.77
+            ],
+            [
+              0.21,
+              0.75
+            ]
+          ],
+          "slices": [
+            {
+              "tier": "1080",
+              "chunk": 0,
+              "offset": 1010,
+              "length": 1100
+            },
+            {
+              "tier": "720",
+              "chunk": 0,
+              "offset": 500,
+              "length": 510
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "quad": [
+            [
+              0.05,
+              0.55
+            ],
+            [
+              0.37,
+              0.56
+            ],
+            [
+              0.36,
+              0.87
+            ],
+            [
+              0.06,
+              0.85
+            ]
+          ],
+          "slices": [
+            {
+              "tier": "1080",
+              "chunk": 1,
+              "offset": 0,
+              "length": 1200
+            },
+            {
+              "tier": "720",
+              "chunk": 1,
+              "offset": 0,
+              "length": 520
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "quad": [
+            [
+              -0.12,
+              0.7
+            ],
+            [
+              0.2,
+              0.71
+            ],
+            [
+              0.19,
+              1.02
+            ],
+            [
+              -0.11,
+              1
+            ]
+          ],
+          "slices": [
+            {
+              "tier": "1080",
+              "chunk": 1,
+              "offset": 1200,
+              "length": 1300
+            },
+            {
+              "tier": "720",
+              "chunk": 1,
+              "offset": 520,
+              "length": 530
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "quad": null,
+          "slices": [
+            {
+              "tier": "1080",
+              "chunk": 2,
+              "offset": 0,
+              "length": 1400
+            },
+            {
+              "tier": "720",
+              "chunk": 2,
+              "offset": 0,
+              "length": 540
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

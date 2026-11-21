@@ -20,8 +20,9 @@
 # Self-made image files use `licence: original`; procedural parts need no entry.
 # Entries for downloaded assets are written by pipeline/fetch_assets.py.
 #
-# `tools:` records the software that produces renders; its version must match
-# pipeline/BLENDER_VERSION.
+# `tools:` records the software that produces renders and media; the Blender
+# entry's version must match pipeline/BLENDER_VERSION. The ffmpeg entry pins
+# the AVIF encoder (story 0.3).
 
 assets:
   - id: polyhaven-metal_office_desk
@@ -171,3 +172,13 @@ tools:
     proof: https://www.blender.org/about/license/
     used-in:
       - pipeline/render_test.py
+  - id: ffmpeg
+    name: "FFmpeg (gyan.dev full build, libaom-av1 + SVT-AV1)"
+    version: "9.1"
+    licence: GPL-3.0-or-later
+    source: https://github.com/GyanD/codexffmpeg/releases/download/9.1/ffmpeg-9.1-full_build.zip
+    proof: https://ffmpeg.org/legal.html
+    install: winget install --id Gyan.FFmpeg --exact --version 9.1
+    used-in:
+      - pipeline/encode_pack.py
+      - pipeline/check_chunks.py

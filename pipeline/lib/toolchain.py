@@ -24,6 +24,7 @@ EXIT_VERSION_MISMATCH = 3
 EXIT_RENDER_FAILED = 4
 EXIT_CONFIG = 5
 EXIT_LICENCE = 6  # scene references an asset missing from licenses/assets.yaml
+EXIT_IMMUTABLE = 7  # published mediaVersion would change (encode_pack.py without --force)
 
 # Cycles GPU backends in order of preference. Never includes CPU.
 GPU_BACKENDS = ("OPTIX", "CUDA")

@@ -16,6 +16,11 @@ pipeline/**/*.mov
 pipeline/**/*.mkv
 pipeline/**/*.bin
 
+# Spike (throwaway Node packages)
+spike/node_modules/
+spike/**/node_modules/
+spike/**/out/
+
 # Blender backups
 *.blend1
 *.blend2
