@@ -20,6 +20,8 @@ pipeline/**/*.bin
 spike/node_modules/
 spike/**/node_modules/
 spike/**/out/
+spike/player/public/media/
+spike/player/dist/
 
 # Blender backups
 *.blend1
