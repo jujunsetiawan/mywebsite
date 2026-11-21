@@ -10,11 +10,157 @@
 #   licence  - SPDX identifier or licence name (e.g. CC0-1.0)
 #   proof    - URL or repo path proving the licence (licence page, receipt, screenshot)
 #   used-in  - list of scenes / shots / builds that use the asset
+# Optional fields:
+#   path     - folder (or file) the asset's files live in: relative to the asset
+#              library ($JFILM_LIBRARY, outside git), absolute, or a Blender
+#              pseudo-path like <builtin>. The licence gate accepts every file a
+#              scene references only if it lies inside some entry's path.
+#   purpose  - what the asset is for (informational)
+#   kind     - "font" for font entries (fonts may also be OFL-1.1)
+# Self-made image files use `licence: original`; procedural parts need no entry.
+# Entries for downloaded assets are written by pipeline/fetch_assets.py.
 #
 # `tools:` records the software that produces renders; its version must match
 # pipeline/BLENDER_VERSION.
 
-assets: []
+assets:
+  - id: polyhaven-metal_office_desk
+    source: https://polyhaven.com/a/metal_office_desk
+    licence: CC0-1.0
+    proof: https://polyhaven.com/license
+    path: polyhaven/metal_office_desk
+    purpose: hero desk and colleague desks
+    used-in:
+      - pipeline/out/scenes/act2_desk_0307.blend (story 0.2 style frame)
+  - id: polyhaven-wall_clock
+    source: https://polyhaven.com/a/wall_clock
+    licence: CC0-1.0
+    proof: https://polyhaven.com/license
+    path: polyhaven/wall_clock
+    purpose: wall clock set to 03:07
+    used-in:
+      - pipeline/out/scenes/act2_desk_0307.blend (story 0.2 style frame)
+  - id: polyhaven-desk_lamp_arm_01
+    source: https://polyhaven.com/a/desk_lamp_arm_01
+    licence: CC0-1.0
+    proof: https://polyhaven.com/license
+    path: polyhaven/desk_lamp_arm_01
+    purpose: hero desk lamp (switched off)
+    used-in:
+      - pipeline/out/scenes/act2_desk_0307.blend (story 0.2 style frame)
+  - id: polyhaven-office_notepads
+    source: https://polyhaven.com/a/office_notepads
+    licence: CC0-1.0
+    proof: https://polyhaven.com/license
+    path: polyhaven/office_notepads
+    purpose: desk clutter (notepads)
+    used-in:
+      - pipeline/out/scenes/act2_desk_0307.blend (story 0.2 style frame)
+  - id: polyhaven-binder_notebook
+    source: https://polyhaven.com/a/binder_notebook
+    licence: CC0-1.0
+    proof: https://polyhaven.com/license
+    path: polyhaven/binder_notebook
+    purpose: desk clutter (binder)
+    used-in:
+      - pipeline/out/scenes/act2_desk_0307.blend (story 0.2 style frame)
+  - id: polyhaven-stationery_supplies
+    source: https://polyhaven.com/a/stationery_supplies
+    licence: CC0-1.0
+    proof: https://polyhaven.com/license
+    path: polyhaven/stationery_supplies
+    purpose: desk clutter (stationery)
+    used-in:
+      - pipeline/out/scenes/act2_desk_0307.blend (story 0.2 style frame)
+  - id: polyhaven-potted_plant_04
+    source: https://polyhaven.com/a/potted_plant_04
+    licence: CC0-1.0
+    proof: https://polyhaven.com/license
+    path: polyhaven/potted_plant_04
+    purpose: colleague desk personal prop
+    used-in:
+      - pipeline/out/scenes/act2_desk_0307.blend (story 0.2 style frame)
+  - id: polyhaven-potted_plant_02
+    source: https://polyhaven.com/a/potted_plant_02
+    licence: CC0-1.0
+    proof: https://polyhaven.com/license
+    path: polyhaven/potted_plant_02
+    purpose: floor plant
+    used-in:
+      - pipeline/out/scenes/act2_desk_0307.blend (story 0.2 style frame)
+  - id: polyhaven-drawer_cabinet
+    source: https://polyhaven.com/a/drawer_cabinet
+    licence: CC0-1.0
+    proof: https://polyhaven.com/license
+    path: polyhaven/drawer_cabinet
+    purpose: background furniture
+    used-in:
+      - pipeline/out/scenes/act2_desk_0307.blend (story 0.2 style frame)
+  - id: polyhaven-dirty_carpet
+    source: https://polyhaven.com/a/dirty_carpet
+    licence: CC0-1.0
+    proof: https://polyhaven.com/license
+    path: polyhaven/dirty_carpet
+    purpose: office floor carpet material
+    used-in:
+      - pipeline/out/scenes/act2_desk_0307.blend (story 0.2 style frame)
+  - id: polyhaven-ceiling_interior
+    source: https://polyhaven.com/a/ceiling_interior
+    licence: CC0-1.0
+    proof: https://polyhaven.com/license
+    path: polyhaven/ceiling_interior
+    purpose: ceiling material
+    used-in:
+      - pipeline/out/scenes/act2_desk_0307.blend (story 0.2 style frame)
+  - id: polyhaven-painted_plaster_wall
+    source: https://polyhaven.com/a/painted_plaster_wall
+    licence: CC0-1.0
+    proof: https://polyhaven.com/license
+    path: polyhaven/painted_plaster_wall
+    purpose: wall material
+    used-in:
+      - pipeline/out/scenes/act2_desk_0307.blend (story 0.2 style frame)
+  - id: polyhaven-kloppenheim_07_puresky
+    source: https://polyhaven.com/a/kloppenheim_07_puresky
+    licence: CC0-1.0
+    proof: https://polyhaven.com/license
+    path: polyhaven/kloppenheim_07_puresky
+    purpose: "candidate overcast night sky; evaluated 2026-11-20 and REJECTED for act2_desk_0307: moon behind thin cloud (peak luminance 14.8) and visible stars"
+    used-in:
+      - "none -- not referenced by any scene (act2_desk_0307 uses a procedural overcast sky instead)"
+  - id: blender-bundled-inter
+    source: https://github.com/rsms/inter
+    licence: OFL-1.1
+    proof: "https://github.com/rsms/inter/blob/master/LICENSE.txt (OFL-1.1); C:/Program Files/Blender Foundation/Blender 5.2/license/license.md (Inter, SIL Open Font License 1.1)"
+    path: "C:/Program Files/Blender Foundation/Blender 5.2/5.2/datafiles/fonts/Inter.woff2"
+    kind: font
+    purpose: "Kia's sticky-note lettering (converted to mesh)"
+    used-in:
+      - pipeline/out/scenes/act2_desk_0307.blend (story 0.2 style frame)
+  - id: ambientcg-Facade009
+    source: https://ambientcg.com/a/Facade009
+    licence: CC0-1.0
+    proof: https://ambientcg.com/license
+    path: ambientcg/Facade009
+    purpose: night city facades with lit windows
+    used-in:
+      - pipeline/out/scenes/act2_desk_0307.blend (story 0.2 style frame)
+  - id: ambientcg-Facade005
+    source: https://ambientcg.com/a/Facade005
+    licence: CC0-1.0
+    proof: https://ambientcg.com/license
+    path: ambientcg/Facade005
+    purpose: glass office-tower facades (city variety)
+    used-in:
+      - pipeline/out/scenes/act2_desk_0307.blend (story 0.2 style frame)
+  - id: ambientcg-Wood094
+    source: https://ambientcg.com/a/Wood094
+    licence: CC0-1.0
+    proof: https://ambientcg.com/license
+    path: ambientcg/Wood094
+    purpose: "desk-top wood (tint toward walnut #3A2A1C)"
+    used-in:
+      - pipeline/out/scenes/act2_desk_0307.blend (story 0.2 style frame)
 
 tools:
   - id: blender
