@@ -1,0 +1,32 @@
+{
+  "name": "jujun-portfolio",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "typecheck": "tsc --noEmit",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test",
+    "budgets": "node scripts/check-budgets.ts",
+    "ci": "npm run check && npm run typecheck && npm run test:unit && npm run build && npm run budgets && npm run test:e2e"
+  },
+  "dependencies": {
+    "astro": "7.4.13",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.12",
+    "@playwright/test": "1.65.1",
+    "@types/node": "22.20.5",
+    "typescript": "6.0.3",
+    "vite": "8.3.8",
+    "vitest": "5.1.1"
+  }
+}

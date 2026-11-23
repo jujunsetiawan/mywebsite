@@ -1,0 +1,9 @@
+# Placeholder entry so the collection is never empty. Replaced in Story 1.5.
+dummy: true
+title:
+  id: Contoh Testimoni
+  en: Sample Testimonial
+quote:
+  id: Ini adalah kutipan contoh.
+  en: This is a sample quote.
+author: Placeholder Author

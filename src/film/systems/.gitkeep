@@ -1,0 +1,1 @@
+Film systems; must not import film/adapters or touch browser globals.

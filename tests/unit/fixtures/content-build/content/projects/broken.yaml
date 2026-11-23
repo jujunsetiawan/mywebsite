@@ -1,0 +1,8 @@
+# Intentionally invalid: title.en is missing.
+dummy: true
+title:
+  id: Rusak
+summary:
+  id: Ringkasan
+  en: Summary
+year: 2026

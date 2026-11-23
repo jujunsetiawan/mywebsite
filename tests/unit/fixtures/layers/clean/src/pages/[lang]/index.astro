@@ -1,0 +1,12 @@
+---
+// Pages may use adapters, never core or systems.
+import { bind } from '../../film/adapters/dom.ts';
+const value = bind();
+---
+
+<p>Jun's page: this text mentions import '../../film/core/clock.ts' but is markup, not code.</p>
+<p>{value}</p>
+<script>
+  import { bind } from '/src/film/adapters/dom.ts';
+  bind();
+</script>
