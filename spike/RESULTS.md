@@ -65,6 +65,11 @@ and [iPhone procedure](#manual-hud-procedure-for-a-later-iphone-run)).
   - [`results/POCO-F7-2026-11-23T09-49-41Z.json`](results/POCO-F7-2026-11-23T09-49-41Z.json) (phone run 1)
   - [`results/POCO-F7-2026-11-23T09-51-42Z.json`](results/POCO-F7-2026-11-23T09-51-42Z.json) (phone run 2)
   - [`results/desktop-edge-2026-11-23T09-52-36Z.json`](results/desktop-edge-2026-11-23T09-52-36Z.json) (desktop)
+  - [`results/POCO-F7-rec-2026-11-23T12-32-30Z.json`](results/POCO-F7-rec-2026-11-23T12-32-30Z.json)
+    (phone run 3, screen-recorded, no HUD), analysed in
+    [`results/POCO-F7-rec-2026-11-23T12-32-30Z.video.json`](results/POCO-F7-rec-2026-11-23T12-32-30Z.video.json).
+    See [Visual observation](#visual-observation-automated-screenrecord). The
+    MP4 and the exported frames are under `spike/device/out/` (git-ignored).
 
 ### Measurement pitfalls found (and fixed in the driver)
 
@@ -186,11 +191,154 @@ the animation, the debounce and one decode.
 | Blank frames | After every phase: an unclipped CDP screenshot, cropped to the central 32×32 CSS px. The channel range must be > 4 (0 = uniform). The player never clears the canvas; a frame not yet decoded keeps the previous one. | **None.** Range 10–222 on the phone, 9–79 on desktop. |
 | Wrong variant after rotation | `drawnVariant` vs the expected aspect/tier, and `drawnFrame` vs the frame before rotating | **None.** All four phone rotations and both desktop rotations drew the expected variant at frame 31. |
 | Stutter at chunk boundaries | Worst target→drawn latency at frames 16/32/48/64 vs 3× the median of all frames' worst latency (and > median + 50 ms) | **None.** 0 ms at every boundary in all slow scrubs; ≤ 50 ms max in fast scrubs, not at boundaries. **Caveat:** only the latency of *drawn* frames at the *forward* chunk starts (16/32/48/64) is checked. Superseded (never drawn) frames and the backward boundaries (15/31/47/63) are not covered. |
-| Tearing | Not detectable from the page | **Manual check pending** (Jun watching the phone during a run, below) |
+| Tearing | Screen recording of phone run 3 plus a tearing heuristic, every candidate inspected by eye ([Visual observation](#visual-observation-automated-screenrecord)) | **None found.** 23 raw candidates; 3 passed the automatic confirmation; all 23 were film content (flat monitor face, dark low-contrast ceiling, letterboxed landscape strip), with coherent whole-frame motion and no seam. Limit: screenrecord captures the composited frames, not the panel scan-out. |
 | Skipped frames in fast flicks | `latencySuperseded`, `missedTicks` | Phone 16x9/1080 fast: 50–63 frames skipped, 58–71 held ticks (see above). Portrait 720 fast: 0–10 / 0–15. |
 
-**Manual observation (Jun, during one phone run):** _pending: note any
-visible stutter, blank frame, tearing, or wrong variant after rotation here._
+**Observation of a phone run:** replaced by the automated screen-recording
+check below (Jun approved the follow-up, 2026-11-23). It found no blank
+frame, no wrong variant after rotation, no tearing, and no player stall. The
+longest still intervals while scrolling are explained by still film content.
+
+## Visual observation (automated, screenrecord)
+
+**Run.** Phone run 3 (`POCO-F7-rec-2026-11-23T12-32-30Z`), same script as
+runs 1–2:
+
+- **Command:**
+  `node spike/device/run-device-test.mjs --record --url http://192.168.101.18:4173/`.
+- **No HUD** (no `?hud=1`), so HUD text never caused screen changes; the
+  `__spike` hook still provides the stats.
+- **Recording:** `adb shell screenrecord --bit-rate 20000000 --time-limit 180`
+  produced an H.264 file at 1280×2772: 4,116 frames over 115.5 s, 29.0 MB. It
+  was pulled to `spike/device/out/` and deleted from the phone.
+- **Phone state:** rotation settings before and after were
+  `accelerometer_rotation 0, user_rotation 0`; cleanup reported no errors.
+
+**Method** ([`device/analyze-video.mjs`](device/analyze-video.mjs), helpers
+in [`device/video.mjs`](device/video.mjs), tested on synthetic frames):
+
+1. **Timestamps:** ffprobe gives one timestamp per recorded frame.
+   screenrecord is variable frame rate and only emits a frame when the screen
+   changes.
+2. **Decoding:** ffmpeg decodes every frame without dropping or duplicating
+   (`-fps_mode passthrough`) to 120×260 grayscale. Each frame is reduced to
+   5×5-px cells: mean luminance, and mean absolute difference (MAD) to the
+   previous frame.
+3. **Alignment:** right after the recording starts, the blank tab flips
+   black, then white. Matching the two flips aligns the driver clock with
+   the video clock: offset −0.609 s, residual 18 ms.
+4. **Visible change:** content-area MAD > 0.5 gray levels.
+   - Portrait content area: full width, top 11 % (status bar, toolbar) and
+     bottom 3 % (gesture bar) cropped.
+   - The idle phase recorded **0 visible changes**, so the threshold sits
+     above the noise floor.
+   - Recorded frames below the threshold are mostly H.264 re-encode noise:
+     the status bar's network-speed counter triggers a frame every second,
+     and each frame carries tiny differences over the whole picture.
+5. **Active scrolling:** per gesture, from the first to the last visible
+   change before the next gesture starts. This counts touch plus fling and
+   excludes the driver's pauses. The new-frame rate is the number of
+   intervals between visible changes per second of active time.
+6. **Tearing heuristic:**
+   - **Raw candidate:** a contiguous band of ≥ 15 % of the content height has
+     MAD < 0.5 while the other bands' median MAD ≥ 2 (≥ 80 % of them
+     > 1.0).
+   - **Confirmed:** the still band is also textured (cell-luminance mean
+     deviation ≥ 4; a flat area cannot show motion) and catches up in the
+     next visible change (band MAD ≥ 2; a torn frame is transient, static
+     content stays still).
+   - Every raw candidate is exported (previous frame, frame, ×8 luma diff)
+     and was looked at.
+7. **Landscape:** screenrecord keeps the starting portrait frame, so landscape
+   content appears upright and letterboxed: a 1280×591 strip, with the
+   display cutout at the left. The content box is found from cells that are
+   not black over the phase, and 20 % is trimmed at both ends of its vertical
+   axis (status bar, toolbar). At 120-px analysis width the strip is only
+   ~27 px tall (8 bands), so landscape numbers are coarser.
+
+**Per phase:**
+
+| Phase | Visible changes | Player draws (HUD) | Visible / draw | New-frame rate (active) | Longest no-change while scrolling | Median gap | Gaps > 50 ms | Tear candidates (confirmed) |
+|---|---|---|---|---|---|---|---|---|
+| slow-forward-1 | 66 | 71 | 0.94 | 6.6 /s | 516 ms | 167 ms | 48 / 59 | 2 (0) |
+| slow-forward-2 | 53 | 72 | 0.74 | 5.9 /s | 185 ms | 167 ms | 46 / 46 | 2 (0) |
+| slow-forward-3 | 53 | 72 | 0.74 | 5.8 /s | 186 ms | 167 ms | 46 / 46 | 2 (0) |
+| fast-back-and-forth-1 | 112 | 78 | 1.44 | 51.3 /s | 216 ms | 16.6 ms | 2 / 107 | 4 (1) |
+| fast-back-and-forth-2 | 112 | 77 | 1.45 | 51.2 /s | 217 ms | 16.7 ms | 2 / 107 | 1 (0) |
+| fast-back-and-forth-3 | 111 | 75 | 1.48 | 50.2 /s | 212 ms | 16.6 ms | 3 / 106 | 1 (1) |
+| landscape-slow-forward (16x9/1080) | 62 | 76 | 0.82 | 9.1 /s | 342 ms | 133 ms | 42 / 56 | 5 (0) |
+| landscape-fast-back-and-forth (16x9/1080) | 58 | 64 | 0.91 | 30.6 /s | 200 ms | 16.8 ms | 7 / 52 | 6 (1) |
+| rotations / cold load / idle | 24 / 32 / 2 / 0 | – | – | – | – | – | – | idle 0 |
+
+**Reading the numbers:**
+
+- **Slow scrubs are content-limited, not frame-rate-limited.**
+  - The canvas only changes when the scroll position crosses into the next
+    film frame. At this scrub speed that happens about every 167 ms (the
+    median gap), so "gaps > 50 ms" is nearly every interval by design.
+  - Visible changes are 0.74–0.94 per player draw because the shot's second
+    half (frames ~36–71, a near-static hold with a slow push) changes by less
+    than the threshold between neighbouring frames.
+  - **The 516 ms gap** comes during the first swipe of the run, 0.95 s into
+    slow-forward-1. The exported frames on both sides show the shot's still
+    opening hold (frames 0–4, "holds still for 6 % of the shot",
+    `pipeline/README.md`), with the toolbar already hidden. The HUD shows
+    0 missed ticks and 0 ms latency for that phase: no stall.
+- **Fast scrubs:** the screen produced new pictures ~51 times per second at a
+  median 16.6 ms gap, close to the 60 Hz cadence. Only 2–3 gaps per rep
+  exceeded 50 ms, at most 217 ms. These lie in the near-static part of the
+  shot or at a turn-around. More visible changes than player draws
+  (×1.45) come from real screen changes besides film frames: the Chrome
+  toolbar showing/hiding, and the overscroll stretch at the ends.
+- **Landscape 16x9/1080, fast flicks:** the picture changed only 30.6 times
+  per second, while the HUD counted 45 superseded targets and 53 held ticks.
+  The recording confirms the [visible-smoothness caveat](#budgets): the frame
+  rate holds, but the picture skips frames during fast flicks in phone
+  landscape.
+- **Tear candidates, verdict after inspecting every exported frame:**
+  **no tearing.**
+  - Portrait: 12 raw candidates. The 10 unconfirmed ones are the flat,
+    emissive monitor face at the bottom of the frame. It shows almost no
+    difference when it moves, while the room above moves; the confirmation
+    rejects all 10 as "flat".
+  - Portrait confirmed candidates (2): the same film transition in two reps,
+    identical metrics. The still band is the dark, low-contrast ceiling at
+    the top (texture 4.1, just above the threshold). The frame is intact:
+    monitor top 727 → 741 px and clock 490 → 497 px move together, and the
+    diff shows coherent motion over the whole frame.
+  - Landscape (11 raw, 1 confirmed): the still band is the smooth ceiling
+    (plus the edge of the toolbar) above a changing window and city-lights
+    strip. The 10 unconfirmed ones were rejected as flat, as staying still in
+    the next frame, or as having no visible change within 100 ms after them.
+    Coherent small motion, no seam.
+  - Files: `spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tearNN-*-{a-prev,b-frame,c-diff}.png`.
+- **Rotation and blank frames:** the samples
+  `rotate-to-landscape-sample3-t78.102.png` and
+  `rotate-to-portrait-sample*.png` show the 16x9 and 9x16 variants drawn
+  after each rotation. No sample or candidate frame was blank.
+- **Recording cost:** screenrecord encodes 1280×2772 at 20 Mbps on the phone
+  and costs some performance, so **this run does not replace the fps budget
+  numbers** (runs 1–2). For comparison, the recorded run's HUD scrub fps was:
+  - portrait slow: median 59.9–60.2, p5 59.9;
+  - portrait fast: p5 59.9, vs 59.5–59.9 and one 30.0 in runs 1–2;
+  - landscape: p5 59.9 / 59.5.
+
+  No drop was measurable on this phone at 60 Hz.
+- **Limits:**
+  - screenrecord captures SurfaceFlinger's composited frames, not the panel
+    scan-out. Panel-level (vsync) tearing is invisible to it; only an
+    external camera could show that.
+  - The heuristic and its thresholds were tuned on this run, and validated
+    only by looking at its candidates.
+  - Alignment error is about ±20–50 ms at phase edges.
+
+**Exported samples** (first, middle and last visible change per phase,
+540 px wide), all in `spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/`.
+Examples: `slow-forward-1-sample{1,2,3}-t*.png`,
+`fast-back-and-forth-1-sample{1,2,3}-t*.png`,
+`landscape-fast-back-and-forth-sample{1,2,3}-t*.png`,
+`rotate-to-landscape-sample{1,2,3}-t*.png`. There are 33 samples and 69
+tear-candidate files (23 × prev / frame / diff).
 
 ## Budgets
 
@@ -338,11 +486,15 @@ worker decode → scroll-scrubbed canvas).
   1. iOS Safari (iPhone) re-verification of the ≥ 30 fps p5 budget and AD-14
      before Epic 4 (Stories 4.7 / 10.1).
   2. Low-end Android is out of scope (Jun, 2026-11-23).
-  3. Jun's manual observation of one phone run (tearing / visible stutter)
-     is still pending.
-  4. Network numbers (time to first frame, rotation time, chunk throughput)
+  3. Network numbers (time to first frame, rotation time, chunk throughput)
      are LAN Wi-Fi only. Re-measure them over the CDN / cellular once the media
      is hosted (Epic 1.2 / 4.2).
+
+  The earlier condition "Jun's manual observation of one phone run" is
+  covered by the automated screen-recording check (no tearing, no blank
+  frame, no wrong variant, no player stall). That check cannot see
+  panel-level tearing (see its Limits). **Jun's sign-off below is the
+  remaining human step.**
 
 ### Parameters carried into Epics 3–5
 
@@ -350,7 +502,7 @@ worker decode → scroll-scrubbed canvas).
 |---|---|---|
 | Chunk packing | **per act** (5 groups, as AD-14 / AR14) | per shot needs N ≥ 55–111 for the same budget |
 | Chunk size N | **72 frames** (3 s @ 24 fps) | Smallest round N that fits ≤ 150 at 7,200 frames **including** the 40-request reserve (150). Without the reserve: 110 requests (7,200 frames), 90 (5,760). Settles the deferred 0.3 item "chunk size N and per-act packing" |
-| Encoder | unchanged from `pipeline/README.md`: FFmpeg 9.1 libaom-av1, still-picture AVIF, `-crf 18 -b:v 0`, `-cpu-used 4`, 4:2:0 8-bit, full range BT.709 / sRGB, **grain synthesis off** | Decoded on Chrome Android in 15–44 ms (p50) per frame; no decode errors; visual check pending (manual observation) |
+| Encoder | unchanged from `pipeline/README.md`: FFmpeg 9.1 libaom-av1, still-picture AVIF, `-crf 18 -b:v 0`, `-cpu-used 4`, 4:2:0 8-bit, full range BT.709 / sRGB, **grain synthesis off** | Decoded on Chrome Android in 15–44 ms (p50) per frame; no decode errors; no visible artefacts in the recorded run's sample and candidate frames (automated screen-recording check) |
 | Look-ahead bound | **150 MiB decoded bytes** (`w × h × 4`); live bitmaps may exceed it by ≤ 2 frames | Measured peak: limit + 0.33 frame. 60 fps held on a 12 GB phone. Unverified below that; revisit with the iPhone run |
 | Player rules | Decode in a worker. **Never read back the film canvas** (getImageData demotes it to software on Android). Stream chunk bodies and decode slices as they arrive, so N = 72 does not delay the first frame by a whole chunk. Consider `overscroll-behavior-y: none` (pull-to-refresh) | Measured pitfalls above |
 | Tier rule (spike) | 16x9: 1080 when stage width × DPR > 1280, else 720; 9x16: 720 | Phone landscape ran 1080 at 60 fps p5, but skips frames on fast flicks; 540 / 720 for phone landscape is a candidate |

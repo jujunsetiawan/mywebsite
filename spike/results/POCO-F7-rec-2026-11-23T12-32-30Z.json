@@ -1,0 +1,2909 @@
+{
+  "schema": 1,
+  "story": "0.5",
+  "tool": "spike/device/run-device-test.mjs",
+  "mode": "android",
+  "url": "http://192.168.101.18:4173/",
+  "startedAt": "2026-11-23T12:32:30.145Z",
+  "mediaVersion": "spike-2026-11-21",
+  "shot": {
+    "id": "ii-03-clock",
+    "frameCount": 72,
+    "chunkSize": 16,
+    "chunkCount": 5
+  },
+  "device": {
+    "manufacturer": "Xiaomi",
+    "model": "25053PC47G",
+    "device": "onyx",
+    "soc": "SM8735",
+    "android": "16",
+    "chrome": "158.0.8127.42",
+    "screen": {
+      "width": 1280,
+      "height": 2772
+    },
+    "density": 520,
+    "memTotalKB": 11502936,
+    "displayRefreshHz": 120.00001
+  },
+  "browser": {
+    "name": "Chrome (Android)",
+    "version": "158.0.8127.42",
+    "launchedByDriver": true
+  },
+  "phases": [
+    {
+      "phase": "cold-load",
+      "variant": "9x16/720",
+      "drawnVariant": "9x16/720",
+      "frame": 0,
+      "drawnFrame": 0,
+      "scrubFpsMedian": null,
+      "scrubFpsP5": null,
+      "scrubSamples": 0,
+      "scrubFrameMsP95": null,
+      "scrubLongIntervals": {
+        "over34ms": 0,
+        "over50ms": 0,
+        "maxMs": null
+      },
+      "scrubLongLog": [],
+      "resizeEvents": 0,
+      "canvasResizes": 1,
+      "allFpsMedian": 59.9,
+      "allFpsP5": 59.9,
+      "frameMsP95": 16.7,
+      "drawMsP95": 2.1,
+      "tickWorkMsP95": 1.66,
+      "decodeMsP50": 21.4,
+      "decodeMsP95": 25.1,
+      "decodeSamples": 14,
+      "decodePath": "worker",
+      "decodeFallbackReason": null,
+      "latencyMsP50": 549.5,
+      "latencyMsP95": 549.5,
+      "latencyMsMax": 549.5,
+      "latencySamples": 1,
+      "latencySuperseded": 0,
+      "missedTicks": 33,
+      "drawnFrames": 1,
+      "liveDecodedBytes": 51609600,
+      "peakLiveDecodedBytes": 51609600,
+      "peakLiveDecodedBitmaps": 14,
+      "cacheBytes": 51609600,
+      "cacheLimitBytes": 157286400,
+      "chunkBytesHeld": 1192202,
+      "memory": {
+        "usedJSHeapSize": 10000000,
+        "totalJSHeapSize": 10000000,
+        "jsHeapSizeLimit": 3140000000
+      },
+      "requests": 5,
+      "requestBytes": 1221011,
+      "requestsTotal": 5,
+      "requestBytesTotal": 1221011,
+      "decodeErrors": 0,
+      "chunkErrors": 0,
+      "timeToFirstFrameMs": 820,
+      "viewport": {
+        "innerWidth": 394,
+        "innerHeight": 734,
+        "devicePixelRatio": 3.25,
+        "stageW": 394,
+        "stageH": 734,
+        "canvasW": 1281,
+        "canvasH": 2386
+      },
+      "driverFirstFrameMs": 915,
+      "kind": "load",
+      "centreRange": 79,
+      "defects": []
+    },
+    {
+      "phase": "slow-forward-1",
+      "variant": "9x16/720",
+      "drawnVariant": "9x16/720",
+      "frame": 71,
+      "drawnFrame": 71,
+      "scrubFpsMedian": 59.9,
+      "scrubFpsP5": 59.9,
+      "scrubSamples": 884,
+      "scrubFrameMsP95": 16.7,
+      "scrubLongIntervals": {
+        "over34ms": 0,
+        "over50ms": 0,
+        "maxMs": 33.4
+      },
+      "scrubLongLog": [],
+      "resizeEvents": 1,
+      "canvasResizes": 1,
+      "allFpsMedian": 59.9,
+      "allFpsP5": 59.9,
+      "frameMsP95": 16.7,
+      "drawMsP95": 0.35,
+      "tickWorkMsP95": 0.6,
+      "decodeMsP50": 25.5,
+      "decodeMsP95": 31.8,
+      "decodeSamples": 62,
+      "decodePath": "worker",
+      "decodeFallbackReason": null,
+      "latencyMsP50": 0,
+      "latencyMsP95": 0,
+      "latencyMsMax": 0,
+      "latencySamples": 71,
+      "latencySuperseded": 0,
+      "missedTicks": 0,
+      "drawnFrames": 71,
+      "liveDecodedBytes": 154828800,
+      "peakLiveDecodedBytes": 158515200,
+      "peakLiveDecodedBitmaps": 43,
+      "cacheBytes": 154828800,
+      "cacheLimitBytes": 157286400,
+      "chunkBytesHeld": 1766816,
+      "memory": {
+        "usedJSHeapSize": 10000000,
+        "totalJSHeapSize": 10000000,
+        "jsHeapSizeLimit": 3140000000
+      },
+      "requests": 2,
+      "requestBytes": 574614,
+      "requestsTotal": 7,
+      "requestBytesTotal": 1795625,
+      "decodeErrors": 0,
+      "chunkErrors": 0,
+      "timeToFirstFrameMs": 820,
+      "viewport": {
+        "innerWidth": 394,
+        "innerHeight": 790,
+        "devicePixelRatio": 3.25,
+        "stageW": 394,
+        "stageH": 790,
+        "canvasW": 1281,
+        "canvasH": 2568
+      },
+      "gestures": 9,
+      "orientation": "portrait",
+      "kind": "scrub",
+      "centreRange": 10,
+      "chunkBoundaries": {
+        "boundaries": [
+          {
+            "frame": 16,
+            "worstMs": 0
+          },
+          {
+            "frame": 32,
+            "worstMs": 0
+          },
+          {
+            "frame": 48,
+            "worstMs": 0
+          },
+          {
+            "frame": 64,
+            "worstMs": 0
+          }
+        ],
+        "median": 0,
+        "thresholdMs": 50,
+        "stalls": []
+      },
+      "latencyByFrameMax": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0,
+        "16": 0,
+        "17": 0,
+        "18": 0,
+        "19": 0,
+        "20": 0,
+        "21": 0,
+        "22": 0,
+        "23": 0,
+        "24": 0,
+        "25": 0,
+        "26": 0,
+        "27": 0,
+        "28": 0,
+        "29": 0,
+        "30": 0,
+        "31": 0,
+        "32": 0,
+        "33": 0,
+        "34": 0,
+        "35": 0,
+        "36": 0,
+        "37": 0,
+        "38": 0,
+        "39": 0,
+        "40": 0,
+        "41": 0,
+        "42": 0,
+        "43": 0,
+        "44": 0,
+        "45": 0,
+        "46": 0,
+        "47": 0,
+        "48": 0,
+        "49": 0,
+        "50": 0,
+        "51": 0,
+        "52": 0,
+        "53": 0,
+        "54": 0,
+        "55": 0,
+        "56": 0,
+        "57": 0,
+        "58": 0,
+        "59": 0,
+        "60": 0,
+        "61": 0,
+        "62": 0,
+        "63": 0,
+        "64": 0,
+        "65": 0,
+        "66": 0,
+        "67": 0,
+        "68": 0,
+        "69": 0,
+        "70": 0,
+        "71": 0
+      },
+      "defects": []
+    },
+    {
+      "phase": "slow-forward-2",
+      "variant": "9x16/720",
+      "drawnVariant": "9x16/720",
+      "frame": 71,
+      "drawnFrame": 71,
+      "scrubFpsMedian": 59.9,
+      "scrubFpsP5": 59.9,
+      "scrubSamples": 875,
+      "scrubFrameMsP95": 16.7,
+      "scrubLongIntervals": {
+        "over34ms": 0,
+        "over50ms": 0,
+        "maxMs": 33.3
+      },
+      "scrubLongLog": [],
+      "resizeEvents": 0,
+      "canvasResizes": 0,
+      "allFpsMedian": 59.9,
+      "allFpsP5": 59.9,
+      "frameMsP95": 16.7,
+      "drawMsP95": 0.3,
+      "tickWorkMsP95": 0.5,
+      "decodeMsP50": 24.7,
+      "decodeMsP95": 31.4,
+      "decodeSamples": 76,
+      "decodePath": "worker",
+      "decodeFallbackReason": null,
+      "latencyMsP50": 0,
+      "latencyMsP95": 0,
+      "latencyMsMax": 0,
+      "latencySamples": 71,
+      "latencySuperseded": 0,
+      "missedTicks": 0,
+      "drawnFrames": 72,
+      "liveDecodedBytes": 154828800,
+      "peakLiveDecodedBytes": 158515200,
+      "peakLiveDecodedBitmaps": 43,
+      "cacheBytes": 154828800,
+      "cacheLimitBytes": 157286400,
+      "chunkBytesHeld": 1766816,
+      "memory": {
+        "usedJSHeapSize": 10000000,
+        "totalJSHeapSize": 10000000,
+        "jsHeapSizeLimit": 3140000000
+      },
+      "requests": 0,
+      "requestBytes": 0,
+      "requestsTotal": 7,
+      "requestBytesTotal": 1795625,
+      "decodeErrors": 0,
+      "chunkErrors": 0,
+      "timeToFirstFrameMs": 820,
+      "viewport": {
+        "innerWidth": 394,
+        "innerHeight": 790,
+        "devicePixelRatio": 3.25,
+        "stageW": 394,
+        "stageH": 790,
+        "canvasW": 1281,
+        "canvasH": 2568
+      },
+      "gestures": 9,
+      "orientation": "portrait",
+      "kind": "scrub",
+      "centreRange": 10,
+      "chunkBoundaries": {
+        "boundaries": [
+          {
+            "frame": 16,
+            "worstMs": 0
+          },
+          {
+            "frame": 32,
+            "worstMs": 0
+          },
+          {
+            "frame": 48,
+            "worstMs": 0
+          },
+          {
+            "frame": 64,
+            "worstMs": 0
+          }
+        ],
+        "median": 0,
+        "thresholdMs": 50,
+        "stalls": []
+      },
+      "latencyByFrameMax": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0,
+        "16": 0,
+        "17": 0,
+        "18": 0,
+        "19": 0,
+        "20": 0,
+        "21": 0,
+        "22": 0,
+        "23": 0,
+        "24": 0,
+        "25": 0,
+        "26": 0,
+        "27": 0,
+        "28": 0,
+        "29": 0,
+        "30": 0,
+        "31": 0,
+        "32": 0,
+        "33": 0,
+        "34": 0,
+        "35": 0,
+        "36": 0,
+        "37": 0,
+        "38": 0,
+        "39": 0,
+        "40": 0,
+        "41": 0,
+        "42": 0,
+        "43": 0,
+        "44": 0,
+        "45": 0,
+        "46": 0,
+        "47": 0,
+        "48": 0,
+        "49": 0,
+        "50": 0,
+        "51": 0,
+        "52": 0,
+        "53": 0,
+        "54": 0,
+        "55": 0,
+        "56": 0,
+        "57": 0,
+        "58": 0,
+        "59": 0,
+        "60": 0,
+        "61": 0,
+        "62": 0,
+        "63": 0,
+        "64": 0,
+        "65": 0,
+        "66": 0,
+        "67": 0,
+        "68": 0,
+        "69": 0,
+        "70": 0,
+        "71": 0
+      },
+      "defects": []
+    },
+    {
+      "phase": "slow-forward-3",
+      "variant": "9x16/720",
+      "drawnVariant": "9x16/720",
+      "frame": 71,
+      "drawnFrame": 71,
+      "scrubFpsMedian": 60.2,
+      "scrubFpsP5": 59.9,
+      "scrubSamples": 881,
+      "scrubFrameMsP95": 16.7,
+      "scrubLongIntervals": {
+        "over34ms": 0,
+        "over50ms": 0,
+        "maxMs": 33.3
+      },
+      "scrubLongLog": [],
+      "resizeEvents": 0,
+      "canvasResizes": 0,
+      "allFpsMedian": 59.9,
+      "allFpsP5": 59.9,
+      "frameMsP95": 16.7,
+      "drawMsP95": 0.25,
+      "tickWorkMsP95": 0.5,
+      "decodeMsP50": 25.2,
+      "decodeMsP95": 29.4,
+      "decodeSamples": 72,
+      "decodePath": "worker",
+      "decodeFallbackReason": null,
+      "latencyMsP50": 0,
+      "latencyMsP95": 0,
+      "latencyMsMax": 0,
+      "latencySamples": 71,
+      "latencySuperseded": 0,
+      "missedTicks": 0,
+      "drawnFrames": 72,
+      "liveDecodedBytes": 154828800,
+      "peakLiveDecodedBytes": 158515200,
+      "peakLiveDecodedBitmaps": 43,
+      "cacheBytes": 154828800,
+      "cacheLimitBytes": 157286400,
+      "chunkBytesHeld": 1766816,
+      "memory": {
+        "usedJSHeapSize": 10000000,
+        "totalJSHeapSize": 10000000,
+        "jsHeapSizeLimit": 3140000000
+      },
+      "requests": 0,
+      "requestBytes": 0,
+      "requestsTotal": 7,
+      "requestBytesTotal": 1795625,
+      "decodeErrors": 0,
+      "chunkErrors": 0,
+      "timeToFirstFrameMs": 820,
+      "viewport": {
+        "innerWidth": 394,
+        "innerHeight": 790,
+        "devicePixelRatio": 3.25,
+        "stageW": 394,
+        "stageH": 790,
+        "canvasW": 1281,
+        "canvasH": 2568
+      },
+      "gestures": 9,
+      "orientation": "portrait",
+      "kind": "scrub",
+      "centreRange": 10,
+      "chunkBoundaries": {
+        "boundaries": [
+          {
+            "frame": 16,
+            "worstMs": 0
+          },
+          {
+            "frame": 32,
+            "worstMs": 0
+          },
+          {
+            "frame": 48,
+            "worstMs": 0
+          },
+          {
+            "frame": 64,
+            "worstMs": 0
+          }
+        ],
+        "median": 0,
+        "thresholdMs": 50,
+        "stalls": []
+      },
+      "latencyByFrameMax": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0,
+        "16": 0,
+        "17": 0,
+        "18": 0,
+        "19": 0,
+        "20": 0,
+        "21": 0,
+        "22": 0,
+        "23": 0,
+        "24": 0,
+        "25": 0,
+        "26": 0,
+        "27": 0,
+        "28": 0,
+        "29": 0,
+        "30": 0,
+        "31": 0,
+        "32": 0,
+        "33": 0,
+        "34": 0,
+        "35": 0,
+        "36": 0,
+        "37": 0,
+        "38": 0,
+        "39": 0,
+        "40": 0,
+        "41": 0,
+        "42": 0,
+        "43": 0,
+        "44": 0,
+        "45": 0,
+        "46": 0,
+        "47": 0,
+        "48": 0,
+        "49": 0,
+        "50": 0,
+        "51": 0,
+        "52": 0,
+        "53": 0,
+        "54": 0,
+        "55": 0,
+        "56": 0,
+        "57": 0,
+        "58": 0,
+        "59": 0,
+        "60": 0,
+        "61": 0,
+        "62": 0,
+        "63": 0,
+        "64": 0,
+        "65": 0,
+        "66": 0,
+        "67": 0,
+        "68": 0,
+        "69": 0,
+        "70": 0,
+        "71": 0
+      },
+      "defects": []
+    },
+    {
+      "phase": "fast-back-and-forth-1",
+      "variant": "9x16/720",
+      "drawnVariant": "9x16/720",
+      "frame": 0,
+      "drawnFrame": 0,
+      "scrubFpsMedian": 59.9,
+      "scrubFpsP5": 59.9,
+      "scrubSamples": 120,
+      "scrubFrameMsP95": 16.7,
+      "scrubLongIntervals": {
+        "over34ms": 0,
+        "over50ms": 0,
+        "maxMs": 16.8
+      },
+      "scrubLongLog": [],
+      "resizeEvents": 1,
+      "canvasResizes": 1,
+      "allFpsMedian": 59.9,
+      "allFpsP5": 59.9,
+      "frameMsP95": 16.7,
+      "drawMsP95": 0.2,
+      "tickWorkMsP95": 0.6,
+      "decodeMsP50": 18.3,
+      "decodeMsP95": 27.9,
+      "decodeSamples": 84,
+      "decodePath": "worker",
+      "decodeFallbackReason": null,
+      "latencyMsP50": 0,
+      "latencyMsP95": 0,
+      "latencyMsMax": 33.2,
+      "latencySamples": 77,
+      "latencySuperseded": 7,
+      "missedTicks": 10,
+      "drawnFrames": 78,
+      "liveDecodedBytes": 154828800,
+      "peakLiveDecodedBytes": 158515200,
+      "peakLiveDecodedBitmaps": 43,
+      "cacheBytes": 154828800,
+      "cacheLimitBytes": 157286400,
+      "chunkBytesHeld": 1766816,
+      "memory": {
+        "usedJSHeapSize": 10000000,
+        "totalJSHeapSize": 10000000,
+        "jsHeapSizeLimit": 3140000000
+      },
+      "requests": 0,
+      "requestBytes": 0,
+      "requestsTotal": 7,
+      "requestBytesTotal": 1795625,
+      "decodeErrors": 0,
+      "chunkErrors": 0,
+      "timeToFirstFrameMs": 820,
+      "viewport": {
+        "innerWidth": 394,
+        "innerHeight": 734,
+        "devicePixelRatio": 3.25,
+        "stageW": 394,
+        "stageH": 734,
+        "canvasW": 1281,
+        "canvasH": 2386
+      },
+      "gestures": 6,
+      "orientation": "portrait",
+      "kind": "scrub",
+      "centreRange": 79,
+      "chunkBoundaries": {
+        "boundaries": [
+          {
+            "frame": 16,
+            "worstMs": 0
+          },
+          {
+            "frame": 32,
+            "worstMs": 0
+          },
+          {
+            "frame": 48,
+            "worstMs": null
+          },
+          {
+            "frame": 64,
+            "worstMs": null
+          }
+        ],
+        "median": 0,
+        "thresholdMs": 50,
+        "stalls": []
+      },
+      "latencyByFrameMax": {
+        "0": 16.6,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0,
+        "16": 0,
+        "17": 0,
+        "18": 0,
+        "19": 0,
+        "20": 0,
+        "21": 0,
+        "22": 0,
+        "23": 0,
+        "24": 0,
+        "25": 0,
+        "26": 0,
+        "27": 0,
+        "28": 0,
+        "29": 0,
+        "30": 0,
+        "31": 0,
+        "32": 0,
+        "33": 0,
+        "34": 0,
+        "36": 0,
+        "37": 0,
+        "39": 0,
+        "40": 0,
+        "42": 0,
+        "43": 0,
+        "44": 0,
+        "45": 0,
+        "46": 0,
+        "47": 0,
+        "49": 0,
+        "50": 0,
+        "51": 0,
+        "52": 0,
+        "53": 0,
+        "54": 0,
+        "55": 0,
+        "56": 0,
+        "57": 0,
+        "58": 0,
+        "60": 0,
+        "62": 0,
+        "63": 0,
+        "65": 0,
+        "66": 0,
+        "67": 0,
+        "69": 0,
+        "70": 0,
+        "71": 33.2
+      },
+      "defects": []
+    },
+    {
+      "phase": "fast-back-and-forth-2",
+      "variant": "9x16/720",
+      "drawnVariant": "9x16/720",
+      "frame": 0,
+      "drawnFrame": 0,
+      "scrubFpsMedian": 59.9,
+      "scrubFpsP5": 59.9,
+      "scrubSamples": 120,
+      "scrubFrameMsP95": 16.7,
+      "scrubLongIntervals": {
+        "over34ms": 0,
+        "over50ms": 0,
+        "maxMs": 33.3
+      },
+      "scrubLongLog": [],
+      "resizeEvents": 2,
+      "canvasResizes": 2,
+      "allFpsMedian": 59.9,
+      "allFpsP5": 59.9,
+      "frameMsP95": 16.7,
+      "drawMsP95": 0.3,
+      "tickWorkMsP95": 0.5,
+      "decodeMsP50": 19.7,
+      "decodeMsP95": 30,
+      "decodeSamples": 60,
+      "decodePath": "worker",
+      "decodeFallbackReason": null,
+      "latencyMsP50": 0,
+      "latencyMsP95": 0,
+      "latencyMsMax": 33.3,
+      "latencySamples": 77,
+      "latencySuperseded": 7,
+      "missedTicks": 10,
+      "drawnFrames": 77,
+      "liveDecodedBytes": 154828800,
+      "peakLiveDecodedBytes": 158515200,
+      "peakLiveDecodedBitmaps": 43,
+      "cacheBytes": 154828800,
+      "cacheLimitBytes": 157286400,
+      "chunkBytesHeld": 1766816,
+      "memory": {
+        "usedJSHeapSize": 10000000,
+        "totalJSHeapSize": 10000000,
+        "jsHeapSizeLimit": 3140000000
+      },
+      "requests": 0,
+      "requestBytes": 0,
+      "requestsTotal": 7,
+      "requestBytesTotal": 1795625,
+      "decodeErrors": 0,
+      "chunkErrors": 0,
+      "timeToFirstFrameMs": 820,
+      "viewport": {
+        "innerWidth": 394,
+        "innerHeight": 734,
+        "devicePixelRatio": 3.25,
+        "stageW": 394,
+        "stageH": 734,
+        "canvasW": 1281,
+        "canvasH": 2386
+      },
+      "gestures": 6,
+      "orientation": "portrait",
+      "kind": "scrub",
+      "centreRange": 79,
+      "chunkBoundaries": {
+        "boundaries": [
+          {
+            "frame": 16,
+            "worstMs": 0
+          },
+          {
+            "frame": 32,
+            "worstMs": 0
+          },
+          {
+            "frame": 48,
+            "worstMs": 0
+          },
+          {
+            "frame": 64,
+            "worstMs": 0
+          }
+        ],
+        "median": 0,
+        "thresholdMs": 50,
+        "stalls": []
+      },
+      "latencyByFrameMax": {
+        "0": 33.3,
+        "1": 0,
+        "3": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "9": 0,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0,
+        "16": 0,
+        "17": 0,
+        "18": 0,
+        "19": 0,
+        "20": 0,
+        "21": 0,
+        "22": 0,
+        "23": 0,
+        "24": 0,
+        "25": 0,
+        "26": 0,
+        "27": 0,
+        "28": 0,
+        "30": 0,
+        "31": 0,
+        "32": 0,
+        "33": 0,
+        "34": 0,
+        "35": 0,
+        "37": 0,
+        "38": 0,
+        "39": 0,
+        "40": 0,
+        "41": 0,
+        "42": 0,
+        "43": 0,
+        "44": 0,
+        "45": 0,
+        "46": 0,
+        "47": 0,
+        "48": 0,
+        "49": 0,
+        "50": 0,
+        "51": 0,
+        "52": 0,
+        "53": 0,
+        "54": 0,
+        "55": 0,
+        "56": 0,
+        "57": 0,
+        "58": 0,
+        "59": 0,
+        "61": 0,
+        "63": 0,
+        "64": 0,
+        "65": 0,
+        "67": 0,
+        "68": 0,
+        "70": 0,
+        "71": 16.7
+      },
+      "defects": []
+    },
+    {
+      "phase": "fast-back-and-forth-3",
+      "variant": "9x16/720",
+      "drawnVariant": "9x16/720",
+      "frame": 0,
+      "drawnFrame": 0,
+      "scrubFpsMedian": 59.9,
+      "scrubFpsP5": 59.9,
+      "scrubSamples": 121,
+      "scrubFrameMsP95": 16.7,
+      "scrubLongIntervals": {
+        "over34ms": 0,
+        "over50ms": 0,
+        "maxMs": 33.4
+      },
+      "scrubLongLog": [],
+      "resizeEvents": 2,
+      "canvasResizes": 2,
+      "allFpsMedian": 59.9,
+      "allFpsP5": 59.9,
+      "frameMsP95": 16.7,
+      "drawMsP95": 0.2,
+      "tickWorkMsP95": 0.67,
+      "decodeMsP50": 20.2,
+      "decodeMsP95": 33.3,
+      "decodeSamples": 61,
+      "decodePath": "worker",
+      "decodeFallbackReason": null,
+      "latencyMsP50": 0,
+      "latencyMsP95": 0,
+      "latencyMsMax": 50,
+      "latencySamples": 75,
+      "latencySuperseded": 6,
+      "missedTicks": 10,
+      "drawnFrames": 75,
+      "liveDecodedBytes": 154828800,
+      "peakLiveDecodedBytes": 158515200,
+      "peakLiveDecodedBitmaps": 43,
+      "cacheBytes": 154828800,
+      "cacheLimitBytes": 157286400,
+      "chunkBytesHeld": 1766816,
+      "memory": {
+        "usedJSHeapSize": 10000000,
+        "totalJSHeapSize": 10000000,
+        "jsHeapSizeLimit": 3140000000
+      },
+      "requests": 0,
+      "requestBytes": 0,
+      "requestsTotal": 7,
+      "requestBytesTotal": 1795625,
+      "decodeErrors": 0,
+      "chunkErrors": 0,
+      "timeToFirstFrameMs": 820,
+      "viewport": {
+        "innerWidth": 394,
+        "innerHeight": 734,
+        "devicePixelRatio": 3.25,
+        "stageW": 394,
+        "stageH": 734,
+        "canvasW": 1281,
+        "canvasH": 2386
+      },
+      "gestures": 6,
+      "orientation": "portrait",
+      "kind": "scrub",
+      "centreRange": 79,
+      "chunkBoundaries": {
+        "boundaries": [
+          {
+            "frame": 16,
+            "worstMs": 0
+          },
+          {
+            "frame": 32,
+            "worstMs": 0
+          },
+          {
+            "frame": 48,
+            "worstMs": 0
+          },
+          {
+            "frame": 64,
+            "worstMs": 0
+          }
+        ],
+        "median": 0,
+        "thresholdMs": 50,
+        "stalls": []
+      },
+      "latencyByFrameMax": {
+        "0": 16.7,
+        "1": 0,
+        "3": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "9": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "15": 0,
+        "16": 0,
+        "17": 0,
+        "18": 0,
+        "19": 0,
+        "21": 0,
+        "22": 0,
+        "23": 0,
+        "24": 0,
+        "25": 0,
+        "26": 0,
+        "28": 0,
+        "29": 0,
+        "30": 0,
+        "32": 0,
+        "33": 0,
+        "35": 0,
+        "36": 0,
+        "38": 0,
+        "39": 0,
+        "41": 0,
+        "42": 0,
+        "43": 0,
+        "44": 0,
+        "45": 0,
+        "46": 0,
+        "47": 0,
+        "48": 0,
+        "49": 0,
+        "50": 0,
+        "51": 0,
+        "52": 0,
+        "53": 0,
+        "54": 0,
+        "55": 0,
+        "56": 0,
+        "57": 0,
+        "58": 0,
+        "59": 0,
+        "60": 0,
+        "61": 0,
+        "63": 0,
+        "64": 0,
+        "66": 0,
+        "67": 0,
+        "69": 0,
+        "70": 0,
+        "71": 50
+      },
+      "defects": []
+    },
+    {
+      "phase": "rotate-to-landscape",
+      "variant": "16x9/1080",
+      "drawnVariant": "16x9/1080",
+      "frame": 31,
+      "drawnFrame": 31,
+      "scrubFpsMedian": 60.1,
+      "scrubFpsP5": 59.9,
+      "scrubSamples": 10,
+      "scrubFrameMsP95": 16.7,
+      "scrubLongIntervals": {
+        "over34ms": 0,
+        "over50ms": 0,
+        "maxMs": 16.7
+      },
+      "scrubLongLog": [],
+      "resizeEvents": 2,
+      "canvasResizes": 1,
+      "allFpsMedian": 59.9,
+      "allFpsP5": 59.9,
+      "frameMsP95": 16.7,
+      "drawMsP95": 0.19,
+      "tickWorkMsP95": 0.5,
+      "decodeMsP50": 33.6,
+      "decodeMsP95": 41.6,
+      "decodeSamples": 4,
+      "decodePath": "worker",
+      "decodeFallbackReason": null,
+      "latencyMsP50": 738.8,
+      "latencyMsP95": 738.8,
+      "latencyMsMax": 738.8,
+      "latencySamples": 1,
+      "latencySuperseded": 0,
+      "missedTicks": 40,
+      "drawnFrames": 2,
+      "liveDecodedBytes": 33177600,
+      "peakLiveDecodedBytes": 154828800,
+      "peakLiveDecodedBitmaps": 42,
+      "cacheBytes": 33177600,
+      "cacheLimitBytes": 157286400,
+      "chunkBytesHeld": 2869290,
+      "memory": {
+        "usedJSHeapSize": 10000000,
+        "totalJSHeapSize": 10000000,
+        "jsHeapSizeLimit": 3140000000
+      },
+      "requests": 3,
+      "requestBytes": 1137747,
+      "requestsTotal": 10,
+      "requestBytesTotal": 2933372,
+      "decodeErrors": 0,
+      "chunkErrors": 0,
+      "timeToFirstFrameMs": 820,
+      "viewport": {
+        "innerWidth": 806,
+        "innerHeight": 275,
+        "devicePixelRatio": 3.25,
+        "stageW": 806,
+        "stageH": 275,
+        "canvasW": 2620,
+        "canvasH": 894
+      },
+      "from": "9x16/720",
+      "to": "16x9/1080",
+      "frameBefore": 31,
+      "frameAfter": 31,
+      "rotationToDrawnMs": 1619,
+      "rotationDefects": [],
+      "kind": "rotation",
+      "centreRange": 41,
+      "defects": []
+    },
+    {
+      "phase": "landscape-slow-forward",
+      "variant": "16x9/1080",
+      "drawnVariant": "16x9/1080",
+      "frame": 71,
+      "drawnFrame": 71,
+      "scrubFpsMedian": 59.9,
+      "scrubFpsP5": 59.9,
+      "scrubSamples": 695,
+      "scrubFrameMsP95": 16.7,
+      "scrubLongIntervals": {
+        "over34ms": 1,
+        "over50ms": 0,
+        "maxMs": 50
+      },
+      "scrubLongLog": [],
+      "resizeEvents": 1,
+      "canvasResizes": 1,
+      "allFpsMedian": 59.9,
+      "allFpsP5": 59.9,
+      "frameMsP95": 16.7,
+      "drawMsP95": 0.3,
+      "tickWorkMsP95": 0.5,
+      "decodeMsP50": 43.1,
+      "decodeMsP95": 50.4,
+      "decodeSamples": 122,
+      "decodePath": "worker",
+      "decodeFallbackReason": null,
+      "latencyMsP50": 0,
+      "latencyMsP95": 0,
+      "latencyMsMax": 0,
+      "latencySamples": 75,
+      "latencySuperseded": 0,
+      "missedTicks": 0,
+      "drawnFrames": 76,
+      "liveDecodedBytes": 149299200,
+      "peakLiveDecodedBytes": 157593600,
+      "peakLiveDecodedBitmaps": 19,
+      "cacheBytes": 149299200,
+      "cacheLimitBytes": 157286400,
+      "chunkBytesHeld": 6901631,
+      "memory": {
+        "usedJSHeapSize": 10000000,
+        "totalJSHeapSize": 10000000,
+        "jsHeapSizeLimit": 3140000000
+      },
+      "requests": 3,
+      "requestBytes": 4032341,
+      "requestsTotal": 13,
+      "requestBytesTotal": 6965713,
+      "decodeErrors": 0,
+      "chunkErrors": 0,
+      "timeToFirstFrameMs": 820,
+      "viewport": {
+        "innerWidth": 806,
+        "innerHeight": 331,
+        "devicePixelRatio": 3.25,
+        "stageW": 806,
+        "stageH": 331,
+        "canvasW": 2620,
+        "canvasH": 1076
+      },
+      "orientation": "landscape",
+      "kind": "scrub",
+      "centreRange": 28,
+      "chunkBoundaries": {
+        "boundaries": [
+          {
+            "frame": 16,
+            "worstMs": 0
+          },
+          {
+            "frame": 32,
+            "worstMs": 0
+          },
+          {
+            "frame": 48,
+            "worstMs": 0
+          },
+          {
+            "frame": 64,
+            "worstMs": 0
+          }
+        ],
+        "median": 0,
+        "thresholdMs": 50,
+        "stalls": []
+      },
+      "latencyByFrameMax": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0,
+        "16": 0,
+        "17": 0,
+        "18": 0,
+        "19": 0,
+        "20": 0,
+        "21": 0,
+        "22": 0,
+        "23": 0,
+        "24": 0,
+        "25": 0,
+        "26": 0,
+        "27": 0,
+        "28": 0,
+        "29": 0,
+        "30": 0,
+        "31": 0,
+        "32": 0,
+        "33": 0,
+        "34": 0,
+        "35": 0,
+        "36": 0,
+        "37": 0,
+        "38": 0,
+        "39": 0,
+        "40": 0,
+        "41": 0,
+        "42": 0,
+        "43": 0,
+        "44": 0,
+        "45": 0,
+        "46": 0,
+        "47": 0,
+        "48": 0,
+        "49": 0,
+        "50": 0,
+        "51": 0,
+        "52": 0,
+        "53": 0,
+        "54": 0,
+        "55": 0,
+        "56": 0,
+        "57": 0,
+        "58": 0,
+        "59": 0,
+        "60": 0,
+        "61": 0,
+        "62": 0,
+        "63": 0,
+        "64": 0,
+        "65": 0,
+        "66": 0,
+        "67": 0,
+        "68": 0,
+        "69": 0,
+        "70": 0,
+        "71": 0
+      },
+      "defects": []
+    },
+    {
+      "phase": "landscape-fast-back-and-forth",
+      "variant": "16x9/1080",
+      "drawnVariant": "16x9/1080",
+      "frame": 0,
+      "drawnFrame": 0,
+      "scrubFpsMedian": 60.2,
+      "scrubFpsP5": 59.5,
+      "scrubSamples": 144,
+      "scrubFrameMsP95": 16.8,
+      "scrubLongIntervals": {
+        "over34ms": 0,
+        "over50ms": 0,
+        "maxMs": 33.3
+      },
+      "scrubLongLog": [],
+      "resizeEvents": 3,
+      "canvasResizes": 3,
+      "allFpsMedian": 60.2,
+      "allFpsP5": 59.5,
+      "frameMsP95": 16.8,
+      "drawMsP95": 0.2,
+      "tickWorkMsP95": 0.46,
+      "decodeMsP50": 31,
+      "decodeMsP95": 43.3,
+      "decodeSamples": 116,
+      "decodePath": "worker",
+      "decodeFallbackReason": null,
+      "latencyMsP50": 0,
+      "latencyMsP95": 0,
+      "latencyMsMax": 50,
+      "latencySamples": 64,
+      "latencySuperseded": 45,
+      "missedTicks": 53,
+      "drawnFrames": 64,
+      "liveDecodedBytes": 149299200,
+      "peakLiveDecodedBytes": 157593600,
+      "peakLiveDecodedBitmaps": 19,
+      "cacheBytes": 149299200,
+      "cacheLimitBytes": 157286400,
+      "chunkBytesHeld": 6901631,
+      "memory": {
+        "usedJSHeapSize": 10000000,
+        "totalJSHeapSize": 10000000,
+        "jsHeapSizeLimit": 3140000000
+      },
+      "requests": 0,
+      "requestBytes": 0,
+      "requestsTotal": 13,
+      "requestBytesTotal": 6965713,
+      "decodeErrors": 0,
+      "chunkErrors": 0,
+      "timeToFirstFrameMs": 820,
+      "viewport": {
+        "innerWidth": 806,
+        "innerHeight": 275,
+        "devicePixelRatio": 3.25,
+        "stageW": 806,
+        "stageH": 275,
+        "canvasW": 2620,
+        "canvasH": 894
+      },
+      "orientation": "landscape",
+      "kind": "scrub",
+      "centreRange": 79,
+      "chunkBoundaries": {
+        "boundaries": [
+          {
+            "frame": 16,
+            "worstMs": 0
+          },
+          {
+            "frame": 32,
+            "worstMs": 0
+          },
+          {
+            "frame": 48,
+            "worstMs": 0
+          },
+          {
+            "frame": 64,
+            "worstMs": 0
+          }
+        ],
+        "median": 0,
+        "thresholdMs": 50,
+        "stalls": []
+      },
+      "latencyByFrameMax": {
+        "0": 50,
+        "2": 0,
+        "4": 0,
+        "6": 0,
+        "8": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0,
+        "16": 0,
+        "17": 0,
+        "19": 0,
+        "20": 0,
+        "21": 0,
+        "22": 0,
+        "23": 0,
+        "24": 0,
+        "25": 0,
+        "26": 0,
+        "28": 0,
+        "29": 0,
+        "30": 0,
+        "32": 0,
+        "34": 0,
+        "37": 0,
+        "40": 0,
+        "42": 0,
+        "45": 0,
+        "46": 0,
+        "47": 0,
+        "48": 0,
+        "49": 0,
+        "50": 0,
+        "51": 0,
+        "52": 0,
+        "53": 0,
+        "54": 0,
+        "55": 0,
+        "56": 0,
+        "58": 0,
+        "59": 0,
+        "60": 0,
+        "61": 0,
+        "62": 0,
+        "64": 0,
+        "65": 0,
+        "66": 0,
+        "67": 0,
+        "68": 0,
+        "69": 0,
+        "70": 0,
+        "71": 33.3
+      },
+      "defects": []
+    },
+    {
+      "phase": "rotate-to-portrait",
+      "variant": "9x16/720",
+      "drawnVariant": "9x16/720",
+      "frame": 31,
+      "drawnFrame": 31,
+      "scrubFpsMedian": 60.1,
+      "scrubFpsP5": 59.9,
+      "scrubSamples": 6,
+      "scrubFrameMsP95": 16.7,
+      "scrubLongIntervals": {
+        "over34ms": 0,
+        "over50ms": 0,
+        "maxMs": 16.7
+      },
+      "scrubLongLog": [],
+      "resizeEvents": 2,
+      "canvasResizes": 1,
+      "allFpsMedian": 59.9,
+      "allFpsP5": 59.9,
+      "frameMsP95": 16.7,
+      "drawMsP95": 0.29,
+      "tickWorkMsP95": 0.3,
+      "decodeMsP50": 18.3,
+      "decodeMsP95": 44.1,
+      "decodeSamples": 10,
+      "decodePath": "worker",
+      "decodeFallbackReason": null,
+      "latencyMsP50": 46.9,
+      "latencyMsP95": 46.9,
+      "latencyMsMax": 46.9,
+      "latencySamples": 1,
+      "latencySuperseded": 0,
+      "missedTicks": 2,
+      "drawnFrames": 2,
+      "liveDecodedBytes": 22118400,
+      "peakLiveDecodedBytes": 157593600,
+      "peakLiveDecodedBitmaps": 19,
+      "cacheBytes": 22118400,
+      "cacheLimitBytes": 157286400,
+      "chunkBytesHeld": 6901631,
+      "memory": {
+        "usedJSHeapSize": 10000000,
+        "totalJSHeapSize": 10000000,
+        "jsHeapSizeLimit": 3140000000
+      },
+      "requests": 0,
+      "requestBytes": 0,
+      "requestsTotal": 13,
+      "requestBytesTotal": 6965713,
+      "decodeErrors": 0,
+      "chunkErrors": 0,
+      "timeToFirstFrameMs": 820,
+      "viewport": {
+        "innerWidth": 394,
+        "innerHeight": 734,
+        "devicePixelRatio": 3.25,
+        "stageW": 394,
+        "stageH": 734,
+        "canvasW": 1281,
+        "canvasH": 2386
+      },
+      "from": "16x9/1080",
+      "to": "9x16/720",
+      "frameBefore": 31,
+      "frameAfter": 31,
+      "rotationToDrawnMs": 661,
+      "rotationDefects": [],
+      "kind": "rotation",
+      "centreRange": 27,
+      "defects": []
+    },
+    {
+      "phase": "idle",
+      "variant": "9x16/720",
+      "drawnVariant": "9x16/720",
+      "frame": 31,
+      "drawnFrame": 31,
+      "scrubFpsMedian": null,
+      "scrubFpsP5": null,
+      "scrubSamples": 0,
+      "scrubFrameMsP95": null,
+      "scrubLongIntervals": {
+        "over34ms": 0,
+        "over50ms": 0,
+        "maxMs": null
+      },
+      "scrubLongLog": [],
+      "resizeEvents": 0,
+      "canvasResizes": 0,
+      "allFpsMedian": 59.9,
+      "allFpsP5": 59.9,
+      "frameMsP95": 16.7,
+      "drawMsP95": null,
+      "tickWorkMsP95": 0.4,
+      "decodeMsP50": null,
+      "decodeMsP95": null,
+      "decodeSamples": 0,
+      "decodePath": "worker",
+      "decodeFallbackReason": null,
+      "latencyMsP50": null,
+      "latencyMsP95": null,
+      "latencyMsMax": null,
+      "latencySamples": 0,
+      "latencySuperseded": 0,
+      "missedTicks": 0,
+      "drawnFrames": 0,
+      "liveDecodedBytes": 143769600,
+      "peakLiveDecodedBytes": 143769600,
+      "peakLiveDecodedBitmaps": 39,
+      "cacheBytes": 143769600,
+      "cacheLimitBytes": 157286400,
+      "chunkBytesHeld": 6901631,
+      "memory": {
+        "usedJSHeapSize": 10000000,
+        "totalJSHeapSize": 10000000,
+        "jsHeapSizeLimit": 3140000000
+      },
+      "requests": 0,
+      "requestBytes": 0,
+      "requestsTotal": 13,
+      "requestBytesTotal": 6965713,
+      "decodeErrors": 0,
+      "chunkErrors": 0,
+      "timeToFirstFrameMs": 820,
+      "viewport": {
+        "innerWidth": 394,
+        "innerHeight": 734,
+        "devicePixelRatio": 3.25,
+        "stageW": 394,
+        "stageH": 734,
+        "canvasW": 1281,
+        "canvasH": 2386
+      },
+      "idleMs": 10000,
+      "kind": "idle",
+      "centreRange": 27,
+      "defects": []
+    }
+  ],
+  "defects": [],
+  "requestLog": [
+    {
+      "phase": "cold-load",
+      "path": "/media/asset-manifest.json",
+      "t": 9969
+    },
+    {
+      "phase": "cold-load",
+      "path": "/media/spike-2026-11-21/frames/II.9x16.json",
+      "t": 10007
+    },
+    {
+      "phase": "cold-load",
+      "path": "/media/spike-2026-11-21/ii-03-clock/9x16/720/chunk-0000.bin",
+      "t": 10094
+    },
+    {
+      "phase": "cold-load",
+      "path": "/media/spike-2026-11-21/ii-03-clock/9x16/720/chunk-0001.bin",
+      "t": 10094
+    },
+    {
+      "phase": "cold-load",
+      "path": "/media/spike-2026-11-21/ii-03-clock/9x16/720/chunk-0002.bin",
+      "t": 10094
+    },
+    {
+      "phase": "slow-forward-1",
+      "path": "/media/spike-2026-11-21/ii-03-clock/9x16/720/chunk-0003.bin",
+      "t": 17302
+    },
+    {
+      "phase": "slow-forward-1",
+      "path": "/media/spike-2026-11-21/ii-03-clock/9x16/720/chunk-0004.bin",
+      "t": 20844
+    },
+    {
+      "phase": "rotate-to-landscape",
+      "path": "/media/spike-2026-11-21/frames/II.16x9.json",
+      "t": 84543
+    },
+    {
+      "phase": "rotate-to-landscape",
+      "path": "/media/spike-2026-11-21/ii-03-clock/16x9/1080/chunk-0001.bin",
+      "t": 84640
+    },
+    {
+      "phase": "rotate-to-landscape",
+      "path": "/media/spike-2026-11-21/ii-03-clock/16x9/1080/chunk-0002.bin",
+      "t": 84640
+    },
+    {
+      "phase": "landscape-slow-forward",
+      "path": "/media/spike-2026-11-21/ii-03-clock/16x9/1080/chunk-0000.bin",
+      "t": 86936
+    },
+    {
+      "phase": "landscape-slow-forward",
+      "path": "/media/spike-2026-11-21/ii-03-clock/16x9/1080/chunk-0003.bin",
+      "t": 94835
+    },
+    {
+      "phase": "landscape-slow-forward",
+      "path": "/media/spike-2026-11-21/ii-03-clock/16x9/1080/chunk-0004.bin",
+      "t": 98045
+    }
+  ],
+  "console": [],
+  "rotationBefore": {
+    "accelerometer_rotation": "0",
+    "user_rotation": "0"
+  },
+  "recording": {
+    "remotePath": "/sdcard/spike-run.mp4",
+    "bitRate": 20000000,
+    "timeLimitS": 180,
+    "startedAt": "2026-11-23T12:32:36.716Z",
+    "sync": [
+      {
+        "name": "black",
+        "ms": 1534
+      },
+      {
+        "name": "white",
+        "ms": 2321
+      }
+    ],
+    "phases": [
+      {
+        "phase": "cold-load",
+        "kind": "load",
+        "orientation": "portrait",
+        "startMs": 3190,
+        "endMs": 4106
+      },
+      {
+        "phase": "slow-forward-1",
+        "kind": "scrub",
+        "orientation": "portrait",
+        "startMs": 6148,
+        "endMs": 23129
+      },
+      {
+        "phase": "slow-forward-2",
+        "kind": "scrub",
+        "orientation": "portrait",
+        "startMs": 24896,
+        "endMs": 41799
+      },
+      {
+        "phase": "slow-forward-3",
+        "kind": "scrub",
+        "orientation": "portrait",
+        "startMs": 43716,
+        "endMs": 61349
+      },
+      {
+        "phase": "fast-back-and-forth-1",
+        "kind": "scrub",
+        "orientation": "portrait",
+        "startMs": 63251,
+        "endMs": 65732
+      },
+      {
+        "phase": "fast-back-and-forth-2",
+        "kind": "scrub",
+        "orientation": "portrait",
+        "startMs": 68003,
+        "endMs": 70441
+      },
+      {
+        "phase": "fast-back-and-forth-3",
+        "kind": "scrub",
+        "orientation": "portrait",
+        "startMs": 72354,
+        "endMs": 74784
+      },
+      {
+        "phase": "rotate-to-landscape",
+        "kind": "rotation",
+        "orientation": "transition",
+        "startMs": 77171,
+        "endMs": 78790
+      },
+      {
+        "phase": "landscape-slow-forward",
+        "kind": "scrub",
+        "orientation": "landscape",
+        "startMs": 80808,
+        "endMs": 96252
+      },
+      {
+        "phase": "landscape-fast-back-and-forth",
+        "kind": "scrub",
+        "orientation": "landscape",
+        "startMs": 99422,
+        "endMs": 102572
+      },
+      {
+        "phase": "rotate-to-portrait",
+        "kind": "rotation",
+        "orientation": "transition",
+        "startMs": 104134,
+        "endMs": 104795
+      },
+      {
+        "phase": "idle",
+        "kind": "idle",
+        "orientation": "portrait",
+        "startMs": 105888,
+        "endMs": 115902
+      }
+    ],
+    "gestures": [
+      {
+        "phase": "slow-forward-1",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 6161,
+        "endMs": 8006,
+        "swiped": true
+      },
+      {
+        "phase": "slow-forward-1",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 8083,
+        "endMs": 9924,
+        "swiped": true
+      },
+      {
+        "phase": "slow-forward-1",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 9940,
+        "endMs": 11751,
+        "swiped": true
+      },
+      {
+        "phase": "slow-forward-1",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 11792,
+        "endMs": 13635,
+        "swiped": true
+      },
+      {
+        "phase": "slow-forward-1",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 13654,
+        "endMs": 15456,
+        "swiped": true
+      },
+      {
+        "phase": "slow-forward-1",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 15473,
+        "endMs": 17306,
+        "swiped": true
+      },
+      {
+        "phase": "slow-forward-1",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 17334,
+        "endMs": 19232,
+        "swiped": true
+      },
+      {
+        "phase": "slow-forward-1",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 19262,
+        "endMs": 21037,
+        "swiped": true
+      },
+      {
+        "phase": "slow-forward-1",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 21163,
+        "endMs": 22993,
+        "swiped": true
+      },
+      {
+        "phase": "slow-forward-2",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 24925,
+        "endMs": 26723,
+        "swiped": true
+      },
+      {
+        "phase": "slow-forward-2",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 26819,
+        "endMs": 28664,
+        "swiped": true
+      },
+      {
+        "phase": "slow-forward-2",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 28732,
+        "endMs": 30528,
+        "swiped": true
+      },
+      {
+        "phase": "slow-forward-2",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 30582,
+        "endMs": 32381,
+        "swiped": true
+      },
+      {
+        "phase": "slow-forward-2",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 32399,
+        "endMs": 34222,
+        "swiped": true
+      },
+      {
+        "phase": "slow-forward-2",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 34254,
+        "endMs": 36063,
+        "swiped": true
+      },
+      {
+        "phase": "slow-forward-2",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 36126,
+        "endMs": 37979,
+        "swiped": true
+      },
+      {
+        "phase": "slow-forward-2",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 37997,
+        "endMs": 39831,
+        "swiped": true
+      },
+      {
+        "phase": "slow-forward-2",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 39903,
+        "endMs": 41744,
+        "swiped": true
+      },
+      {
+        "phase": "slow-forward-3",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 43735,
+        "endMs": 45595,
+        "swiped": true
+      },
+      {
+        "phase": "slow-forward-3",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 45743,
+        "endMs": 47552,
+        "swiped": true
+      },
+      {
+        "phase": "slow-forward-3",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 47633,
+        "endMs": 49461,
+        "swiped": true
+      },
+      {
+        "phase": "slow-forward-3",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 49630,
+        "endMs": 51467,
+        "swiped": true
+      },
+      {
+        "phase": "slow-forward-3",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 51575,
+        "endMs": 53377,
+        "swiped": true
+      },
+      {
+        "phase": "slow-forward-3",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 53511,
+        "endMs": 55348,
+        "swiped": true
+      },
+      {
+        "phase": "slow-forward-3",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 55463,
+        "endMs": 57307,
+        "swiped": true
+      },
+      {
+        "phase": "slow-forward-3",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 57412,
+        "endMs": 59237,
+        "swiped": true
+      },
+      {
+        "phase": "slow-forward-3",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 59339,
+        "endMs": 61153,
+        "swiped": true
+      },
+      {
+        "phase": "fast-back-and-forth-1",
+        "kind": "fast",
+        "dir": 1,
+        "startMs": 63285,
+        "endMs": 63669,
+        "swiped": true
+      },
+      {
+        "phase": "fast-back-and-forth-1",
+        "kind": "fast",
+        "dir": 1,
+        "startMs": 63684,
+        "endMs": 64042,
+        "swiped": true
+      },
+      {
+        "phase": "fast-back-and-forth-1",
+        "kind": "fast",
+        "dir": 1,
+        "startMs": 64070,
+        "endMs": 64413,
+        "swiped": true
+      },
+      {
+        "phase": "fast-back-and-forth-1",
+        "kind": "fast",
+        "dir": -1,
+        "startMs": 64473,
+        "endMs": 64818,
+        "swiped": true
+      },
+      {
+        "phase": "fast-back-and-forth-1",
+        "kind": "fast",
+        "dir": -1,
+        "startMs": 64831,
+        "endMs": 65205,
+        "swiped": true
+      },
+      {
+        "phase": "fast-back-and-forth-1",
+        "kind": "fast",
+        "dir": -1,
+        "startMs": 65233,
+        "endMs": 65655,
+        "swiped": false
+      },
+      {
+        "phase": "fast-back-and-forth-2",
+        "kind": "fast",
+        "dir": 1,
+        "startMs": 68036,
+        "endMs": 68395,
+        "swiped": true
+      },
+      {
+        "phase": "fast-back-and-forth-2",
+        "kind": "fast",
+        "dir": 1,
+        "startMs": 68409,
+        "endMs": 68750,
+        "swiped": true
+      },
+      {
+        "phase": "fast-back-and-forth-2",
+        "kind": "fast",
+        "dir": 1,
+        "startMs": 68781,
+        "endMs": 69155,
+        "swiped": true
+      },
+      {
+        "phase": "fast-back-and-forth-2",
+        "kind": "fast",
+        "dir": -1,
+        "startMs": 69199,
+        "endMs": 69560,
+        "swiped": true
+      },
+      {
+        "phase": "fast-back-and-forth-2",
+        "kind": "fast",
+        "dir": -1,
+        "startMs": 69606,
+        "endMs": 69970,
+        "swiped": true
+      },
+      {
+        "phase": "fast-back-and-forth-2",
+        "kind": "fast",
+        "dir": -1,
+        "startMs": 69979,
+        "endMs": 70403,
+        "swiped": false
+      },
+      {
+        "phase": "fast-back-and-forth-3",
+        "kind": "fast",
+        "dir": 1,
+        "startMs": 72386,
+        "endMs": 72754,
+        "swiped": true
+      },
+      {
+        "phase": "fast-back-and-forth-3",
+        "kind": "fast",
+        "dir": 1,
+        "startMs": 72781,
+        "endMs": 73130,
+        "swiped": true
+      },
+      {
+        "phase": "fast-back-and-forth-3",
+        "kind": "fast",
+        "dir": 1,
+        "startMs": 73140,
+        "endMs": 73517,
+        "swiped": true
+      },
+      {
+        "phase": "fast-back-and-forth-3",
+        "kind": "fast",
+        "dir": -1,
+        "startMs": 73582,
+        "endMs": 73938,
+        "swiped": true
+      },
+      {
+        "phase": "fast-back-and-forth-3",
+        "kind": "fast",
+        "dir": -1,
+        "startMs": 73949,
+        "endMs": 74311,
+        "swiped": true
+      },
+      {
+        "phase": "fast-back-and-forth-3",
+        "kind": "fast",
+        "dir": -1,
+        "startMs": 74340,
+        "endMs": 74729,
+        "swiped": false
+      },
+      {
+        "phase": "landscape-slow-forward",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 80852,
+        "endMs": 82943,
+        "swiped": true
+      },
+      {
+        "phase": "landscape-slow-forward",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 82979,
+        "endMs": 84791,
+        "swiped": true
+      },
+      {
+        "phase": "landscape-slow-forward",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 84845,
+        "endMs": 86656,
+        "swiped": true
+      },
+      {
+        "phase": "landscape-slow-forward",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 86689,
+        "endMs": 88518,
+        "swiped": true
+      },
+      {
+        "phase": "landscape-slow-forward",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 88612,
+        "endMs": 90424,
+        "swiped": true
+      },
+      {
+        "phase": "landscape-slow-forward",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 90466,
+        "endMs": 92293,
+        "swiped": true
+      },
+      {
+        "phase": "landscape-slow-forward",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 92308,
+        "endMs": 94146,
+        "swiped": true
+      },
+      {
+        "phase": "landscape-slow-forward",
+        "kind": "slow",
+        "dir": 1,
+        "startMs": 94272,
+        "endMs": 96104,
+        "swiped": true
+      },
+      {
+        "phase": "landscape-fast-back-and-forth",
+        "kind": "fast",
+        "dir": -1,
+        "startMs": 99458,
+        "endMs": 99812,
+        "swiped": true
+      },
+      {
+        "phase": "landscape-fast-back-and-forth",
+        "kind": "fast",
+        "dir": -1,
+        "startMs": 99853,
+        "endMs": 100186,
+        "swiped": true
+      },
+      {
+        "phase": "landscape-fast-back-and-forth",
+        "kind": "fast",
+        "dir": -1,
+        "startMs": 100196,
+        "endMs": 100544,
+        "swiped": false
+      },
+      {
+        "phase": "landscape-fast-back-and-forth",
+        "kind": "fast",
+        "dir": 1,
+        "startMs": 100597,
+        "endMs": 100949,
+        "swiped": true
+      },
+      {
+        "phase": "landscape-fast-back-and-forth",
+        "kind": "fast",
+        "dir": 1,
+        "startMs": 100997,
+        "endMs": 101352,
+        "swiped": true
+      },
+      {
+        "phase": "landscape-fast-back-and-forth",
+        "kind": "fast",
+        "dir": -1,
+        "startMs": 101410,
+        "endMs": 101757,
+        "swiped": true
+      },
+      {
+        "phase": "landscape-fast-back-and-forth",
+        "kind": "fast",
+        "dir": -1,
+        "startMs": 101769,
+        "endMs": 102157,
+        "swiped": true
+      },
+      {
+        "phase": "landscape-fast-back-and-forth",
+        "kind": "fast",
+        "dir": -1,
+        "startMs": 102173,
+        "endMs": 102549,
+        "swiped": false
+      }
+    ],
+    "file": "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z.mp4",
+    "bytes": 30435140,
+    "truncated": false,
+    "endMs": 117344
+  },
+  "timeToFirstFrameMs": 820,
+  "resourceTiming": [
+    {
+      "path": "/media/asset-manifest.json",
+      "startMs": 143,
+      "ttfbMs": 47,
+      "responseStart": 193,
+      "responseEnd": 194.8,
+      "durationMs": 52,
+      "transferSize": 740,
+      "encodedBodySize": 440
+    },
+    {
+      "path": "/media/spike-2026-11-21/frames/II.9x16.json",
+      "startMs": 202,
+      "ttfbMs": 46,
+      "responseStart": 248.9,
+      "responseEnd": 253.2,
+      "durationMs": 52,
+      "transferSize": 3896,
+      "encodedBodySize": 3596
+    },
+    {
+      "path": "/media/spike-2026-11-21/ii-03-clock/9x16/720/chunk-0000.bin",
+      "startMs": 270,
+      "ttfbMs": 31,
+      "responseStart": 306.5,
+      "responseEnd": 754.1,
+      "durationMs": 484,
+      "transferSize": 467079,
+      "encodedBodySize": 466779
+    },
+    {
+      "path": "/media/spike-2026-11-21/ii-03-clock/9x16/720/chunk-0001.bin",
+      "startMs": 271,
+      "ttfbMs": 41,
+      "responseStart": 318.4,
+      "responseEnd": 680.9,
+      "durationMs": 410,
+      "transferSize": 343852,
+      "encodedBodySize": 343552
+    },
+    {
+      "path": "/media/spike-2026-11-21/ii-03-clock/9x16/720/chunk-0002.bin",
+      "startMs": 272,
+      "ttfbMs": 98,
+      "responseStart": 405.8,
+      "responseEnd": 893.1,
+      "durationMs": 621,
+      "transferSize": 382171,
+      "encodedBodySize": 381871
+    },
+    {
+      "path": "/media/spike-2026-11-21/ii-03-clock/9x16/720/chunk-0003.bin",
+      "startMs": 7481,
+      "ttfbMs": 57,
+      "responseStart": 7581.1,
+      "responseEnd": 7838.8,
+      "durationMs": 358,
+      "transferSize": 383491,
+      "encodedBodySize": 383191
+    },
+    {
+      "path": "/media/spike-2026-11-21/ii-03-clock/9x16/720/chunk-0004.bin",
+      "startMs": 11026,
+      "ttfbMs": 60,
+      "responseStart": 11089.9,
+      "responseEnd": 11138.5,
+      "durationMs": 113,
+      "transferSize": 191723,
+      "encodedBodySize": 191423
+    },
+    {
+      "path": "/media/spike-2026-11-21/frames/II.16x9.json",
+      "startMs": 74751,
+      "ttfbMs": 23,
+      "responseStart": 74811,
+      "responseEnd": 74812.5,
+      "durationMs": 62,
+      "transferSize": 4688,
+      "encodedBodySize": 4388
+    },
+    {
+      "path": "/media/spike-2026-11-21/ii-03-clock/16x9/1080/chunk-0001.bin",
+      "startMs": 74832,
+      "ttfbMs": 47,
+      "responseStart": 74880.8,
+      "responseEnd": 75435.9,
+      "durationMs": 604,
+      "transferSize": 1102774,
+      "encodedBodySize": 1102474
+    },
+    {
+      "path": "/media/spike-2026-11-21/ii-03-clock/16x9/1080/chunk-0002.bin",
+      "startMs": 74833,
+      "ttfbMs": 48,
+      "responseStart": 74907.9,
+      "responseEnd": 75786.7,
+      "durationMs": 954,
+      "transferSize": 1276946,
+      "encodedBodySize": 1276646
+    },
+    {
+      "path": "/media/spike-2026-11-21/ii-03-clock/16x9/1080/chunk-0000.bin",
+      "startMs": 77123,
+      "ttfbMs": 52,
+      "responseStart": 77178.8,
+      "responseEnd": 77450.1,
+      "durationMs": 327,
+      "transferSize": 868928,
+      "encodedBodySize": 868628
+    },
+    {
+      "path": "/media/spike-2026-11-21/ii-03-clock/16x9/1080/chunk-0003.bin",
+      "startMs": 85015,
+      "ttfbMs": 31,
+      "responseStart": 85089.7,
+      "responseEnd": 85771.8,
+      "durationMs": 757,
+      "transferSize": 1257925,
+      "encodedBodySize": 1257625
+    },
+    {
+      "path": "/media/spike-2026-11-21/ii-03-clock/16x9/1080/chunk-0004.bin",
+      "startMs": 88229,
+      "ttfbMs": 49,
+      "responseStart": 88281.5,
+      "responseEnd": 88864.4,
+      "durationMs": 635,
+      "transferSize": 629742,
+      "encodedBodySize": 629442
+    }
+  ],
+  "finalSnapshot": {
+    "fpsMedian": 59.9,
+    "fpsP5": 59.9,
+    "frameMsMedian": 16.7,
+    "frameMsP95": 16.7,
+    "scrubFpsMedian": null,
+    "scrubFpsP5": null,
+    "scrubFrameMsP95": null,
+    "scrubSamples": 0,
+    "scrubLongIntervals": {
+      "over34ms": 0,
+      "over50ms": 0,
+      "maxMs": null
+    },
+    "latencyMsP50": null,
+    "latencyMsP95": null,
+    "latencyMsMax": null,
+    "latencySamples": 0,
+    "latencySuperseded": 0,
+    "latencyByFrameMax": {},
+    "timeToFirstFrameMs": 820,
+    "peakLiveDecodedBitmaps": 39,
+    "peakLiveDecodedBytes": 143769600,
+    "resizeEvents": 0,
+    "canvasResizes": 0,
+    "scrubLongLog": [],
+    "tickWorkMsP95": 0.4,
+    "drawMsP50": null,
+    "drawMsP95": null,
+    "decodeMsP50": null,
+    "decodeMsP95": null,
+    "decodeSamples": 0,
+    "decodedBytes": 143769600,
+    "decodedFrames": 39,
+    "cacheLimitBytes": 157286400,
+    "liveDecodedBitmaps": 39,
+    "liveDecodedBytes": 143769600,
+    "inflight": 0,
+    "chunkBytesHeld": 6901631,
+    "memory": {
+      "usedJSHeapSize": 10000000,
+      "totalJSHeapSize": 10000000,
+      "jsHeapSizeLimit": 3140000000
+    },
+    "requests": 13,
+    "requestBytes": 6965713,
+    "decodePath": "worker",
+    "decodeFallbackReason": null,
+    "aspect": "9x16",
+    "tier": "720",
+    "tierOverride": null,
+    "frame": 31,
+    "drawnFrame": 31,
+    "drawnVariant": "9x16/720",
+    "frameCount": 72,
+    "progress": 0.4371,
+    "missedTicks": 0,
+    "drawnCount": 590,
+    "decodeErrors": 0,
+    "chunkErrors": 0,
+    "mediaVersion": "spike-2026-11-21",
+    "userAgent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/158.0.0.0 Mobile Safari/537.36",
+    "viewport": {
+      "innerWidth": 394,
+      "innerHeight": 734,
+      "devicePixelRatio": 3.25,
+      "stageW": 394,
+      "stageH": 734,
+      "canvasW": 1281,
+      "canvasH": 2386
+    },
+    "at": "2026-11-23T12:34:35.089Z"
+  },
+  "rotationAfter": {
+    "accelerometer_rotation": "0",
+    "user_rotation": "0"
+  },
+  "cleanup": {
+    "rotationRestored": true,
+    "forwardRemoved": true,
+    "restoredRotation": {
+      "accelerometer_rotation": "0",
+      "user_rotation": "0"
+    },
+    "hooksRun": 1,
+    "errors": []
+  },
+  "requests": {
+    "total": 13,
+    "manifest": 1,
+    "frameData": 2,
+    "chunks": 10,
+    "byVariant": {
+      "9x16/720": {
+        "requests": 5,
+        "distinctChunks": 5,
+        "chunksInManifest": 5
+      },
+      "16x9/1080": {
+        "requests": 5,
+        "distinctChunks": 5,
+        "chunksInManifest": 5
+      }
+    },
+    "bytesHud": 6965713,
+    "requestsHud": 13
+  },
+  "requestEstimate": {
+    "measuredChunkRequestRatio": 1,
+    "budget": 150,
+    "rows": [
+      {
+        "frames": 5760,
+        "packing": "per-act",
+        "N": 16,
+        "requests": 370,
+        "withOneRotationWorstCase": 739,
+        "withReserve40": 410,
+        "pass": false
+      },
+      {
+        "frames": 5760,
+        "packing": "per-act",
+        "N": 48,
+        "requests": 130,
+        "withOneRotationWorstCase": 259,
+        "withReserve40": 170,
+        "pass": true
+      },
+      {
+        "frames": 5760,
+        "packing": "per-act",
+        "N": 64,
+        "requests": 100,
+        "withOneRotationWorstCase": 199,
+        "withReserve40": 140,
+        "pass": true
+      },
+      {
+        "frames": 5760,
+        "packing": "per-act",
+        "N": 72,
+        "requests": 90,
+        "withOneRotationWorstCase": 179,
+        "withReserve40": 130,
+        "pass": true
+      },
+      {
+        "frames": 5760,
+        "packing": "per-act",
+        "N": 96,
+        "requests": 70,
+        "withOneRotationWorstCase": 139,
+        "withReserve40": 110,
+        "pass": true
+      },
+      {
+        "frames": 5760,
+        "packing": "per-act",
+        "smallestNWithinBudget": 42,
+        "smallestNWithReserve40": 58
+      },
+      {
+        "frames": 5760,
+        "packing": "per-shot",
+        "N": 16,
+        "requests": 405,
+        "withOneRotationWorstCase": 809,
+        "withReserve40": 445,
+        "pass": false
+      },
+      {
+        "frames": 5760,
+        "packing": "per-shot",
+        "N": 48,
+        "requests": 165,
+        "withOneRotationWorstCase": 329,
+        "withReserve40": 205,
+        "pass": false
+      },
+      {
+        "frames": 5760,
+        "packing": "per-shot",
+        "N": 64,
+        "requests": 135,
+        "withOneRotationWorstCase": 269,
+        "withReserve40": 175,
+        "pass": true
+      },
+      {
+        "frames": 5760,
+        "packing": "per-shot",
+        "N": 72,
+        "requests": 125,
+        "withOneRotationWorstCase": 249,
+        "withReserve40": 165,
+        "pass": true
+      },
+      {
+        "frames": 5760,
+        "packing": "per-shot",
+        "N": 96,
+        "requests": 105,
+        "withOneRotationWorstCase": 209,
+        "withReserve40": 145,
+        "pass": true
+      },
+      {
+        "frames": 5760,
+        "packing": "per-shot",
+        "smallestNWithinBudget": 55,
+        "smallestNWithReserve40": 89
+      },
+      {
+        "frames": 7200,
+        "packing": "per-act",
+        "N": 16,
+        "requests": 460,
+        "withOneRotationWorstCase": 919,
+        "withReserve40": 500,
+        "pass": false
+      },
+      {
+        "frames": 7200,
+        "packing": "per-act",
+        "N": 48,
+        "requests": 160,
+        "withOneRotationWorstCase": 319,
+        "withReserve40": 200,
+        "pass": false
+      },
+      {
+        "frames": 7200,
+        "packing": "per-act",
+        "N": 64,
+        "requests": 123,
+        "withOneRotationWorstCase": 245,
+        "withReserve40": 163,
+        "pass": true
+      },
+      {
+        "frames": 7200,
+        "packing": "per-act",
+        "N": 72,
+        "requests": 110,
+        "withOneRotationWorstCase": 219,
+        "withReserve40": 150,
+        "pass": true
+      },
+      {
+        "frames": 7200,
+        "packing": "per-act",
+        "N": 96,
+        "requests": 85,
+        "withOneRotationWorstCase": 169,
+        "withReserve40": 125,
+        "pass": true
+      },
+      {
+        "frames": 7200,
+        "packing": "per-act",
+        "smallestNWithinBudget": 52,
+        "smallestNWithReserve40": 72
+      },
+      {
+        "frames": 7200,
+        "packing": "per-shot",
+        "N": 16,
+        "requests": 495,
+        "withOneRotationWorstCase": 989,
+        "withReserve40": 535,
+        "pass": false
+      },
+      {
+        "frames": 7200,
+        "packing": "per-shot",
+        "N": 48,
+        "requests": 195,
+        "withOneRotationWorstCase": 389,
+        "withReserve40": 235,
+        "pass": false
+      },
+      {
+        "frames": 7200,
+        "packing": "per-shot",
+        "N": 64,
+        "requests": 158,
+        "withOneRotationWorstCase": 315,
+        "withReserve40": 198,
+        "pass": false
+      },
+      {
+        "frames": 7200,
+        "packing": "per-shot",
+        "N": 72,
+        "requests": 145,
+        "withOneRotationWorstCase": 289,
+        "withReserve40": 185,
+        "pass": true
+      },
+      {
+        "frames": 7200,
+        "packing": "per-shot",
+        "N": 96,
+        "requests": 120,
+        "withOneRotationWorstCase": 239,
+        "withReserve40": 160,
+        "pass": true
+      },
+      {
+        "frames": 7200,
+        "packing": "per-shot",
+        "smallestNWithinBudget": 69,
+        "smallestNWithReserve40": 111
+      }
+    ]
+  },
+  "chunkNetwork": {
+    "samples": 10,
+    "avgBodyKBps": 1509,
+    "ttfbMedianMs": 48,
+    "durationsMs": [
+      484,
+      410,
+      621,
+      358,
+      113,
+      604,
+      954,
+      327,
+      757,
+      635
+    ]
+  },
+  "budgets": [
+    {
+      "phase": "cold-load",
+      "budget": "peak live decoded bytes <= cache limit + 2 frames of 9x16/720",
+      "value": {
+        "peak": 51609600,
+        "bound": 164659200
+      },
+      "pass": true
+    },
+    {
+      "phase": "slow-forward-1",
+      "budget": "scrub fps p5 >= 30",
+      "value": {
+        "median": 59.9,
+        "p5": 59.9,
+        "n": 884
+      },
+      "pass": true
+    },
+    {
+      "phase": "slow-forward-1",
+      "budget": "peak live decoded bytes <= cache limit + 2 frames of 9x16/720",
+      "value": {
+        "peak": 158515200,
+        "bound": 164659200
+      },
+      "pass": true
+    },
+    {
+      "phase": "slow-forward-2",
+      "budget": "scrub fps p5 >= 30",
+      "value": {
+        "median": 59.9,
+        "p5": 59.9,
+        "n": 875
+      },
+      "pass": true
+    },
+    {
+      "phase": "slow-forward-2",
+      "budget": "peak live decoded bytes <= cache limit + 2 frames of 9x16/720",
+      "value": {
+        "peak": 158515200,
+        "bound": 164659200
+      },
+      "pass": true
+    },
+    {
+      "phase": "slow-forward-3",
+      "budget": "scrub fps p5 >= 30",
+      "value": {
+        "median": 60.2,
+        "p5": 59.9,
+        "n": 881
+      },
+      "pass": true
+    },
+    {
+      "phase": "slow-forward-3",
+      "budget": "peak live decoded bytes <= cache limit + 2 frames of 9x16/720",
+      "value": {
+        "peak": 158515200,
+        "bound": 164659200
+      },
+      "pass": true
+    },
+    {
+      "phase": "fast-back-and-forth-1",
+      "budget": "scrub fps p5 >= 30",
+      "value": {
+        "median": 59.9,
+        "p5": 59.9,
+        "n": 120
+      },
+      "pass": true
+    },
+    {
+      "phase": "fast-back-and-forth-1",
+      "budget": "peak live decoded bytes <= cache limit + 2 frames of 9x16/720",
+      "value": {
+        "peak": 158515200,
+        "bound": 164659200
+      },
+      "pass": true
+    },
+    {
+      "phase": "fast-back-and-forth-2",
+      "budget": "scrub fps p5 >= 30",
+      "value": {
+        "median": 59.9,
+        "p5": 59.9,
+        "n": 120
+      },
+      "pass": true
+    },
+    {
+      "phase": "fast-back-and-forth-2",
+      "budget": "peak live decoded bytes <= cache limit + 2 frames of 9x16/720",
+      "value": {
+        "peak": 158515200,
+        "bound": 164659200
+      },
+      "pass": true
+    },
+    {
+      "phase": "fast-back-and-forth-3",
+      "budget": "scrub fps p5 >= 30",
+      "value": {
+        "median": 59.9,
+        "p5": 59.9,
+        "n": 121
+      },
+      "pass": true
+    },
+    {
+      "phase": "fast-back-and-forth-3",
+      "budget": "peak live decoded bytes <= cache limit + 2 frames of 9x16/720",
+      "value": {
+        "peak": 158515200,
+        "bound": 164659200
+      },
+      "pass": true
+    },
+    {
+      "phase": "rotate-to-landscape",
+      "budget": "peak live decoded bytes <= cache limit + 2 frames of 16x9/1080",
+      "value": {
+        "peak": 154828800,
+        "bound": 173875200
+      },
+      "pass": true
+    },
+    {
+      "phase": "landscape-slow-forward",
+      "budget": "scrub fps p5 >= 30",
+      "value": {
+        "median": 59.9,
+        "p5": 59.9,
+        "n": 695
+      },
+      "pass": true
+    },
+    {
+      "phase": "landscape-slow-forward",
+      "budget": "peak live decoded bytes <= cache limit + 2 frames of 16x9/1080",
+      "value": {
+        "peak": 157593600,
+        "bound": 173875200
+      },
+      "pass": true
+    },
+    {
+      "phase": "landscape-fast-back-and-forth",
+      "budget": "scrub fps p5 >= 30",
+      "value": {
+        "median": 60.2,
+        "p5": 59.5,
+        "n": 144
+      },
+      "pass": true
+    },
+    {
+      "phase": "landscape-fast-back-and-forth",
+      "budget": "peak live decoded bytes <= cache limit + 2 frames of 16x9/1080",
+      "value": {
+        "peak": 157593600,
+        "bound": 173875200
+      },
+      "pass": true
+    },
+    {
+      "phase": "rotate-to-portrait",
+      "budget": "peak live decoded bytes <= cache limit + 2 frames of 9x16/720",
+      "value": {
+        "peak": 157593600,
+        "bound": 164659200
+      },
+      "pass": true
+    },
+    {
+      "phase": "idle",
+      "budget": "peak live decoded bytes <= cache limit + 2 frames of 9x16/720",
+      "value": {
+        "peak": 143769600,
+        "bound": 164659200
+      },
+      "pass": true
+    }
+  ],
+  "visualChecks": {
+    "blankFrames": "32x32 CSS-px compositor screenshot (CDP) at the viewport centre after every phase: channel range > 4 (0 = uniform/blank). No canvas readback (it demotes the canvas to software on Android). The player never clears the canvas; a not-yet-decoded frame keeps the last one (counted as missedTicks)",
+    "wrongVariantAfterRotation": "drawnVariant after each rotation vs expected aspect, drawnFrame vs the frame before rotating",
+    "chunkBoundaryStutter": "worst target->drawn latency at frames 16/32/48/64 vs 3x the median of all frames' worst latency (and > median + 50 ms)",
+    "tearing": "not detectable from the page; see the screen recording analysis (node spike/device/analyze-video.mjs <this JSON> -> <this name>.video.json)"
+  },
+  "finishedAt": "2026-11-23T12:34:56.536Z"
+}

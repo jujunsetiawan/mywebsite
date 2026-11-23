@@ -30,7 +30,7 @@ export class DriverError extends Error {
 // ------------------------------------------------------------------ CLI
 
 export function parseArgs(argv) {
-  const o = { desktop: false, device: process.env.ADB_SERIAL || DEFAULTS.device, url: null, port: DEFAULTS.port, label: null, out: null, idleMs: 10_000, reps: 3 };
+  const o = { desktop: false, record: false, device: process.env.ADB_SERIAL || DEFAULTS.device, url: null, port: DEFAULTS.port, label: null, out: null, idleMs: 10_000, reps: 3 };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     const next = () => {
@@ -39,6 +39,7 @@ export function parseArgs(argv) {
       return v;
     };
     if (a === "--desktop") o.desktop = true;
+    else if (a === "--record") o.record = true;
     else if (a === "--device") o.device = next();
     else if (a === "--url") o.url = next();
     else if (a === "--port") o.port = Number(next());
@@ -53,6 +54,7 @@ export function parseArgs(argv) {
   if (!Number.isInteger(o.port) || o.port <= 0) throw new DriverError("--port must be a positive integer", 1);
   if (!Number.isInteger(o.reps) || o.reps <= 0) throw new DriverError("--reps must be a positive integer", 1);
   if (!Number.isFinite(o.idleMs) || o.idleMs < 0) throw new DriverError("--idle-ms must be a non-negative number", 1);
+  if (o.record && o.desktop) throw new DriverError("--record is Android only (adb screenrecord)", 1);
   return o;
 }
 
@@ -193,21 +195,34 @@ export function sameRotation(now, saved) {
 /**
  * Run `body` with rotation settings saved and the port forward set up;
  * whatever happens, restore rotation and remove the forward. The restore
- * outcome is returned (and verified against the saved values).
+ * outcome is returned (and verified against the saved values). `body(saved,
+ * addCleanup)` may register extra cleanup steps (e.g. stop the screen
+ * recording and delete it from the phone); they run first, newest first,
+ * and their errors land in `cleanup.errors`.
  */
 export async function withDeviceSession(adb, port, socket, body) {
   const saved = await readRotation(adb);
-  const cleanup = { rotationRestored: false, forwardRemoved: false, restoredRotation: null, errors: [] };
+  const cleanup = { rotationRestored: false, forwardRemoved: false, restoredRotation: null, hooksRun: 0, errors: [] };
+  const hooks = [];
+  const addCleanup = (name, fn) => hooks.push({ name, fn });
   let forwarded = false;
   try {
     await adb.cmd(["forward", `tcp:${port}`, `localabstract:${socket}`], `forward tcp:${port}`);
     forwarded = true;
-    return { result: await body(saved), saved, cleanup };
+    return { result: await body(saved, addCleanup), saved, cleanup };
   } catch (e) {
     e.cleanup = cleanup;
     e.savedRotation = saved;
     throw e;
   } finally {
+    for (const h of hooks.reverse()) {
+      try {
+        await h.fn();
+        cleanup.hooksRun++;
+      } catch (e) {
+        cleanup.errors.push(`${h.name} failed: ${e.message}`);
+      }
+    }
     try {
       await restoreRotation(adb, saved);
       const now = await readRotation(adb);
@@ -265,6 +280,84 @@ export async function wakeDevice(adb) {
   if (/(isKeyguardShowing|mShowingLockscreen|KeyguardShowing)=true/.test(w)) throw new DriverError(`device ${adb.serial} is locked — unlock the screen and re-run`, 3);
 }
 
+// ------------------------------------------------------------------ Screen recording (--record)
+
+export const RECORD_DEFAULTS = { remotePath: "/sdcard/spike-run.mp4", bitRate: 20_000_000, timeLimitS: 180 };
+
+/**
+ * `adb shell screenrecord` running in the background. Wall-clock marks are
+ * ms since `start()` (spawn time); the video's own clock is aligned to them
+ * later with the sync flips (see video.mjs findSyncOffset). `spawnFn` is
+ * injectable for tests (same signature as child_process.spawn).
+ */
+export function createScreenRecorder(adb, { spawnFn = spawn, now = () => Date.now(), ...o } = {}) {
+  const cfg = { ...RECORD_DEFAULTS, ...o };
+  let proc = null;
+  let exited = null;
+  let startWall = null;
+  let state = "idle"; // idle | recording | stopped | removed
+  const rec = {
+    cfg,
+    get state() {
+      return state;
+    },
+    get startWall() {
+      return startWall;
+    },
+    /** ms since the recording was started (wall clock). */
+    ms: () => (startWall == null ? null : now() - startWall),
+    async start() {
+      if (state !== "idle") throw new DriverError(`screen recorder already ${state}`, 5);
+      await adb.shell(`rm -f ${cfg.remotePath}`);
+      proc = spawnFn("adb", ["-s", adb.serial, "shell", `screenrecord --bit-rate ${cfg.bitRate} --time-limit ${cfg.timeLimitS} ${cfg.remotePath}`], { stdio: "ignore", windowsHide: true });
+      exited = new Promise((resolveExit) => {
+        proc.on("exit", () => resolveExit());
+        proc.on("error", () => resolveExit());
+      });
+      startWall = now();
+      state = "recording";
+      // screenrecord needs a moment to create the encoder; make sure it is alive.
+      for (let i = 0; i < 20; i++) {
+        await adb.sleep(100);
+        if ((await adb.shell("pidof screenrecord || true")).trim()) return startWall;
+      }
+      throw new DriverError(`screenrecord did not start on ${adb.serial}`, 5);
+    },
+    /** SIGINT lets screenrecord finalize the MP4; wait until the process is gone. */
+    async stop({ timeoutMs = 15_000 } = {}) {
+      if (state !== "recording") return;
+      await adb.shell("pkill -INT screenrecord || true");
+      const t0 = now();
+      while (now() - t0 < timeoutMs) {
+        if (!(await adb.shell("pidof screenrecord || true")).trim()) break;
+        await adb.sleep(200);
+      }
+      if ((await adb.shell("pidof screenrecord || true")).trim()) throw new DriverError(`screenrecord did not exit within ${timeoutMs} ms`, 5);
+      await Promise.race([exited, adb.sleep(3000)]);
+      await adb.sleep(500); // file close / media scanner
+      state = "stopped";
+    },
+    async pull(localPath) {
+      await adb.cmd(["pull", cfg.remotePath, localPath], `pull ${cfg.remotePath}`);
+    },
+    async remove() {
+      await adb.shell(`rm -f ${cfg.remotePath}`);
+      state = "removed";
+    },
+    /** Cleanup path: stop if still recording, then delete from the phone. Idempotent. */
+    async abort() {
+      if (state === "idle" || state === "removed") return;
+      try {
+        await rec.stop();
+      } finally {
+        if (proc && proc.exitCode === null) proc.kill();
+        await rec.remove();
+      }
+    },
+  };
+  return rec;
+}
+
 // ------------------------------------------------------------------ Result maths
 
 export const pct = (n) => (n == null || !Number.isFinite(n) ? null : n);
@@ -302,6 +395,7 @@ export function summarizePhase(name, snap, prev, extra = {}) {
     latencySamples: snap.latencySamples,
     latencySuperseded: snap.latencySuperseded,
     missedTicks: snap.missedTicks,
+    drawnFrames: d("drawnCount"),
     liveDecodedBytes: snap.liveDecodedBytes,
     peakLiveDecodedBytes: snap.peakLiveDecodedBytes,
     peakLiveDecodedBitmaps: snap.peakLiveDecodedBitmaps,

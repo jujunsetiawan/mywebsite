@@ -22,6 +22,8 @@ spike/**/node_modules/
 spike/**/out/
 spike/player/public/media/
 spike/player/dist/
+# Story 0.5 screen recordings and exported frames
+spike/device/out/
 
 # Blender backups
 *.blend1

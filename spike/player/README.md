@@ -171,6 +171,44 @@ npm run test:device                           # node:test for the driver helpers
   usage, `2` preview server unreachable, `3` device unreachable / locked,
   `4` Chrome DevTools not reachable, `5` run or cleanup failed, `130`
   interrupted.
+- **Screen recording (`--record`, Android only):**
+  `npm run device -- --record --url http://<pc-ip>:4173/` (no `?hud=1`, so the
+  HUD text does not cause screen changes; the `__spike` hook works without it).
+  - `adb shell screenrecord --bit-rate 20000000 --time-limit 180
+    /sdcard/spike-run.mp4` runs from just before the cold load to the end of
+    the idle phase.
+  - Right after it starts, the blank tab flips black, then white: these are
+    the sync marks.
+  - Phase and gesture start/end times are stored as ms since the recording
+    started (`recording` in the results JSON).
+  - The MP4 is pulled to `spike/device/out/<label>-<timestamp>.mp4`
+    (git-ignored) and deleted from the phone, also on errors and Ctrl+C.
+    Recording costs the phone some performance, so use plain runs for the
+    fps budgets.
+- **Video analysis:**
+  `npm run analyze-video -- ../results/<run>.json` (or
+  `node spike/device/analyze-video.mjs spike/results/<run>.json`). It needs
+  ffmpeg / ffprobe (PATH or the winget Links folder; `FFMPEG` / `FFPROBE`
+  override).
+  - Decodes every recorded frame to 120 px grayscale, aligns video time with
+    the sync flips, and reports per phase:
+    - visible changes (content-area mean abs diff > 0.5);
+    - the new-frame rate and the longest interval without visible change
+      inside active-scroll spans (first..last change per gesture);
+    - gaps > 50 ms;
+    - tear candidates: a still band ≥ 15 % of the content height while the
+      rest changes strongly;
+    - confirmed tears: a candidate whose still band is textured and catches up
+      in the next visible change (flat or static content is rejected).
+
+    Look at the exported candidates before calling anything a tear.
+  - Landscape phases: screenrecord keeps the portrait frame, so the content is
+    located as the non-black box.
+  - Writes `spike/results/<run>.video.json`, plus sample PNGs and every tear
+    candidate (previous / frame / amplified diff) to
+    `spike/device/out/<run>/`.
+  - Helpers: `../device/video.mjs`, tested on synthetic frames in
+    `../device/video.test.mjs`.
 - **Do not read the canvas back on Android:** two `getImageData` calls
   switch Chrome's 2D canvas to software rendering (every new frame then
   costs ~66 ms), and a clipped CDP screenshot makes `window.scrollTo` a

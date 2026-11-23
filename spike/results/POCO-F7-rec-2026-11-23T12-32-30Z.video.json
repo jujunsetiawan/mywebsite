@@ -1,0 +1,1143 @@
+{
+  "schema": 1,
+  "story": "0.5",
+  "tool": "spike/device/analyze-video.mjs",
+  "run": "spike/results/POCO-F7-rec-2026-11-23T12-32-30Z.json",
+  "video": {
+    "file": "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z.mp4",
+    "codec": "h264",
+    "width": 1280,
+    "height": 2772,
+    "frames": 4116,
+    "durationS": 115.457,
+    "bitRate": 20000000
+  },
+  "analysis": {
+    "grayWidth": 120,
+    "grayHeight": 260,
+    "cellPx": 5,
+    "noiseMad": 0.5,
+    "portraitCrop": {
+      "top": 0.11,
+      "bottom": 0.03
+    },
+    "landscapeTrim": 0.2,
+    "tear": {
+      "staticMax": 0.5,
+      "strongMin": 2,
+      "strongShare": 0.8,
+      "minFrac": 0.15
+    },
+    "tearConfirm": {
+      "minTexture": 4,
+      "catchUpMin": 2
+    },
+    "activeSpan": "per gesture: first..last visible change between this gesture's start and the next gesture's start (or the phase end)",
+    "newFrameRate": "intervals between visible changes per second of active span time"
+  },
+  "sync": {
+    "offsetS": -0.6091,
+    "events": [
+      0.9337,
+      1.703089
+    ],
+    "residualMs": 18
+  },
+  "phases": [
+    {
+      "phase": "cold-load",
+      "kind": "load",
+      "orientation": "portrait",
+      "videoStartS": 2.581,
+      "videoEndS": 3.497,
+      "recordedFrames": 33,
+      "content": {
+        "rect": {
+          "x0": 0,
+          "x1": 24,
+          "y0": 5,
+          "y1": 51
+        },
+        "axis": "y",
+        "how": "portrait: full width, top 11 % / bottom 3 % cropped (status bar, toolbar, gesture bar)"
+      },
+      "visibleChanges": 2,
+      "subThresholdChanges": 3,
+      "contentMadP50": 102.08,
+      "tearCandidates": 0,
+      "tearsConfirmed": 0,
+      "samples": [
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/cold-load-sample1-t2.730.png",
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/cold-load-sample2-t3.429.png"
+      ]
+    },
+    {
+      "phase": "slow-forward-1",
+      "kind": "scrub",
+      "orientation": "portrait",
+      "videoStartS": 5.539,
+      "videoEndS": 22.52,
+      "recordedFrames": 851,
+      "content": {
+        "rect": {
+          "x0": 0,
+          "x1": 24,
+          "y0": 5,
+          "y1": 51
+        },
+        "axis": "y",
+        "how": "portrait: full width, top 11 % / bottom 3 % cropped (status bar, toolbar, gesture bar)"
+      },
+      "visibleChanges": 66,
+      "subThresholdChanges": 106,
+      "contentMadP50": 5.1,
+      "gestures": 9,
+      "spans": 7,
+      "activeSeconds": 8.873,
+      "newFrameRate": 6.6,
+      "longestNoChangeMs": 516.1,
+      "longestNoChangeAtS": 6.493,
+      "medianGapMs": 166.6,
+      "gapsOver50ms": 48,
+      "gaps": 59,
+      "hud": {
+        "scrubFpsMedian": 59.9,
+        "scrubFpsP5": 59.9,
+        "scrubSamples": 884,
+        "drawnFrames": 71,
+        "latencySuperseded": 0,
+        "missedTicks": 0
+      },
+      "visibleChangesPerPlayerDraw": 0.94,
+      "tearCandidates": 2,
+      "tearsConfirmed": 0,
+      "samples": [
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/slow-forward-1-sample1-t6.310.png",
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/slow-forward-1-sample2-t11.539.png",
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/slow-forward-1-sample3-t18.833.png"
+      ]
+    },
+    {
+      "phase": "slow-forward-2",
+      "kind": "scrub",
+      "orientation": "portrait",
+      "videoStartS": 24.287,
+      "videoEndS": 41.19,
+      "recordedFrames": 844,
+      "content": {
+        "rect": {
+          "x0": 0,
+          "x1": 24,
+          "y0": 5,
+          "y1": 51
+        },
+        "axis": "y",
+        "how": "portrait: full width, top 11 % / bottom 3 % cropped (status bar, toolbar, gesture bar)"
+      },
+      "visibleChanges": 53,
+      "subThresholdChanges": 112,
+      "contentMadP50": 2.14,
+      "gestures": 9,
+      "spans": 7,
+      "activeSeconds": 7.842,
+      "newFrameRate": 5.9,
+      "longestNoChangeMs": 185.3,
+      "longestNoChangeAtS": 27.39,
+      "medianGapMs": 167,
+      "gapsOver50ms": 46,
+      "gaps": 46,
+      "hud": {
+        "scrubFpsMedian": 59.9,
+        "scrubFpsP5": 59.9,
+        "scrubSamples": 875,
+        "drawnFrames": 72,
+        "latencySuperseded": 0,
+        "missedTicks": 0
+      },
+      "visibleChangesPerPlayerDraw": 0.74,
+      "tearCandidates": 2,
+      "tearsConfirmed": 0,
+      "samples": [
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/slow-forward-2-sample1-t25.510.png",
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/slow-forward-2-sample2-t31.304.png",
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/slow-forward-2-sample3-t36.999.png"
+      ]
+    },
+    {
+      "phase": "slow-forward-3",
+      "kind": "scrub",
+      "orientation": "portrait",
+      "videoStartS": 43.107,
+      "videoEndS": 60.74,
+      "recordedFrames": 846,
+      "content": {
+        "rect": {
+          "x0": 0,
+          "x1": 24,
+          "y0": 5,
+          "y1": 51
+        },
+        "axis": "y",
+        "how": "portrait: full width, top 11 % / bottom 3 % cropped (status bar, toolbar, gesture bar)"
+      },
+      "visibleChanges": 53,
+      "subThresholdChanges": 118,
+      "contentMadP50": 2.14,
+      "gestures": 9,
+      "spans": 7,
+      "activeSeconds": 7.877,
+      "newFrameRate": 5.8,
+      "longestNoChangeMs": 185.6,
+      "longestNoChangeAtS": 53.581,
+      "medianGapMs": 167.2,
+      "gapsOver50ms": 46,
+      "gaps": 46,
+      "hud": {
+        "scrubFpsMedian": 60.2,
+        "scrubFpsP5": 59.9,
+        "scrubSamples": 881,
+        "drawnFrames": 72,
+        "latencySuperseded": 0,
+        "missedTicks": 0
+      },
+      "visibleChangesPerPlayerDraw": 0.74,
+      "tearCandidates": 2,
+      "tearsConfirmed": 0,
+      "samples": [
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/slow-forward-3-sample1-t44.358.png",
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/slow-forward-3-sample2-t50.386.png",
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/slow-forward-3-sample3-t56.315.png"
+      ]
+    },
+    {
+      "phase": "fast-back-and-forth-1",
+      "kind": "scrub",
+      "orientation": "portrait",
+      "videoStartS": 62.642,
+      "videoEndS": 65.123,
+      "recordedFrames": 132,
+      "content": {
+        "rect": {
+          "x0": 0,
+          "x1": 24,
+          "y0": 5,
+          "y1": 51
+        },
+        "axis": "y",
+        "how": "portrait: full width, top 11 % / bottom 3 % cropped (status bar, toolbar, gesture bar)"
+      },
+      "visibleChanges": 112,
+      "subThresholdChanges": 17,
+      "contentMadP50": 3.37,
+      "gestures": 5,
+      "spans": 5,
+      "activeSeconds": 2.085,
+      "newFrameRate": 51.3,
+      "longestNoChangeMs": 215.7,
+      "longestNoChangeAtS": 63.908,
+      "medianGapMs": 16.6,
+      "gapsOver50ms": 2,
+      "gaps": 107,
+      "hud": {
+        "scrubFpsMedian": 59.9,
+        "scrubFpsP5": 59.9,
+        "scrubSamples": 120,
+        "drawnFrames": 78,
+        "latencySuperseded": 7,
+        "missedTicks": 10
+      },
+      "visibleChangesPerPlayerDraw": 1.44,
+      "tearCandidates": 4,
+      "tearsConfirmed": 1,
+      "samples": [
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/fast-back-and-forth-1-sample1-t62.875.png",
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/fast-back-and-forth-1-sample2-t63.841.png",
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/fast-back-and-forth-1-sample3-t65.076.png"
+      ]
+    },
+    {
+      "phase": "fast-back-and-forth-2",
+      "kind": "scrub",
+      "orientation": "portrait",
+      "videoStartS": 67.394,
+      "videoEndS": 69.832,
+      "recordedFrames": 136,
+      "content": {
+        "rect": {
+          "x0": 0,
+          "x1": 24,
+          "y0": 5,
+          "y1": 51
+        },
+        "axis": "y",
+        "how": "portrait: full width, top 11 % / bottom 3 % cropped (status bar, toolbar, gesture bar)"
+      },
+      "visibleChanges": 112,
+      "subThresholdChanges": 13,
+      "contentMadP50": 3.56,
+      "gestures": 5,
+      "spans": 5,
+      "activeSeconds": 2.091,
+      "newFrameRate": 51.2,
+      "longestNoChangeMs": 216.9,
+      "longestNoChangeAtS": 68.636,
+      "medianGapMs": 16.7,
+      "gapsOver50ms": 2,
+      "gaps": 107,
+      "hud": {
+        "scrubFpsMedian": 59.9,
+        "scrubFpsP5": 59.9,
+        "scrubSamples": 120,
+        "drawnFrames": 77,
+        "latencySuperseded": 7,
+        "missedTicks": 10
+      },
+      "visibleChangesPerPlayerDraw": 1.45,
+      "tearCandidates": 1,
+      "tearsConfirmed": 0,
+      "samples": [
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/fast-back-and-forth-2-sample1-t67.603.png",
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/fast-back-and-forth-2-sample2-t68.622.png",
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/fast-back-and-forth-2-sample3-t69.820.png"
+      ]
+    },
+    {
+      "phase": "fast-back-and-forth-3",
+      "kind": "scrub",
+      "orientation": "portrait",
+      "videoStartS": 71.745,
+      "videoEndS": 74.175,
+      "recordedFrames": 132,
+      "content": {
+        "rect": {
+          "x0": 0,
+          "x1": 24,
+          "y0": 5,
+          "y1": 51
+        },
+        "axis": "y",
+        "how": "portrait: full width, top 11 % / bottom 3 % cropped (status bar, toolbar, gesture bar)"
+      },
+      "visibleChanges": 111,
+      "subThresholdChanges": 13,
+      "contentMadP50": 3.56,
+      "gestures": 5,
+      "spans": 5,
+      "activeSeconds": 2.111,
+      "newFrameRate": 50.2,
+      "longestNoChangeMs": 212.1,
+      "longestNoChangeAtS": 73.004,
+      "medianGapMs": 16.6,
+      "gapsOver50ms": 3,
+      "gaps": 106,
+      "hud": {
+        "scrubFpsMedian": 59.9,
+        "scrubFpsP5": 59.9,
+        "scrubSamples": 121,
+        "drawnFrames": 75,
+        "latencySuperseded": 6,
+        "missedTicks": 10
+      },
+      "visibleChangesPerPlayerDraw": 1.48,
+      "tearCandidates": 1,
+      "tearsConfirmed": 1,
+      "samples": [
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/fast-back-and-forth-3-sample1-t71.966.png",
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/fast-back-and-forth-3-sample2-t72.934.png",
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/fast-back-and-forth-3-sample3-t74.164.png"
+      ]
+    },
+    {
+      "phase": "rotate-to-landscape",
+      "kind": "rotation",
+      "orientation": "transition",
+      "videoStartS": 76.562,
+      "videoEndS": 78.181,
+      "recordedFrames": 97,
+      "content": {
+        "rect": {
+          "x0": 0,
+          "x1": 24,
+          "y0": 0,
+          "y1": 52
+        },
+        "axis": "y",
+        "how": "rotation animation: full frame, no tear check"
+      },
+      "visibleChanges": 24,
+      "subThresholdChanges": 29,
+      "contentMadP50": 1.77,
+      "samples": [
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/rotate-to-landscape-sample1-t77.180.png",
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/rotate-to-landscape-sample2-t77.281.png",
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/rotate-to-landscape-sample3-t78.102.png"
+      ]
+    },
+    {
+      "phase": "landscape-slow-forward",
+      "kind": "scrub",
+      "orientation": "landscape",
+      "videoStartS": 80.199,
+      "videoEndS": 95.643,
+      "recordedFrames": 669,
+      "content": {
+        "rect": {
+          "x0": 1,
+          "x1": 24,
+          "y0": 22,
+          "y1": 30
+        },
+        "axis": "y",
+        "letterboxed": true,
+        "box": {
+          "x0": 1,
+          "x1": 24,
+          "y0": 20,
+          "y1": 32
+        },
+        "how": "landscape: non-black content box (upright, letterboxed), 20 % trimmed at both ends of its vertical axis"
+      },
+      "visibleChanges": 62,
+      "subThresholdChanges": 85,
+      "contentMadP50": 5.39,
+      "gestures": 8,
+      "spans": 6,
+      "activeSeconds": 6.177,
+      "newFrameRate": 9.1,
+      "longestNoChangeMs": 342.4,
+      "longestNoChangeAtS": 84.253,
+      "medianGapMs": 133,
+      "gapsOver50ms": 42,
+      "gaps": 56,
+      "hud": {
+        "scrubFpsMedian": 59.9,
+        "scrubFpsP5": 59.9,
+        "scrubSamples": 695,
+        "drawnFrames": 76,
+        "latencySuperseded": 0,
+        "missedTicks": 0
+      },
+      "visibleChangesPerPlayerDraw": 0.82,
+      "tearCandidates": 5,
+      "tearsConfirmed": 0,
+      "samples": [
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/landscape-slow-forward-sample1-t81.566.png",
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/landscape-slow-forward-sample2-t84.827.png",
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/landscape-slow-forward-sample3-t90.556.png"
+      ]
+    },
+    {
+      "phase": "landscape-fast-back-and-forth",
+      "kind": "scrub",
+      "orientation": "landscape",
+      "videoStartS": 98.813,
+      "videoEndS": 101.963,
+      "recordedFrames": 164,
+      "content": {
+        "rect": {
+          "x0": 1,
+          "x1": 24,
+          "y0": 22,
+          "y1": 30
+        },
+        "axis": "y",
+        "letterboxed": true,
+        "box": {
+          "x0": 1,
+          "x1": 24,
+          "y0": 20,
+          "y1": 32
+        },
+        "how": "landscape: non-black content box (upright, letterboxed), 20 % trimmed at both ends of its vertical axis"
+      },
+      "visibleChanges": 58,
+      "subThresholdChanges": 70,
+      "contentMadP50": 4.8,
+      "gestures": 6,
+      "spans": 6,
+      "activeSeconds": 1.698,
+      "newFrameRate": 30.6,
+      "longestNoChangeMs": 199.6,
+      "longestNoChangeAtS": 99.398,
+      "medianGapMs": 16.8,
+      "gapsOver50ms": 7,
+      "gaps": 52,
+      "hud": {
+        "scrubFpsMedian": 60.2,
+        "scrubFpsP5": 59.5,
+        "scrubSamples": 144,
+        "drawnFrames": 64,
+        "latencySuperseded": 45,
+        "missedTicks": 53
+      },
+      "visibleChangesPerPlayerDraw": 0.91,
+      "tearCandidates": 6,
+      "tearsConfirmed": 1,
+      "samples": [
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/landscape-fast-back-and-forth-sample1-t99.002.png",
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/landscape-fast-back-and-forth-sample2-t100.430.png",
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/landscape-fast-back-and-forth-sample3-t101.729.png"
+      ]
+    },
+    {
+      "phase": "rotate-to-portrait",
+      "kind": "rotation",
+      "orientation": "transition",
+      "videoStartS": 103.525,
+      "videoEndS": 104.186,
+      "recordedFrames": 38,
+      "content": {
+        "rect": {
+          "x0": 0,
+          "x1": 24,
+          "y0": 0,
+          "y1": 52
+        },
+        "axis": "y",
+        "how": "rotation animation: full frame, no tear check"
+      },
+      "visibleChanges": 32,
+      "subThresholdChanges": 1,
+      "contentMadP50": 5.63,
+      "samples": [
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/rotate-to-portrait-sample1-t103.912.png",
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/rotate-to-portrait-sample2-t104.045.png",
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/rotate-to-portrait-sample3-t104.184.png"
+      ]
+    },
+    {
+      "phase": "idle",
+      "kind": "idle",
+      "orientation": "portrait",
+      "videoStartS": 105.279,
+      "videoEndS": 115.293,
+      "recordedFrames": 5,
+      "content": {
+        "rect": {
+          "x0": 0,
+          "x1": 24,
+          "y0": 5,
+          "y1": 51
+        },
+        "axis": "y",
+        "how": "portrait: full width, top 11 % / bottom 3 % cropped (status bar, toolbar, gesture bar)"
+      },
+      "visibleChanges": 0,
+      "subThresholdChanges": 0,
+      "contentMadP50": null,
+      "tearCandidates": 0,
+      "tearsConfirmed": 0,
+      "samples": [
+        "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/idle-sample1-t105.367.png"
+      ]
+    }
+  ],
+  "tearCandidates": {
+    "count": 23,
+    "confirmed": 3,
+    "exported": 23,
+    "list": [
+      {
+        "phase": "landscape-fast-back-and-forth",
+        "frame": 3976,
+        "t": 101.6126,
+        "prevT": 101.5972,
+        "contentMad": 0.95,
+        "tear": true,
+        "stillBand": {
+          "start": 0,
+          "end": 5,
+          "frac": 0.625
+        },
+        "othersMedian": 2.1,
+        "strongShare": 1,
+        "confirmation": {
+          "confirmed": true,
+          "texture": 8.05,
+          "catchUp": 41.19,
+          "reason": "textured still band that catches up in the next frame"
+        },
+        "exports": [
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear01-landscape-fast-back-and-forth-t101.613-a-prev.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear01-landscape-fast-back-and-forth-t101.613-b-frame.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear01-landscape-fast-back-and-forth-t101.613-c-diff.png"
+        ]
+      },
+      {
+        "phase": "landscape-fast-back-and-forth",
+        "frame": 3869,
+        "t": 99.6473,
+        "prevT": 99.6314,
+        "contentMad": 2.12,
+        "tear": true,
+        "stillBand": {
+          "start": 0,
+          "end": 4,
+          "frac": 0.5
+        },
+        "othersMedian": 4.72,
+        "strongShare": 1,
+        "confirmation": {
+          "confirmed": false,
+          "texture": 8.08,
+          "catchUp": 0.15,
+          "reason": "still band stays still in the next frame (static content)"
+        },
+        "exports": [
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear02-landscape-fast-back-and-forth-t99.647-a-prev.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear02-landscape-fast-back-and-forth-t99.647-b-frame.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear02-landscape-fast-back-and-forth-t99.647-c-diff.png"
+        ]
+      },
+      {
+        "phase": "landscape-fast-back-and-forth",
+        "frame": 3975,
+        "t": 101.5972,
+        "prevT": 101.5803,
+        "contentMad": 1.96,
+        "tear": true,
+        "stillBand": {
+          "start": 0,
+          "end": 4,
+          "frac": 0.5
+        },
+        "othersMedian": 4.11,
+        "strongShare": 1,
+        "confirmation": {
+          "confirmed": false,
+          "texture": 8,
+          "catchUp": 0.14,
+          "reason": "still band stays still in the next frame (static content)"
+        },
+        "exports": [
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear03-landscape-fast-back-and-forth-t101.597-a-prev.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear03-landscape-fast-back-and-forth-t101.597-b-frame.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear03-landscape-fast-back-and-forth-t101.597-c-diff.png"
+        ]
+      },
+      {
+        "phase": "landscape-slow-forward",
+        "frame": 3467,
+        "t": 87.0771,
+        "prevT": 87.0606,
+        "contentMad": 1.45,
+        "tear": true,
+        "stillBand": {
+          "start": 0,
+          "end": 4,
+          "frac": 0.5
+        },
+        "othersMedian": 2.79,
+        "strongShare": 1,
+        "confirmation": {
+          "confirmed": false,
+          "texture": 4.97,
+          "catchUp": null,
+          "reason": "no visible change within 100 ms after it"
+        },
+        "exports": [
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear04-landscape-slow-forward-t87.077-a-prev.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear04-landscape-slow-forward-t87.077-b-frame.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear04-landscape-slow-forward-t87.077-c-diff.png"
+        ]
+      },
+      {
+        "phase": "landscape-slow-forward",
+        "frame": 3451,
+        "t": 86.8108,
+        "prevT": 86.7946,
+        "contentMad": 2.42,
+        "tear": true,
+        "stillBand": {
+          "start": 0,
+          "end": 3,
+          "frac": 0.375
+        },
+        "othersMedian": 3.68,
+        "strongShare": 0.8,
+        "confirmation": {
+          "confirmed": false,
+          "texture": 3.28,
+          "catchUp": null,
+          "reason": "still band is flat (no texture to show motion)"
+        },
+        "exports": [
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear05-landscape-slow-forward-t86.811-a-prev.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear05-landscape-slow-forward-t86.811-b-frame.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear05-landscape-slow-forward-t86.811-c-diff.png"
+        ]
+      },
+      {
+        "phase": "landscape-slow-forward",
+        "frame": 3459,
+        "t": 86.9427,
+        "prevT": 86.9279,
+        "contentMad": 1.89,
+        "tear": true,
+        "stillBand": {
+          "start": 0,
+          "end": 3,
+          "frac": 0.375
+        },
+        "othersMedian": 2.93,
+        "strongShare": 0.8,
+        "confirmation": {
+          "confirmed": false,
+          "texture": 3.23,
+          "catchUp": null,
+          "reason": "still band is flat (no texture to show motion)"
+        },
+        "exports": [
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear06-landscape-slow-forward-t86.943-a-prev.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear06-landscape-slow-forward-t86.943-b-frame.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear06-landscape-slow-forward-t86.943-c-diff.png"
+        ]
+      },
+      {
+        "phase": "landscape-fast-back-and-forth",
+        "frame": 3915,
+        "t": 100.5627,
+        "prevT": 100.5462,
+        "contentMad": 2.25,
+        "tear": true,
+        "stillBand": {
+          "start": 0,
+          "end": 3,
+          "frac": 0.375
+        },
+        "othersMedian": 2.91,
+        "strongShare": 0.8,
+        "confirmation": {
+          "confirmed": false,
+          "texture": 3.42,
+          "catchUp": null,
+          "reason": "still band is flat (no texture to show motion)"
+        },
+        "exports": [
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear07-landscape-fast-back-and-forth-t100.563-a-prev.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear07-landscape-fast-back-and-forth-t100.563-b-frame.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear07-landscape-fast-back-and-forth-t100.563-c-diff.png"
+        ]
+      },
+      {
+        "phase": "landscape-fast-back-and-forth",
+        "frame": 3854,
+        "t": 99.3985,
+        "prevT": 99.3479,
+        "contentMad": 7.61,
+        "tear": true,
+        "stillBand": {
+          "start": 0,
+          "end": 2,
+          "frac": 0.25
+        },
+        "othersMedian": 10.43,
+        "strongShare": 0.83,
+        "confirmation": {
+          "confirmed": false,
+          "texture": 12.92,
+          "catchUp": null,
+          "reason": "no visible change within 100 ms after it"
+        },
+        "exports": [
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear08-landscape-fast-back-and-forth-t99.398-a-prev.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear08-landscape-fast-back-and-forth-t99.398-b-frame.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear08-landscape-fast-back-and-forth-t99.398-c-diff.png"
+        ]
+      },
+      {
+        "phase": "landscape-fast-back-and-forth",
+        "frame": 3959,
+        "t": 101.3307,
+        "prevT": 101.2793,
+        "contentMad": 7.34,
+        "tear": true,
+        "stillBand": {
+          "start": 0,
+          "end": 2,
+          "frac": 0.25
+        },
+        "othersMedian": 9.41,
+        "strongShare": 0.83,
+        "confirmation": {
+          "confirmed": false,
+          "texture": 12.91,
+          "catchUp": 0.15,
+          "reason": "still band stays still in the next frame (static content)"
+        },
+        "exports": [
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear09-landscape-fast-back-and-forth-t101.331-a-prev.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear09-landscape-fast-back-and-forth-t101.331-b-frame.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear09-landscape-fast-back-and-forth-t101.331-c-diff.png"
+        ]
+      },
+      {
+        "phase": "landscape-slow-forward",
+        "frame": 3435,
+        "t": 86.5448,
+        "prevT": 86.5285,
+        "contentMad": 3.81,
+        "tear": true,
+        "stillBand": {
+          "start": 0,
+          "end": 2,
+          "frac": 0.25
+        },
+        "othersMedian": 5.03,
+        "strongShare": 0.83,
+        "confirmation": {
+          "confirmed": false,
+          "texture": 2.33,
+          "catchUp": null,
+          "reason": "still band is flat (no texture to show motion)"
+        },
+        "exports": [
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear10-landscape-slow-forward-t86.545-a-prev.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear10-landscape-slow-forward-t86.545-b-frame.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear10-landscape-slow-forward-t86.545-c-diff.png"
+        ]
+      },
+      {
+        "phase": "landscape-slow-forward",
+        "frame": 3443,
+        "t": 86.6779,
+        "prevT": 86.6612,
+        "contentMad": 3.07,
+        "tear": true,
+        "stillBand": {
+          "start": 0,
+          "end": 2,
+          "frac": 0.25
+        },
+        "othersMedian": 3.98,
+        "strongShare": 0.83,
+        "confirmation": {
+          "confirmed": false,
+          "texture": 2.24,
+          "catchUp": null,
+          "reason": "still band is flat (no texture to show motion)"
+        },
+        "exports": [
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear11-landscape-slow-forward-t86.678-a-prev.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear11-landscape-slow-forward-t86.678-b-frame.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear11-landscape-slow-forward-t86.678-c-diff.png"
+        ]
+      },
+      {
+        "phase": "slow-forward-2",
+        "frame": 1172,
+        "t": 29.1724,
+        "prevT": 29.1564,
+        "contentMad": 8.99,
+        "tear": true,
+        "stillBand": {
+          "start": 33,
+          "end": 44,
+          "frac": 0.239
+        },
+        "othersMedian": 2.86,
+        "strongShare": 0.97,
+        "confirmation": {
+          "confirmed": false,
+          "texture": 0,
+          "catchUp": null,
+          "reason": "still band is flat (no texture to show motion)"
+        },
+        "exports": [
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear12-slow-forward-2-t29.172-a-prev.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear12-slow-forward-2-t29.172-b-frame.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear12-slow-forward-2-t29.172-c-diff.png"
+        ]
+      },
+      {
+        "phase": "slow-forward-1",
+        "frame": 332,
+        "t": 10.6063,
+        "prevT": 10.5898,
+        "contentMad": 8.99,
+        "tear": true,
+        "stillBand": {
+          "start": 33,
+          "end": 44,
+          "frac": 0.239
+        },
+        "othersMedian": 2.83,
+        "strongShare": 1,
+        "confirmation": {
+          "confirmed": false,
+          "texture": 0,
+          "catchUp": null,
+          "reason": "still band is flat (no texture to show motion)"
+        },
+        "exports": [
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear13-slow-forward-1-t10.606-a-prev.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear13-slow-forward-1-t10.606-b-frame.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear13-slow-forward-1-t10.606-c-diff.png"
+        ]
+      },
+      {
+        "phase": "slow-forward-3",
+        "frame": 2021,
+        "t": 48.0883,
+        "prevT": 48.0721,
+        "contentMad": 8.99,
+        "tear": true,
+        "stillBand": {
+          "start": 33,
+          "end": 44,
+          "frac": 0.239
+        },
+        "othersMedian": 2.83,
+        "strongShare": 1,
+        "confirmation": {
+          "confirmed": false,
+          "texture": 0,
+          "catchUp": null,
+          "reason": "still band is flat (no texture to show motion)"
+        },
+        "exports": [
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear14-slow-forward-3-t48.088-a-prev.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear14-slow-forward-3-t48.088-b-frame.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear14-slow-forward-3-t48.088-c-diff.png"
+        ]
+      },
+      {
+        "phase": "fast-back-and-forth-1",
+        "frame": 2644,
+        "t": 63.0906,
+        "prevT": 63.0749,
+        "contentMad": 8.99,
+        "tear": true,
+        "stillBand": {
+          "start": 33,
+          "end": 44,
+          "frac": 0.239
+        },
+        "othersMedian": 2.83,
+        "strongShare": 1,
+        "confirmation": {
+          "confirmed": false,
+          "texture": 0,
+          "catchUp": 18.44,
+          "reason": "still band is flat (no texture to show motion)"
+        },
+        "exports": [
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear15-fast-back-and-forth-1-t63.091-a-prev.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear15-fast-back-and-forth-1-t63.091-b-frame.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear15-fast-back-and-forth-1-t63.091-c-diff.png"
+        ]
+      },
+      {
+        "phase": "slow-forward-2",
+        "frame": 1183,
+        "t": 29.3537,
+        "prevT": 29.3379,
+        "contentMad": 8.5,
+        "tear": true,
+        "stillBand": {
+          "start": 35,
+          "end": 46,
+          "frac": 0.239
+        },
+        "othersMedian": 2.39,
+        "strongShare": 0.89,
+        "confirmation": {
+          "confirmed": false,
+          "texture": 0.06,
+          "catchUp": null,
+          "reason": "still band is flat (no texture to show motion)"
+        },
+        "exports": [
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear16-slow-forward-2-t29.354-a-prev.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear16-slow-forward-2-t29.354-b-frame.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear16-slow-forward-2-t29.354-c-diff.png"
+        ]
+      },
+      {
+        "phase": "slow-forward-1",
+        "frame": 342,
+        "t": 10.7715,
+        "prevT": 10.7552,
+        "contentMad": 8.5,
+        "tear": true,
+        "stillBand": {
+          "start": 35,
+          "end": 46,
+          "frac": 0.239
+        },
+        "othersMedian": 2.37,
+        "strongShare": 0.89,
+        "confirmation": {
+          "confirmed": false,
+          "texture": 0.06,
+          "catchUp": null,
+          "reason": "still band is flat (no texture to show motion)"
+        },
+        "exports": [
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear17-slow-forward-1-t10.771-a-prev.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear17-slow-forward-1-t10.771-b-frame.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear17-slow-forward-1-t10.771-c-diff.png"
+        ]
+      },
+      {
+        "phase": "slow-forward-3",
+        "frame": 2031,
+        "t": 48.2542,
+        "prevT": 48.2384,
+        "contentMad": 8.5,
+        "tear": true,
+        "stillBand": {
+          "start": 35,
+          "end": 46,
+          "frac": 0.239
+        },
+        "othersMedian": 2.37,
+        "strongShare": 0.89,
+        "confirmation": {
+          "confirmed": false,
+          "texture": 0.06,
+          "catchUp": null,
+          "reason": "still band is flat (no texture to show motion)"
+        },
+        "exports": [
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear18-slow-forward-3-t48.254-a-prev.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear18-slow-forward-3-t48.254-b-frame.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear18-slow-forward-3-t48.254-c-diff.png"
+        ]
+      },
+      {
+        "phase": "fast-back-and-forth-1",
+        "frame": 2645,
+        "t": 63.1068,
+        "prevT": 63.0906,
+        "contentMad": 8.48,
+        "tear": true,
+        "stillBand": {
+          "start": 35,
+          "end": 46,
+          "frac": 0.239
+        },
+        "othersMedian": 2.31,
+        "strongShare": 0.89,
+        "confirmation": {
+          "confirmed": false,
+          "texture": 0.06,
+          "catchUp": 2.86,
+          "reason": "still band is flat (no texture to show motion)"
+        },
+        "exports": [
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear19-fast-back-and-forth-1-t63.107-a-prev.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear19-fast-back-and-forth-1-t63.107-b-frame.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear19-fast-back-and-forth-1-t63.107-c-diff.png"
+        ]
+      },
+      {
+        "phase": "fast-back-and-forth-1",
+        "frame": 2735,
+        "t": 64.6904,
+        "prevT": 64.6728,
+        "contentMad": 19.55,
+        "tear": true,
+        "stillBand": {
+          "start": 0,
+          "end": 8,
+          "frac": 0.174
+        },
+        "othersMedian": 7.33,
+        "strongShare": 0.87,
+        "confirmation": {
+          "confirmed": true,
+          "texture": 4.12,
+          "catchUp": 4.19,
+          "reason": "textured still band that catches up in the next frame"
+        },
+        "exports": [
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear20-fast-back-and-forth-1-t64.690-a-prev.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear20-fast-back-and-forth-1-t64.690-b-frame.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear20-fast-back-and-forth-1-t64.690-c-diff.png"
+        ]
+      },
+      {
+        "phase": "fast-back-and-forth-3",
+        "frame": 3015,
+        "t": 73.8135,
+        "prevT": 73.7972,
+        "contentMad": 19.42,
+        "tear": true,
+        "stillBand": {
+          "start": 0,
+          "end": 8,
+          "frac": 0.174
+        },
+        "othersMedian": 7.26,
+        "strongShare": 0.87,
+        "confirmation": {
+          "confirmed": true,
+          "texture": 4.13,
+          "catchUp": 4.21,
+          "reason": "textured still band that catches up in the next frame"
+        },
+        "exports": [
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear21-fast-back-and-forth-3-t73.814-a-prev.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear21-fast-back-and-forth-3-t73.814-b-frame.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear21-fast-back-and-forth-3-t73.814-c-diff.png"
+        ]
+      },
+      {
+        "phase": "fast-back-and-forth-2",
+        "frame": 2868,
+        "t": 69.301,
+        "prevT": 69.2843,
+        "contentMad": 12.39,
+        "tear": true,
+        "stillBand": {
+          "start": 38,
+          "end": 46,
+          "frac": 0.174
+        },
+        "othersMedian": 2.05,
+        "strongShare": 0.87,
+        "confirmation": {
+          "confirmed": false,
+          "texture": 0,
+          "catchUp": 27.33,
+          "reason": "still band is flat (no texture to show motion)"
+        },
+        "exports": [
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear22-fast-back-and-forth-2-t69.301-a-prev.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear22-fast-back-and-forth-2-t69.301-b-frame.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear22-fast-back-and-forth-2-t69.301-c-diff.png"
+        ]
+      },
+      {
+        "phase": "fast-back-and-forth-1",
+        "frame": 2725,
+        "t": 64.5218,
+        "prevT": 64.5057,
+        "contentMad": 14.82,
+        "tear": true,
+        "stillBand": {
+          "start": 39,
+          "end": 46,
+          "frac": 0.152
+        },
+        "othersMedian": 2.64,
+        "strongShare": 0.92,
+        "confirmation": {
+          "confirmed": false,
+          "texture": 0,
+          "catchUp": 5.07,
+          "reason": "still band is flat (no texture to show motion)"
+        },
+        "exports": [
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear23-fast-back-and-forth-1-t64.522-a-prev.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear23-fast-back-and-forth-1-t64.522-b-frame.png",
+          "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z/tear23-fast-back-and-forth-1-t64.522-c-diff.png"
+        ]
+      }
+    ]
+  },
+  "exportDir": "spike/device/out/POCO-F7-rec-2026-11-23T12-32-30Z",
+  "exports": 102,
+  "analysedAt": "2026-11-23T12:42:18.424Z"
+}

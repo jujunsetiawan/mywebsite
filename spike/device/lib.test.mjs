@@ -3,7 +3,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { deflateSync } from "node:zlib";
+import { EventEmitter } from "node:events";
 import {
+  createScreenRecorder,
   blankDefect,
   centreCropRange,
   channelRange,
@@ -61,11 +63,46 @@ function fakeAdb({ online = true, socketAfterPolls = 0, failOn = null, initial =
         delete settings[m[1]];
         return { code: 0, stdout: "", stderr: "" };
       }
+      if (c === "pidof screenrecord || true") return { code: 0, stdout: device.recording ? "4242\n" : "", stderr: "" };
+      if (c === "pkill -INT screenrecord || true") {
+        if (device.recording) {
+          device.recording = false;
+          device.proc?.emit("exit", 0);
+        }
+        return { code: 0, stdout: "", stderr: "" };
+      }
+      m = c.match(/^rm -f (\S+)$/);
+      if (m) {
+        device.files.delete(m[1]);
+        return { code: 0, stdout: "", stderr: "" };
+      }
+    }
+    if (a[0] === "pull") {
+      if (!device.files.has(a[1])) return { code: 1, stdout: "", stderr: `remote object '${a[1]}' does not exist` };
+      device.pulled.push([a[1], a[2]]);
+      return { code: 0, stdout: "1 file pulled", stderr: "" };
     }
     return { code: 0, stdout: "", stderr: "" };
   };
+  /** Fake background `adb shell screenrecord ...` (an EventEmitter like a ChildProcess). */
+  const device = { recording: false, files: new Set(), pulled: [], proc: null, spawned: [] };
+  const spawnFn = (cmd, args) => {
+    device.spawned.push([cmd, ...args].join(" "));
+    const p = new EventEmitter();
+    p.exitCode = null;
+    p.kill = () => {
+      device.recording = false;
+      p.exitCode = 1;
+      p.emit("exit", 1);
+    };
+    p.on("exit", (code) => (p.exitCode = code));
+    device.proc = p;
+    device.recording = true;
+    device.files.add(args[args.length - 1].split(" ").pop());
+    return p;
+  };
   const adb = createAdb("10.0.0.9:5555", { run, sleep: async (ms) => void (clock += ms), now: () => clock });
-  return { adb, run, calls, settings };
+  return { adb, run, calls, settings, device, spawnFn, now: () => clock };
 }
 
 test("phone unreachable: preflight fails naming the device (exit 3)", async () => {
@@ -127,6 +164,40 @@ test("setting never written before the run (\"null\"): deleted again, counted as
   assert.deepEqual(settings, { accelerometer_rotation: "1" });
   assert.equal(cleanup.rotationRestored, true);
   assert.deepEqual(cleanup.errors, []);
+});
+
+test("screen recording: start, SIGINT stop, pull, delete from the phone", async () => {
+  const { adb, calls, device, spawnFn, now } = fakeAdb();
+  const rec = createScreenRecorder(adb, { spawnFn, now });
+  await rec.start();
+  assert.equal(rec.state, "recording");
+  assert.match(device.spawned[0], /-s 10\.0\.0\.9:5555 shell screenrecord --bit-rate 20000000 --time-limit 180 \/sdcard\/spike-run\.mp4$/);
+  assert.ok(rec.ms() >= 0);
+  await rec.stop();
+  assert.ok(calls.some((c) => c.endsWith("pkill -INT screenrecord || true")));
+  assert.equal(device.recording, false);
+  await rec.pull("out/x.mp4");
+  assert.deepEqual(device.pulled, [["/sdcard/spike-run.mp4", "out/x.mp4"]]);
+  await rec.remove();
+  assert.equal(device.files.size, 0);
+  await rec.abort(); // idempotent after removal
+});
+
+test("screen recording: run fails mid-way -> cleanup stops and deletes it, rotation restored", async () => {
+  const { adb, device, spawnFn, now, settings } = fakeAdb();
+  await assert.rejects(
+    withDeviceSession(adb, 9333, "chrome_devtools_remote", async (_saved, addCleanup) => {
+      const rec = createScreenRecorder(adb, { spawnFn, now });
+      addCleanup("screen recording", () => rec.abort());
+      await rec.start();
+      await setRotation(adb, 1);
+      throw new Error("phase exploded");
+    }),
+    (e) => e.message === "phase exploded" && e.cleanup.hooksRun === 1 && e.cleanup.rotationRestored && e.cleanup.errors.length === 0,
+  );
+  assert.equal(device.recording, false);
+  assert.equal(device.files.size, 0, "recording deleted from the phone");
+  assert.deepEqual(settings, { accelerometer_rotation: "1", user_rotation: "0" });
 });
 
 test("rotation: wrong variant / changed frame are logged as defects", () => {
@@ -273,4 +344,6 @@ test("CLI parsing", () => {
   assert.throws(() => parseArgs(["--nope"]), DriverError);
   for (const v of ["abc", "-1", "Infinity"]) assert.throws(() => parseArgs(["--idle-ms", v]), (e) => e instanceof DriverError && e.exitCode === 1);
   assert.equal(parseArgs(["--idle-ms", "0"]).idleMs, 0);
+  assert.equal(parseArgs(["--record"]).record, true);
+  assert.throws(() => parseArgs(["--record", "--desktop"]), (e) => e instanceof DriverError && e.exitCode === 1);
 });

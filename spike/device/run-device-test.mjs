@@ -14,6 +14,14 @@
 // `settings put system user_rotation` (auto-rotate off) and restores the
 // original rotation settings afterwards, also on failure / Ctrl+C.
 //
+// `--record` (Android only): `adb shell screenrecord` runs from just before
+// the cold load to the end of the idle phase. The page flips black/white twice
+// right after the recording starts (sync marks), and every phase and gesture
+// is logged in ms since the recording started (`recording` in the JSON). The
+// MP4 is pulled to spike/device/out/<label>-<timestamp>.mp4 (git-ignored) and
+// deleted from the phone, also on failure / Ctrl+C. Analyse it with
+// `node spike/device/analyze-video.mjs <results JSON>`.
+//
 // Desktop (`--desktop`): the installed Microsoft Edge, headed, 1440x900
 // viewport, mouse-wheel scrubs, "rotation" = viewport 1440x900 <-> 900x1440.
 //
@@ -31,9 +39,9 @@
 
 import { createRequire } from "node:module";
 import { spawn, spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, join, resolve } from "node:path";
+import { dirname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   blankDefect,
@@ -41,6 +49,7 @@ import {
   chunkBoundaryStalls,
   decodePng,
   createAdb,
+  createScreenRecorder,
   DEFAULTS,
   deviceInfo,
   DriverError,
@@ -68,6 +77,9 @@ const { chromium } = require("playwright-core");
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const log = (m) => console.log(`[device] ${m}`);
+const repoRoot = resolve(here, "..", "..");
+/** Screen recordings and exported frames (git-ignored). */
+const videoDir = join(here, "out");
 const HARD_TIMEOUT_MS = 15 * 60_000;
 
 // ------------------------------------------------------------------ Page helpers
@@ -293,7 +305,40 @@ async function runPhases(env, opts, manifest, results) {
   });
 
   const cdp = await page.context().newCDPSession(page);
+
+  // --record: phase / gesture marks in ms since the screen recording started.
+  const rec = env.recording ?? null;
+  const orientationOf = (name) => (name.startsWith("rotate-") ? "transition" : name.startsWith(`${env.alt}-`) ? env.alt : env.base);
+  const markStart = (name, kind) => rec?.data.phases.push({ phase: name, kind, orientation: orientationOf(name), startMs: rec.recorder.ms(), endMs: null });
+  const markEnd = (name) => {
+    if (!rec) return;
+    const p = rec.data.phases.findLast((x) => x.phase === name);
+    if (p) p.endMs = rec.recorder.ms();
+  };
+  if (rec) {
+    const gesture = env.gesture.bind(env);
+    env.gesture = async (kind, dir, st) => {
+      const startMs = rec.recorder.ms();
+      const r = await gesture(kind, dir, st);
+      rec.data.gestures.push({ phase: phaseName, kind, dir, startMs, endMs: rec.recorder.ms(), swiped: r !== false });
+      return r;
+    };
+    // Sync marks on the blank tab: two full-screen flips at known wall times.
+    await page.bringToFront().catch(() => {});
+    await rec.recorder.start();
+    rec.data.startedAt = new Date(rec.recorder.startWall).toISOString();
+    await sleep(1200);
+    for (const [name, colour] of [["black", "#000"], ["white", "#fff"]]) {
+      await page.evaluate((c) => {
+        document.documentElement.style.background = c;
+      }, colour);
+      rec.data.sync.push({ name, ms: rec.recorder.ms() });
+      await sleep(700);
+    }
+  }
+
   const record = async (name, kind, extra = {}) => {
+    markEnd(name);
     const s = await snap(page);
     const range = await centreRange(page, cdp);
     const p = { ...summarizePhase(name, s, prev, extra), kind, centreRange: range };
@@ -319,6 +364,7 @@ async function runPhases(env, opts, manifest, results) {
   await cdp.send("Network.clearBrowserCache");
   await cdp.send("Network.setCacheDisabled", { cacheDisabled: true });
   const navStart = Date.now();
+  markStart("cold-load", "load");
   await page.goto(opts.url, { waitUntil: "load", timeout: 60_000 });
   await page.bringToFront().catch(() => {});
   await waitFor(page, (x) => x.drawnFrame === 0 && x.timeToFirstFrameMs != null, 60_000, "first frame");
@@ -330,6 +376,7 @@ async function runPhases(env, opts, manifest, results) {
     phaseName = `slow-forward-${r}`;
     await jumpTo(page, 0);
     await resetStats(page);
+    markStart(phaseName, "scrub");
     const gestures = await scrubTo(env, "slow", +1);
     await settled(page, `${phaseName} end`);
     await record(phaseName, "scrub", { gestures, orientation: env.base });
@@ -340,6 +387,7 @@ async function runPhases(env, opts, manifest, results) {
   for (let r = 1; r <= opts.reps; r++) {
     phaseName = `fast-back-and-forth-${r}`;
     await resetStats(page);
+    markStart(phaseName, "scrub");
     const down = await scrubTo(env, "fast", +1);
     const up = await scrubTo(env, "fast", -1);
     await settled(page, `${phaseName} end`);
@@ -352,6 +400,7 @@ async function runPhases(env, opts, manifest, results) {
   await resetStats(page);
   const baseVariant = before.drawnVariant;
   const t0 = Date.now();
+  markStart(phaseName, "rotation");
   await env.rotate(env.alt);
   const after = await waitFor(page, (x) => x.drawnVariant !== baseVariant && x.drawnVariant === `${x.aspect}/${x.tier}` && x.drawnFrame === x.frame, 20_000, `variant switch after rotating to ${env.alt}`).catch(async (e) => {
     defects.push(`${phaseName}: ${e.message}`);
@@ -368,12 +417,14 @@ async function runPhases(env, opts, manifest, results) {
   phaseName = `${env.alt}-slow-forward`;
   await jumpTo(page, 0);
   await resetStats(page);
+  markStart(phaseName, "scrub");
   await scrubTo(env, "slow", +1);
   await settled(page, `${env.alt} slow end`);
   await record(phaseName, "scrub", { orientation: env.alt });
 
   phaseName = `${env.alt}-fast-back-and-forth`;
   await resetStats(page);
+  markStart(phaseName, "scrub");
   await scrubTo(env, "fast", -1);
   await scrubTo(env, "fast", +1);
   await scrubTo(env, "fast", -1);
@@ -385,6 +436,7 @@ async function runPhases(env, opts, manifest, results) {
   const before2 = await jumpTo(page, 0.437);
   await resetStats(page);
   const t1 = Date.now();
+  markStart(phaseName, "rotation");
   await env.rotate(env.base);
   const after2 = await waitFor(page, (x) => x.drawnVariant === baseVariant && x.drawnFrame === x.frame, 20_000, `variant ${baseVariant} after rotating back`).catch(async (e) => {
     defects.push(`${phaseName}: ${e.message}`);
@@ -397,6 +449,7 @@ async function runPhases(env, opts, manifest, results) {
   // ---- 7. Idle 10 s (recorded separately; never mixed into scrub fps).
   phaseName = "idle";
   await resetStats(page);
+  markStart("idle", "idle");
   await sleep(opts.idleMs);
   await record("idle", "idle", { idleMs: opts.idleMs });
 
@@ -446,7 +499,7 @@ function analyse(results, manifest, opts) {
     blankFrames: "32x32 CSS-px compositor screenshot (CDP) at the viewport centre after every phase: channel range > 4 (0 = uniform/blank). No canvas readback (it demotes the canvas to software on Android). The player never clears the canvas; a not-yet-decoded frame keeps the last one (counted as missedTicks)",
     wrongVariantAfterRotation: "drawnVariant after each rotation vs expected aspect, drawnFrame vs the frame before rotating",
     chunkBoundaryStutter: "worst target->drawn latency at frames 16/32/48/64 vs 3x the median of all frames' worst latency (and > median + 50 ms)",
-    tearing: "not detectable from the page; manual observation during the run (RESULTS.md)",
+    tearing: opts.record ? "not detectable from the page; see the screen recording analysis (node spike/device/analyze-video.mjs <this JSON> -> <this name>.video.json)" : "not detectable from the page; run with --record and analyse the video",
   };
 }
 
@@ -459,6 +512,8 @@ async function main() {
     return 0;
   }
   const outDir = resolve(opts.out ?? join(here, "..", "results"));
+  /** One stamp per run: results JSON and video share it. */
+  const runStamp = timestamp();
 
   // Preview server reachable from this machine (the phone uses the same LAN URL).
   const manifestUrl = new URL("media/asset-manifest.json", opts.url).href;
@@ -507,9 +562,17 @@ async function main() {
       results.device = await deviceInfo(adb);
       log(`device ${opts.device}: ${results.device.manufacturer} ${results.device.model}, Android ${results.device.android}, Chrome ${results.device.chrome}`);
       await wakeDevice(adb);
-      const session = await withDeviceSession(adb, opts.port, DEFAULTS.devtoolsSocket, async (saved) => {
+      label = opts.label ?? `${results.device.model}`.replace(/[^\w.-]+/g, "_");
+      const session = await withDeviceSession(adb, opts.port, DEFAULTS.devtoolsSocket, async (saved, addCleanup) => {
         results.rotationBefore = saved;
+        const recorder = opts.record ? createScreenRecorder(adb) : null;
+        if (recorder) {
+          // Runs inside the session cleanup (before the rotation restore): stop + delete from the phone.
+          addCleanup("screen recording", () => recorder.abort());
+          results.recording = { remotePath: recorder.cfg.remotePath, bitRate: recorder.cfg.bitRate, timeLimitS: recorder.cfg.timeLimitS, startedAt: null, sync: [], phases: [], gestures: [], file: null, bytes: null, truncated: null };
+        }
         emergency = async () => {
+          await recorder?.abort().catch(() => {});
           await restoreRotation(adb, saved).catch(() => {});
           await adb.cmd(["forward", "--remove", `tcp:${opts.port}`]).catch(() => {});
         };
@@ -525,7 +588,23 @@ async function main() {
           // Close earlier player tabs (e.g. the one `am start` opened) so only the test tab runs.
           const origin = new URL(opts.url).origin;
           for (const p of context.pages()) if (p !== page && p.url().startsWith(origin)) await p.close().catch(() => {});
-          await runPhases(androidEnv(adb, results.device, page), opts, manifest, results);
+          const env = androidEnv(adb, results.device, page);
+          if (recorder) env.recording = { recorder, data: results.recording };
+          await runPhases(env, opts, manifest, results);
+          if (recorder) {
+            const lastMs = recorder.ms();
+            await recorder.stop();
+            mkdirSync(videoDir, { recursive: true });
+            const local = join(videoDir, `${label}-${runStamp}.mp4`);
+            await recorder.pull(local);
+            await recorder.remove();
+            results.recording.file = relative(repoRoot, local).split(sep).join("/");
+            results.recording.bytes = statSync(local).size;
+            results.recording.endMs = lastMs;
+            results.recording.truncated = lastMs > recorder.cfg.timeLimitS * 1000;
+            if (results.recording.truncated) results.defects.push(`recording: run lasted ${Math.round(lastMs / 1000)} s, longer than the ${recorder.cfg.timeLimitS} s screenrecord limit; later phases are missing from the video`);
+            log(`recording: ${results.recording.file} (${(results.recording.bytes / 1048576).toFixed(1)} MB), deleted from the phone`);
+          }
           await page.close().catch(() => {});
         } finally {
           await browser.close().catch(() => {}); // disconnects; Chrome keeps running
@@ -534,7 +613,6 @@ async function main() {
       cleanup = session.cleanup;
       results.rotationAfter = await readRotation(adb);
       results.cleanup = cleanup;
-      label = opts.label ?? `${results.device.model}`.replace(/[^\w.-]+/g, "_");
     }
   } catch (e) {
     if (e.cleanup) results.cleanup = e.cleanup;
@@ -551,7 +629,7 @@ async function main() {
   results.finishedAt = new Date().toISOString();
   delete results.t0;
   mkdirSync(outDir, { recursive: true });
-  const file = join(outDir, `${label}-${timestamp()}.json`);
+  const file = join(outDir, `${label}-${runStamp}.json`);
   if (existsSync(file)) throw new DriverError(`refusing to overwrite ${file}`, 5);
   writeFileSync(file, JSON.stringify(results, null, 2) + "\n");
   log(`results: ${file}`);

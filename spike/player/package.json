@@ -14,9 +14,10 @@
     "preview": "vite preview",
     "test": "vitest run",
     "smoke": "node scripts/smoke.mjs",
-    "test:device": "node --test ../device/lib.test.mjs",
+    "test:device": "node --test ../device/lib.test.mjs ../device/video.test.mjs",
     "device": "node ../device/run-device-test.mjs",
-    "device:desktop": "node ../device/run-device-test.mjs --desktop"
+    "device:desktop": "node ../device/run-device-test.mjs --desktop",
+    "analyze-video": "node ../device/analyze-video.mjs"
   },
   "devDependencies": {
     "playwright-core": "^1.65.1",
