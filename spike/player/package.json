@@ -13,7 +13,10 @@
     "build": "tsc --noEmit -p tsconfig.json && vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "smoke": "node scripts/smoke.mjs"
+    "smoke": "node scripts/smoke.mjs",
+    "test:device": "node --test ../device/lib.test.mjs",
+    "device": "node ../device/run-device-test.mjs",
+    "device:desktop": "node ../device/run-device-test.mjs --desktop"
   },
   "devDependencies": {
     "playwright-core": "^1.65.1",

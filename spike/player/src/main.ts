@@ -9,6 +9,7 @@ import { FrameCache, parseCacheMB } from "./core/cache.ts";
 import { LoadError, loadFrameData, loadManifest, type FetchLike, type FrameDataShot, type Manifest, type ManifestShot } from "./core/load.ts";
 import { chunksFor, lookaheadOrder, windowFrames } from "./core/lookahead.ts";
 import { frameIndexFromProgress, frameToDraw, progressFromScroll, scrollForProgress, spacerHeight } from "./core/progress.ts";
+import { ScrollActivity, TargetLatency } from "./core/scrub.ts";
 import { median, percentile, RollingSamples, summarizeFrames } from "./core/stats.ts";
 import { coverTransform, drawRect, quadToStage, type Quad } from "./core/transform.ts";
 import { buildChunkUrl } from "./core/url.ts";
@@ -121,11 +122,14 @@ let current: Current | null = null;
  * on-screen frame + results not yet inserted). Incremented on decode arrival,
  * decremented on close().
  */
-const live = { count: 0, bytes: 0 };
+const live = { count: 0, bytes: 0, peakCount: 0, peakBytes: 0 };
 
 function trackBitmap(bmp: ImageBitmap): void {
   live.count++;
   live.bytes += bmp.width * bmp.height * 4;
+  // Story 0.5: peak since the last __spike.reset() (memory budget per phase).
+  live.peakCount = Math.max(live.peakCount, live.count);
+  live.peakBytes = Math.max(live.peakBytes, live.bytes);
 }
 
 function closeBitmap(bmp: ImageBitmap): void {
@@ -156,12 +160,24 @@ const drawMs = new RollingSamples(600);
 const decodeMs = new RollingSamples(300);
 let missedTicks = 0;
 let drawnCount = 0;
+// Story 0.5 (spike-only): scrub-only fps, target->drawn latency, time to first frame.
+const activity = new ScrollActivity();
+const activeIntervals = new RollingSamples(20000);
+const latency = new TargetLatency();
+/** ms since navigation start (performance.now) when the first frame was drawn. */
+let timeToFirstFrameMs: number | null = null;
+/** resize/orientationchange events, and measure() calls (canvas size set), since reset. */
+let resizeEvents = 0;
+let canvasResizes = 0;
+/** First 100 active-scrub rAF intervals > 50 ms since reset, with context (diagnostics). */
+const longLog: Array<Record<string, number | null>> = [];
 let decodeErrors = 0;
 let chunkErrors = 0;
 
 // ------------------------------------------------------------------ Layout
 
 function measure(): void {
+  canvasResizes++;
   stageW = Math.max(1, stageEl.clientWidth);
   stageH = Math.max(1, stageEl.clientHeight);
   dpr = window.devicePixelRatio || 1;
@@ -210,6 +226,7 @@ async function applyVariant(): Promise<void> {
   const entry = variant.tiers.find((x) => x.tier === t)!;
   tierSize = { width: entry.width, height: entry.height };
   frames = null;
+  latency.invalidate(performance.now()); // the new variant must draw the target again
   inflight.clear();
   failed.clear();
   cache.clear(); // the on-screen bitmap survives (orphaned) until replaced
@@ -365,6 +382,7 @@ function show(index: number): void {
   current = { bitmap, index, gen, aspect: aspect!, tier: tier!, quad: (frames!.frames[index]!.quad as Quad) ?? null, orphaned: false };
   drawnCount++;
   paint();
+  if (timeToFirstFrameMs === null) timeToFirstFrameMs = performance.now();
   cache.evict(playhead, pinned()); // the previous on-screen frame may now be over the limit
 }
 
@@ -376,7 +394,16 @@ let lastHud = 0;
 function tick(ts: number): void {
   requestAnimationFrame(tick);
   const t0 = performance.now();
-  if (lastTs) intervals.push(ts - lastTs);
+  const active = activity.update(scrollY, ts);
+  if (lastTs) {
+    intervals.push(ts - lastTs);
+    if (active) {
+      activeIntervals.push(ts - lastTs);
+      if (ts - lastTs > 50 && longLog.length < 100) {
+        longLog.push({ atMs: Math.round(ts), ms: round(ts - lastTs, 1), frame: playhead, drawn: current?.index ?? null, cacheFrames: cache.size, inflight: inflight.size, scrollY: Math.round(scrollY) });
+      }
+    }
+  }
   lastTs = ts;
 
   const progress = frozenProgress ?? readProgress();
@@ -391,6 +418,7 @@ function tick(ts: number): void {
     if (idx !== null && !onScreen) show(idx);
     else if (needsRedraw) paint();
     if (idx === null && !onScreen) missedTicks++;
+    latency.observe(target, current && current.gen === gen ? current.index : null, ts);
     pump();
   } else if (needsRedraw) {
     paint();
@@ -409,6 +437,7 @@ let resizeTimer: number | undefined;
 let majorPending = false;
 
 function onResize(): void {
+  resizeEvents++;
   // Phone toolbars change only the height a little while scrolling: just
   // resize the canvas, keep the spacer (no progress freeze, no jump).
   const minor = innerWidth === lastInnerW && Math.abs(innerHeight - lastInnerH) < lastInnerH * 0.25;
@@ -456,11 +485,34 @@ function snapshot(): Snapshot {
   const dec = decodeMs.values();
   const draw = drawMs.values();
   const mem = (performance as Performance & { memory?: { usedJSHeapSize: number; totalJSHeapSize: number; jsHeapSizeLimit: number } }).memory;
+  const act = summarizeFrames(activeIntervals.values());
+  const lat = latency.summary();
   return {
     fpsMedian: round(f.fpsMedian),
     fpsP5: round(f.fpsP5),
     frameMsMedian: round(f.frameMsMedian, 2),
     frameMsP95: round(f.frameMsP95, 2),
+    // Story 0.5: only rAF intervals while scrollY changed in the last 150 ms.
+    scrubFpsMedian: round(act.fpsMedian),
+    scrubFpsP5: round(act.fpsP5),
+    scrubFrameMsP95: round(act.frameMsP95, 2),
+    scrubSamples: activeIntervals.length,
+    scrubLongIntervals: (() => {
+      const v = activeIntervals.values();
+      return { over34ms: v.filter((x) => x > 34).length, over50ms: v.filter((x) => x > 50).length, maxMs: v.length ? round(Math.max(...v), 1) : null };
+    })(),
+    latencyMsP50: round(lat.p50, 1),
+    latencyMsP95: round(lat.p95, 1),
+    latencyMsMax: round(lat.max, 1),
+    latencySamples: lat.samples,
+    latencySuperseded: lat.superseded,
+    latencyByFrameMax: Object.fromEntries(Object.entries(lat.byFrameMax).map(([k, v]) => [k, round(v, 1)])),
+    timeToFirstFrameMs: timeToFirstFrameMs === null ? null : round(timeToFirstFrameMs, 0),
+    peakLiveDecodedBitmaps: live.peakCount,
+    peakLiveDecodedBytes: live.peakBytes,
+    resizeEvents,
+    canvasResizes,
+    scrubLongLog: longLog.slice(),
     tickWorkMsP95: round(percentile(workMs.values(), 95), 2),
     drawMsP50: round(median(draw), 2),
     drawMsP95: round(percentile(draw, 95), 2),
@@ -527,10 +579,12 @@ function renderHud(): void {
     `variant ${s.aspect} / ${s.tier}${TIER_OVERRIDE ? " (override)" : ""}`,
     `frame   ${s.frame} / ${(s.frameCount as number | null) ?? "?"}  drawn ${s.drawnFrame ?? "-"}  missed ${missedTicks}`,
     `fps     med ${s.fpsMedian ?? "-"}  p5 ${s.fpsP5 ?? "-"}`,
+    `scrub   fps med ${s.scrubFpsMedian ?? "-"}  p5 ${s.scrubFpsP5 ?? "-"}  (n=${s.scrubSamples})`,
+    `latency p50 ${s.latencyMsP50 ?? "-"}  p95 ${s.latencyMsP95 ?? "-"}  max ${s.latencyMsMax ?? "-"} ms  first frame ${s.timeToFirstFrameMs ?? "-"} ms`,
     `frameMs med ${s.frameMsMedian ?? "-"}  p95 ${s.frameMsP95 ?? "-"}  draw p95 ${s.drawMsP95 ?? "-"}`,
     `decode  p50 ${s.decodeMsP50 ?? "-"} ms  p95 ${s.decodeMsP95 ?? "-"} ms  (n=${s.decodeSamples})`,
     `cache   ${mb(cache.bytes)} / ${mb(cache.limitBytes)}  (${cache.size} frames)  chunks ${mb(chunkBytesHeld)}`,
-    `live    ${mb(live.bytes)} decoded (${live.count} bitmaps)  inflight ${inflight.size}`,
+    `live    ${mb(live.bytes)} decoded (${live.count} bitmaps, peak ${mb(live.peakBytes)})  inflight ${inflight.size}`,
     `heap    ${memo ? mb(memo.usedJSHeapSize) : "n/a"}`,
     `net     ${net.requests} req  ${mb(net.bytes)}`,
   ].join("\n");
@@ -566,8 +620,31 @@ async function copyResults(btn: HTMLButtonElement): Promise<void> {
   btn.textContent = copied ? "Copied ✓ (fallback)" : "Select + copy below";
 }
 
-// Test/debug hook for the headless smoke check.
-(window as unknown as { __spike: unknown }).__spike = { snapshot };
+/**
+ * Story 0.5: clear the rolling stats between test phases (fps, scrub fps,
+ * frame/draw/decode times, latency, missed ticks, live-bitmap peaks).
+ * Cumulative counters (requests, bytes, errors, drawn count) and the time to
+ * first frame are kept; the device driver diffs them per phase.
+ */
+function reset(): void {
+  intervals.clear();
+  activeIntervals.clear();
+  workMs.clear();
+  drawMs.clear();
+  decodeMs.clear();
+  latency.reset();
+  activity.reset();
+  missedTicks = 0;
+  resizeEvents = 0;
+  canvasResizes = 0;
+  longLog.length = 0;
+  live.peakCount = live.count;
+  live.peakBytes = live.bytes;
+  lastHud = 0;
+}
+
+// Test/debug hook for the headless smoke check and the device driver.
+(window as unknown as { __spike: unknown }).__spike = { snapshot, reset };
 
 // ------------------------------------------------------------------ Boot
 

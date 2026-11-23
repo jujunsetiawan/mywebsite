@@ -76,6 +76,22 @@ real decoded memory and can exceed the cache limit by a frame or two), chunk
 bytes held, `performance.memory` heap where available (Chromium only), request
 count and bytes.
 
+Story 0.5 additions (spike-only):
+
+| Field (JSON) | HUD line | Meaning |
+|---|---|---|
+| `scrubFpsMedian` / `scrubFpsP5` / `scrubSamples` | `scrub` | fps from rAF intervals **only while scrollY changed in the last 150 ms** (idle frames excluded) |
+| `scrubLongIntervals`, `scrubLongLog` | – | active intervals > 34 / > 50 ms, and the first 100 > 50 ms with frame / cache context |
+| `latencyMsP50` / `P95` / `Max`, `latencySuperseded`, `latencyByFrameMax` | `latency` | target → drawn: from the first tick that asks for a frame to the tick it is on screen (0 = ready in time); targets replaced before being drawn; worst latency per frame (chunk-boundary check) |
+| `timeToFirstFrameMs` | `first frame` | `performance.now()` at the first drawn frame (ms since navigation start) |
+| `peakLiveDecodedBytes` / `peakLiveDecodedBitmaps` | `live … peak` | peak open-bitmap bytes since the last reset |
+| `resizeEvents` / `canvasResizes` | – | resize events, and `measure()` calls (canvas size set), since the last reset (e.g. phone toolbar show/hide) |
+
+`window.__spike.reset()` clears the rolling stats (fps, scrub fps, frame /
+draw / decode times, latency, missed ticks, peaks, resize counters) between
+test phases; cumulative counters (requests, bytes, errors) and the time to
+first frame are kept.
+
 **[Copy results]** copies a JSON summary (all of the above plus user agent and
 viewport) with the Clipboard API. Over plain HTTP (LAN) there is no Clipboard
 API: the JSON appears in a selected text box; `document.execCommand("copy")`
@@ -128,6 +144,39 @@ decodes + the on-screen frame (so live decoded bytes can exceed the limit by
 about one or two frames); a 404 manifest shows error text without an exception.
 `EDGE_PATH` overrides the Edge location.
 
+## Device test driver (Story 0.5)
+
+[`../device/run-device-test.mjs`](../device/run-device-test.mjs) runs the
+scripted test (cold load, 3 slow forward scrubs, 3 fast back-and-forth
+scrubs, rotation + one slow and one fast scrub in the other orientation,
+rotation back, 10 s idle) and writes `spike/results/<device>-<timestamp>.json`.
+Results and the go/no-go: [`../RESULTS.md`](../RESULTS.md).
+
+```powershell
+npm run build; npm run preview -- --host      # terminal 1 (production build on the LAN, port 4173)
+npm run device                                # Android over adb + CDP (default device 192.168.101.13:5555)
+npm run device -- --device <serial> --url http://<pc-ip>:4173/?hud=1
+npm run device:desktop                        # headed Edge, 1440x900, mouse wheel
+npm run test:device                           # node:test for the driver helpers (fake adb)
+```
+
+- **Android:** the phone must be unlocked. The driver launches Chrome via
+  `am start` if its DevTools socket is absent, forwards
+  `localabstract:chrome_devtools_remote`, opens a fresh tab with the HTTP
+  cache disabled, scrubs with real `adb shell input swipe` gestures, and
+  rotates with `settings put system user_rotation` (auto-rotate off). The
+  original rotation settings and the port forward are restored afterwards,
+  also on errors and Ctrl+C.
+- **Exit codes:** `0` completed (budgets may still fail; see the JSON), `1`
+  usage, `2` preview server unreachable, `3` device unreachable / locked,
+  `4` Chrome DevTools not reachable, `5` run or cleanup failed, `130`
+  interrupted.
+- **Do not read the canvas back on Android:** two `getImageData` calls
+  switch Chrome's 2D canvas to software rendering (every new frame then
+  costs ~66 ms), and a clipped CDP screenshot makes `window.scrollTo` a
+  no-op. The blank-frame check uses an unclipped CDP screenshot instead.
+  The desktop smoke check still uses `getImageData` (harmless there).
+
 ## Known limits (spike)
 
 - Chunks stay in memory once fetched (≈ 1–5 MB per variant for this shot); only
@@ -137,6 +186,6 @@ about one or two frames); a 404 manifest shows error text without an exception.
 - Phone toolbar show/hide (small height-only resizes) only resizes the canvas;
   the spacer is kept so scrolling does not jump. Progress can shift by a
   fraction of a frame while the toolbar animates.
-- fps is measured from `requestAnimationFrame` intervals, which includes idle
-  time (60 fps when nothing moves); judge p5 while actively scrubbing, or
-  press [Copy results] right after a scrub.
+- `fps` is measured from all `requestAnimationFrame` intervals, including idle
+  time (60 fps when nothing moves). Judge budgets on `scrub fps` (active
+  scrolling only, Story 0.5).

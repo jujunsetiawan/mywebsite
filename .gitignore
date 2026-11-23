@@ -30,3 +30,19 @@ spike/player/dist/
 # Python
 __pycache__/
 *.pyc
+
+# AI agent tooling and BMAD workflow artifacts (local only, never pushed)
+.agents/
+.claude/
+.opencode/
+.cursor/
+.windsurf/
+.codex/
+.gemini/
+_bmad/
+_bmad-output/
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+opencode.json
+opencode.jsonc
