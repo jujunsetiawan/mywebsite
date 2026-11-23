@@ -400,9 +400,9 @@ the remaining chunks. The measured cost for this shot was +6 requests.
 - **Mid-film rotation:** about 165.
 
 So the ≤ 150 budget holds for a watch **without rotation**. Treating a
-rotation as an allowed overrun is **proposed — accepted by Jun at
-sign-off**. Once accepted, this settles the deferred 0.3 item "request
-budget incl. rotation".
+rotation as an allowed overrun was **accepted by Jun at sign-off
+(2026-11-23)**. This settles the deferred 0.3 item "request budget incl.
+rotation".
 
 **Frame-data size, full film.** Per aspect: about 2.8–3.5 MB raw, or about
 0.36–0.44 MB gzip (measured 3,596 B and 4,388 B gzip per 72 frames).
@@ -466,7 +466,7 @@ For comparison, Chromium on Android does decode eagerly in the worker:
 fps budget, try **540 on phones** first (smallest change, no architecture
 change), then Lite plates.
 
-## Decision (recommendation)
+## Decision (signed off by Jun, 2026-11-23)
 
 **Conditional GO for pipeline A** (offline renders → AVIF frame chunks →
 worker decode → scroll-scrubbed canvas).
@@ -512,5 +512,10 @@ worker decode → scroll-scrubbed canvas).
 Recommendation written by the implementing agent on 2026-11-23. The story is
 done only after Jun signs below.
 
-- Decision: ☐ GO (conditional, as above) ☐ GO with fallback: ______ ☐ NO-GO
-- Signed: ____________________ (Jun)  Date: ____________
+- Decision: ☑ GO (conditional, as above) ☐ GO with fallback: ______ ☐ NO-GO
+- Signed: Jujun Setiawan (Jun)  Date: 2026-11-23
+- Accepted with this sign-off: the rotation request overrun above 150 per
+  watch, chunk size N = 72 (per act, to be validated in Story 4.2), and the
+  desktop "60 fps" reading (median ≥ 58, p5 ≥ 55). Conditions in the Decision
+  section stay open: iOS Safari re-verification before Epic 4, network
+  re-measurement over the CDN / cellular, low-end Android out of scope.
