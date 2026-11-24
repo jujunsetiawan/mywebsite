@@ -45,7 +45,7 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Budgets (first-load, static assets, layer imports)
+      - name: Budgets (first-load, static assets, layer imports, i18n routes)
         run: npm run budgets
 
       - name: Install Playwright browsers

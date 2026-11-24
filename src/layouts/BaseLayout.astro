@@ -2,16 +2,25 @@
 import type { Locale } from '../content/schemas.ts';
 import { loadSiteConfig } from '../../config/load.ts';
 import { beaconToken, isIndexable } from '../../config/site.schema.ts';
+import { alternates, canonical } from '../i18n/routes.ts';
 
 interface Props {
   lang: Locale;
   title: string;
+  /**
+   * Language-less route path of a mirrored page ('' for home). When given,
+   * the head carries a self-canonical and id/en/x-default alternates, always
+   * absolute on the production origin (also in preview/development builds).
+   */
+  path?: string | undefined;
 }
 
-const { lang, title } = Astro.props;
+const { lang, title, path } = Astro.props;
 const site = loadSiteConfig();
 const noindex = !isIndexable(site);
 const token = beaconToken(site);
+const canonicalHref = path === undefined ? null : canonical(site.productionOrigin, lang, path);
+const alternateLinks = path === undefined ? [] : alternates(site.productionOrigin, path);
 ---
 
 <!doctype html>
@@ -21,6 +30,8 @@ const token = beaconToken(site);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     {noindex && <meta name="robots" content="noindex" />}
     <title>{title}</title>
+    {canonicalHref !== null && <link rel="canonical" href={canonicalHref} />}
+    {alternateLinks.map((alt) => <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />)}
     {
       token !== null && (
         <script

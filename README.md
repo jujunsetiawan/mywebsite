@@ -36,7 +36,7 @@ site build or its tooling.
 | `npm run typecheck` | `tsc --noEmit` for the site and `tsc --noEmit -p worker` for the Worker |
 | `npm run test:unit` | Vitest (`tests/unit/`), including the `/media` Worker in Wrangler's local runtime |
 | `npm run test:e2e` | Playwright against `wrangler dev --local` serving the built `dist/` (Chromium, WebKit, 390×844, 844×390); seeds local R2 first. With `DEPLOY_URL` set, runs only `tests/e2e/deployed/` against that URL |
-| `npm run budgets` | First-load (≤ 204,800 gzip-9 bytes per language home), static-asset limits (≤ 20,000 files, no file > 25 MiB) and layer-import checks |
+| `npm run budgets` | First-load (≤ 204,800 gzip-9 bytes per language home), static-asset limits (≤ 20,000 files, no file > 25 MiB), layer-import checks and the i18n route check (see Routing) |
 | `npm run ci` | Everything above in CI order |
 
 First-time Playwright setup: `npx playwright install chromium webkit`.
@@ -49,13 +49,22 @@ First-time Playwright setup: `npx playwright install chromium webkit`.
 - `src/layouts/StaticLayout.astro` — office-styled static page frame: skip link, top letterbox bar (`src/components/StaticChrome.astro`; named slot `lang-switch`), `<main id="main">` on the panel, footer bar (named slot `privacy`). Hub links and the contact pill render only when `features.hubLinks` / `features.contact` are on
 - `config/` — Zod-validated site config: `site.schema.ts`, `site.{production,preview,development}.json` picked by `SITE_ENV`, optional git-ignored `site.local.json` override
 - `src/pages`, `src/layouts`, `src/components`
-- `src/i18n/copy.ts` — `t(key, lang)` reads keyed copy from the `film-copy` collection; `COPY_KEYS` lists every key and must match `content/film-copy/*.yaml` (unit-tested)
+- `src/i18n/copy.ts` — `t(key, lang)` reads keyed copy from the `film-copy` collection; `COPY_KEYS` (`src/i18n/copy-keys.ts`) lists every key and must match `content/film-copy/*.yaml` (unit-tested). `src/i18n/routes.ts` — mirrored-route helpers (see Routing)
 - `src/integrations/site-env.ts` — writes env-dependent `robots.txt` and `X-Robots-Tag` into `dist/`
 - `src/film/{core,systems,adapters}` — film layers; import rules are enforced by `scripts/budgets/layer-imports.ts`
-- `scripts/` — build-time checks (`node scripts/check-budgets.ts`), local R2 seeding for e2e
+- `scripts/` — build-time checks (`node scripts/check-budgets.ts`, `scripts/budgets/`, `scripts/checks/`), local R2 seeding for e2e
 - `tests/unit`, `tests/e2e` (`tests/e2e/deployed/` runs only with `DEPLOY_URL`)
 - `worker/media.ts` — read-only `/media/*` R2 proxy; `wrangler.jsonc` — Workers config
-- `public/_headers` — shared CSP
+- `public/_headers` — shared CSP; `public/_redirects` — `/` → `/id/` 301
 - `infra/README.md` — Cloudflare setup, tokens, analytics, rollback
+
+## Routing (ID default, EN mirror)
+
+- `public/_redirects` holds exactly `/ /id/ 301` — a real HTTP 301 from Workers static assets (no meta-refresh, no Accept-Language detection, no Astro `i18n` config). `/proyek/*` arrives with Story 1.6.
+- Every page lives under `/id/<path>` and `/en/<path>` with the identical slug (`trailingSlash: 'always'`). The route path is the part after the language segment: `''` for the homes, e.g. `proyek/x/` later.
+- Pages pass that route path to `StaticLayout` (`path=""` on the homes). `BaseLayout` then emits a self-canonical plus `id`/`en`/`x-default` (→ `/id/<path>`) alternates, always absolute on `productionOrigin` from site config — also in preview/development builds — and never with a query string. Pages without `path` (the top-level `404.astro`) emit neither.
+- `StaticLayout` fills the bar's `lang-switch` slot with `src/components/LangSwitch.astro`: two plain links "ID"/"EN" (`hreflang`, `lang`, accessible name = the language's own name, `aria-current="true"` + underline on the current one). No JS; hash and query are not carried over.
+- `src/i18n/routes.ts` holds the pure helpers (`localePath`, `mirrorPath`, `canonical`, `alternates`).
+- `scripts/checks/i18n-routes.ts` (run by `npm run budgets`, or standalone: `node scripts/checks/i18n-routes.ts <distDir> <productionOrigin>`) fails, naming the page and the problem, when a `dist/{id,en}/**/index.html` lacks its mirror, its canonical is not its own URL, or any canonical/alternate is off the production origin, carries a query, or does not resolve to a file in `dist/`.
 
 CI (`.github/workflows/ci.yml`): the `check` job runs `npm ci` → `astro check` → `tsc --noEmit` → Vitest → `astro build` → budgets → Playwright. After it passes, `deploy-preview` (pull requests) or `deploy-production` (push to `main`) deploys to Cloudflare Workers — see `infra/README.md`.

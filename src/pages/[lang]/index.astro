@@ -1,17 +1,25 @@
 ---
-// Placeholder language home. Routing redirects and real content arrive in
-// Stories 1.4–1.6; the film island in Epic 3.
+// Language home (Story 1.4): keyed title, intro and the `#proyek` section.
+// The project list is filled in Story 1.5; the film island arrives in Epic 3.
 import type { GetStaticPaths } from 'astro';
 import StaticLayout from '../../layouts/StaticLayout.astro';
 import { LOCALES, type Locale } from '../../content/schemas.ts';
+import { t } from '../../i18n/copy.ts';
 
 export const getStaticPaths = (() =>
   LOCALES.map((lang) => ({ params: { lang } }))) satisfies GetStaticPaths;
 
 const lang = Astro.params.lang as Locale;
-const name = 'Jujun Setiawan';
+const title = await t('page.home.title', lang);
+const intro = await t('page.home.intro', lang);
+const projectsHeading = await t('page.home.projects-heading', lang);
 ---
 
-<StaticLayout lang={lang} title={name}>
-  <h1 class="t-title-serif">{name}</h1>
+<StaticLayout lang={lang} title={title} path="">
+  <h1 class="t-title-serif">{title}</h1>
+  <p class="home-intro">{intro}</p>
+  <section id="proyek" class="home-section" aria-labelledby="proyek-heading">
+    <h2 id="proyek-heading" class="t-subtitle-serif">{projectsHeading}</h2>
+    {/* Project list arrives with Story 1.5 (omitted while there are no items). */}
+  </section>
 </StaticLayout>

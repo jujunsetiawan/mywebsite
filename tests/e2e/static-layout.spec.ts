@@ -171,9 +171,10 @@ for (const copy of LANGS) {
         return [...probes].sort();
       };
       // Not vacuous: all three probes far below the fold are focused both ways.
+      // Step budget covers skip link + credit + projects + ID/EN switch + 3 probes.
       const all = ['probe 0', 'probe 1', 'probe 2'];
-      expect(await visit(false, 8)).toEqual(all);
-      expect(await visit(true, 8)).toEqual(all);
+      expect(await visit(false, 10)).toEqual(all);
+      expect(await visit(true, 10)).toEqual(all);
       // After the skip link, the top of the content is not hidden under the top bar.
       await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
       await page.locator('.skip-link').focus();
@@ -213,7 +214,8 @@ async function reflowProblems(page: Page): Promise<string[]> {
     for (let node = walker.nextNode(); node; node = walker.nextNode()) {
       const text = node.textContent?.trim();
       const parent = node.parentElement;
-      if (!text || !parent || parent.closest('.skip-link')) continue;
+      // Skip link and visually hidden text are intentionally clipped.
+      if (!text || !parent || parent.closest('.skip-link, .visually-hidden')) continue;
       const cs = getComputedStyle(parent);
       if (cs.visibility === 'hidden' || parent.getClientRects().length === 0) continue;
       const range = document.createRange();

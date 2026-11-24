@@ -1,0 +1,47 @@
+---
+// ID/EN switch for the top letterbox bar (Story 1.4): plain links to the
+// mirrored route, no JS. The current language carries aria-current="true"
+// (underlined by `.chrome-link[aria-current]`). No aria-label: each link's
+// accessible name is the visible code plus a visually hidden language name in
+// that language (`lang` on the link), e.g. "EN English" (WCAG 2.5.3).
+// Hash and query are deliberately not carried over.
+import type { Locale } from '../content/schemas.ts';
+import { LOCALES } from '../content/schemas.ts';
+import { t } from '../i18n/copy.ts';
+import { localePath } from '../i18n/routes.ts';
+
+interface Props {
+  lang: Locale;
+  /** Language-less route path of the current page ('' for home). */
+  path: string;
+}
+
+const { lang, path } = Astro.props;
+const label = await t('chrome.lang-switch-label', lang);
+const links = await Promise.all(
+  LOCALES.map(async (target) => ({
+    target,
+    href: localePath(target, path),
+    text: await t(`chrome.lang-${target}`, lang),
+    name: await t(`chrome.lang-${target}-name`, target),
+    current: target === lang,
+  })),
+);
+---
+
+<nav class="lang-switch" aria-label={label}>
+  {
+    links.map((link) => (
+      <a
+        class="chrome-link"
+        href={link.href}
+        hreflang={link.target}
+        lang={link.target}
+        aria-current={link.current ? 'true' : undefined}
+        data-chrome={`lang-${link.target}`}
+      >
+        {link.text}<span class="visually-hidden"> {link.name}</span>
+      </a>
+    ))
+  }
+</nav>

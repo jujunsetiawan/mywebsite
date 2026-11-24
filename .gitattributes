@@ -1,4 +1,5 @@
 # Deploy files parsed byte-for-byte (Workers `_headers`, site config) stay LF
 # on every checkout, including Windows with core.autocrlf=true.
 public/_headers text eol=lf
+public/_redirects text eol=lf
 config/*.json text eol=lf

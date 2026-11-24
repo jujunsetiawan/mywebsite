@@ -4,6 +4,7 @@ import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSyn
 import os from 'node:os';
 import path from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
+import { parse as parseYaml } from 'yaml';
 import { filmCopySchema, formatIssues } from '../../src/content/schemas.ts';
 import { COPY_KEYS } from '../../src/i18n/copy-keys.ts';
 import { astroBuild, repoRoot } from './helpers/astro-build.ts';
@@ -59,6 +60,31 @@ describe('static chrome feature flags', () => {
     expect(en).toContain('aria-label="Site footer"');
     // CSP `style-src 'self'`: no inline <style> and no style attributes.
     for (const html of [id, en]) expect(html).not.toMatch(/<style|\sstyle=/);
+    // ID/EN switch (Story 1.4): plain links, current language marked, names in their own language.
+    expect(id).toContain('<nav class="lang-switch" aria-label="Bahasa">');
+    expect(en).toContain('<nav class="lang-switch" aria-label="Language">');
+    for (const html of [id, en]) {
+      // No aria-label: name = visible code + visually hidden own-language name (WCAG 2.5.3).
+      expect(html).not.toMatch(/<a [^>]*data-chrome="lang-[^>]*aria-label|<a [^>]*aria-label[^>]*data-chrome="lang-/);
+      expect(html).toMatch(
+        /<a class="chrome-link" href="\/id\/" hreflang="id" lang="id"[^>]*>ID<span class="visually-hidden"> Bahasa Indonesia<\/span><\/a>/,
+      );
+      expect(html).toMatch(
+        /<a class="chrome-link" href="\/en\/" hreflang="en" lang="en"[^>]*>EN<span class="visually-hidden"> English<\/span><\/a>/,
+      );
+      expect(html.match(/aria-current="true"/g)).toHaveLength(1);
+    }
+    // The projects section holds no empty list until Story 1.5 adds items.
+    for (const html of [id, en]) expect(html).not.toMatch(/<section id="proyek"[\s\S]*?<ul[\s\S]*?<\/section>/);
+    expect(id).toMatch(/aria-current="true" data-chrome="lang-id"/);
+    expect(en).toMatch(/aria-current="true" data-chrome="lang-en"/);
+    // Keyed home copy: one language per page.
+    expect(id).toContain('Product engineer yang menjaga sistem tetap hidup — dan menceritakannya lewat film pendek.');
+    expect(id).not.toContain('A product engineer who keeps systems alive');
+    expect(en).toContain('A product engineer who keeps systems alive — and tells the story as a short film.');
+    expect(en).not.toContain('Product engineer yang menjaga');
+    expect(id).toMatch(/<h2 id="proyek-heading"[^>]*>Proyek<\/h2>/);
+    expect(en).toMatch(/<h2 id="proyek-heading"[^>]*>Projects<\/h2>/);
   }, 120_000);
 
   it('flags true: skip-story, awards and the contact pill render in the page language', () => {
@@ -92,6 +118,35 @@ describe('film-copy keys', () => {
       .map((name) => name.replace(/\.yaml$/, ''))
       .sort();
     expect(files).toEqual([...COPY_KEYS].sort());
+  });
+
+  it('every key has non-empty `id` and `en` text', () => {
+    for (const key of COPY_KEYS) {
+      const data = parseYaml(readFileSync(path.join(repoRoot, 'content/film-copy', `${key}.yaml`), 'utf8'));
+      const result = filmCopySchema.safeParse(data);
+      expect(result.success ? [] : formatIssues(key, result.error), key).toEqual([]);
+    }
+  });
+
+  it('Story 1.4 keys carry the specified copy', () => {
+    const text = (key: string) =>
+      filmCopySchema.parse(parseYaml(readFileSync(path.join(repoRoot, 'content/film-copy', `${key}.yaml`), 'utf8'))).text;
+    expect(text('chrome.lang-id')).toEqual({ id: 'ID', en: 'ID' });
+    expect(text('chrome.lang-en')).toEqual({ id: 'EN', en: 'EN' });
+    expect(text('chrome.lang-id-name')).toEqual({ id: 'Bahasa Indonesia', en: 'Bahasa Indonesia' });
+    expect(text('chrome.lang-en-name')).toEqual({ id: 'English', en: 'English' });
+    expect(text('chrome.lang-switch-label')).toEqual({ id: 'Bahasa', en: 'Language' });
+    expect(text('page.home.title')).toEqual({ id: 'Jujun Setiawan', en: 'Jujun Setiawan' });
+    expect(text('page.home.projects-heading')).toEqual({ id: 'Proyek', en: 'Projects' });
+    expect(text('page.home.intro')).toEqual({
+      id: 'Product engineer yang menjaga sistem tetap hidup — dan menceritakannya lewat film pendek.',
+      en: 'A product engineer who keeps systems alive — and tells the story as a short film.',
+    });
+  });
+
+  it('the language home holds no visible literals', () => {
+    const source = readFileSync(path.join(repoRoot, 'src/pages/[lang]/index.astro'), 'utf8');
+    expect(source).not.toContain('Jujun Setiawan');
   });
 });
 

@@ -3,6 +3,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import type { SiteConfig } from '../../config/site.schema.ts';
+import { checkI18nRoutesDir } from '../../scripts/checks/i18n-routes.ts';
 import { headersFile, NOINDEX_HEADER_LINE, robotsTxt, writeEnvOutput } from '../../src/integrations/site-env.ts';
 import { astroBuild, repoRoot } from './helpers/astro-build.ts';
 
@@ -77,13 +78,14 @@ describe('pure env output', () => {
   });
 });
 
+const outDir = (name: string) => path.join(tmpRoot, name);
+
 /** Real `astro build` of the site into a temp outDir. */
 function build(name: string, env: Record<string, string>) {
-  const outDir = path.join(tmpRoot, name);
-  const { run, output } = astroBuild(outDir, env);
+  const { run, output } = astroBuild(outDir(name), env);
   expect(run.error, output).toBeUndefined();
   expect(run.status, output).toBe(0);
-  const read = (file: string) => readFileSync(path.join(outDir, file), 'utf8');
+  const read = (file: string) => readFileSync(path.join(outDir(name), file), 'utf8');
   return { read };
 }
 
@@ -110,6 +112,20 @@ describe('astro build per SITE_ENV', () => {
     }
     expect(read('_headers')).toBe(PREVIEW_HEADERS);
     expect(read('robots.txt')).toBe('User-agent: *\nDisallow: /\n');
+    expect(read('_redirects')).toBe('/ /id/ 301\n');
+    // Story 1.4: canonical/alternates stay on the production origin in preview builds.
+    const origin = JSON.parse(readFileSync(path.join(repoRoot, 'config/site.preview.json'), 'utf8')).productionOrigin;
+    for (const lang of ['id', 'en']) {
+      const html = read(`${lang}/index.html`);
+      expect(html).toContain(`<link rel="canonical" href="${origin}/${lang}/">`);
+      expect(html).toContain(`<link rel="alternate" hreflang="id" href="${origin}/id/">`);
+      expect(html).toContain(`<link rel="alternate" hreflang="en" href="${origin}/en/">`);
+      expect(html).toContain(`<link rel="alternate" hreflang="x-default" href="${origin}/id/">`);
+    }
+    const routes = checkI18nRoutesDir(outDir('preview'), origin);
+    expect(routes.problems).toEqual([]);
+    // The unmirrored top-level 404 carries neither canonical nor alternates.
+    expect(read('404.html')).not.toMatch(/rel="(canonical|alternate)"/);
   }, 120_000);
 
   it('production with a token: no noindex, allow robots, exactly one beacon', () => {

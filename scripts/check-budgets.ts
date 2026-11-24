@@ -1,9 +1,11 @@
-// Runs all dist/ budget checks and the layer-import check.
+// Runs all dist/ budget checks, the layer-import check and the i18n route check.
 // Usage: node scripts/check-budgets.ts  (Node native type stripping)
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { loadSiteConfig } from '../config/load.ts';
 import { diskReader, formatFirstLoad, measureFirstLoad } from './budgets/first-load.ts';
+import { checkI18nRoutesDir, formatI18nRoutes } from './checks/i18n-routes.ts';
 import { checkLayers, formatLayers } from './budgets/layer-imports.ts';
 import { checkStaticAssets, formatStaticAssets, listFiles } from './budgets/static-assets.ts';
 
@@ -34,6 +36,13 @@ if (!assets.ok) failed = true;
 const violations = checkLayers(rootDir);
 console.log(formatLayers(violations));
 if (violations.length > 0) failed = true;
+console.log('');
+
+// Canonical/hreflang always target the production origin, whatever SITE_ENV built dist/.
+const { productionOrigin } = loadSiteConfig({ configDir: process.env.SITE_CONFIG_DIR ?? path.join(rootDir, 'config') });
+const routes = checkI18nRoutesDir(distDir, productionOrigin);
+console.log(formatI18nRoutes(routes, productionOrigin));
+if (!routes.ok) failed = true;
 
 console.log('');
 console.log(failed ? 'Budgets: FAIL' : 'Budgets: PASS');

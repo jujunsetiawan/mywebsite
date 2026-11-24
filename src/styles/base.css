@@ -83,6 +83,20 @@ a {
   outline: none;
 }
 
+/* ---------- Visually hidden (read by assistive tech, not painted) ---------- */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 /* ---------- Skip link ---------- */
 
 .skip-link {
@@ -176,6 +190,13 @@ a {
   text-underline-offset: 4px;
 }
 
+/* ID/EN switch (Story 1.4): two adjacent links; their >= 44px hit area comes from .chrome-link. */
+.lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .chrome-pill {
   display: inline-flex;
   align-items: center;
@@ -217,4 +238,15 @@ a {
   background: var(--surface-panel);
   padding: var(--space-section) var(--space-gutter);
   overflow-wrap: anywhere;
+}
+
+/* ---------- Language home ---------- */
+
+.home-intro {
+  max-width: 60ch;
+  margin-top: var(--space-gutter);
+}
+
+.home-section {
+  margin-top: var(--space-section);
 }

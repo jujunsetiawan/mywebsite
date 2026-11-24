@@ -8,6 +8,14 @@ export const COPY_KEYS = [
   'chrome.awards',
   'chrome.contact',
   'chrome.footer-label',
+  'chrome.lang-id',
+  'chrome.lang-en',
+  'chrome.lang-id-name',
+  'chrome.lang-en-name',
+  'chrome.lang-switch-label',
+  'page.home.title',
+  'page.home.intro',
+  'page.home.projects-heading',
 ] as const;
 
 export type CopyKey = (typeof COPY_KEYS)[number];

@@ -1,12 +1,15 @@
 ---
 // Office-styled static page frame (Story 1.3): skip link → top letterbox bar →
 // <main id="main"> on surface.panel → footer letterbox bar.
-// Named slots: `lang-switch` (Story 1.4) and `privacy` (Story 1.7).
+// Named slots: `lang-switch` and `privacy` (Story 1.7). When `path` is given
+// (a mirrored route, Story 1.4) the layout fills `lang-switch` itself with the
+// ID/EN switch and BaseLayout emits canonical + hreflang alternates.
 import '../styles/tokens.css';
 import '../styles/type.css';
 import '../styles/base.css';
 import BaseLayout from './BaseLayout.astro';
 import StaticChrome from '../components/StaticChrome.astro';
+import LangSwitch from '../components/LangSwitch.astro';
 import type { Locale } from '../content/schemas.ts';
 import { loadSiteConfig } from '../../config/load.ts';
 import { t } from '../i18n/copy.ts';
@@ -14,18 +17,26 @@ import { t } from '../i18n/copy.ts';
 interface Props {
   lang: Locale;
   title: string;
+  /** Language-less route path ('' for home, e.g. 'proyek/x/'); omit for unmirrored pages. */
+  path?: string;
 }
 
-const { lang, title } = Astro.props;
+const { lang, title, path } = Astro.props;
 const { features } = loadSiteConfig();
 const skipToContent = await t('chrome.skip-to-content', lang);
 const footerLabel = await t('chrome.footer-label', lang);
 ---
 
-<BaseLayout lang={lang} title={title}>
+<BaseLayout lang={lang} title={title} path={path}>
   <a class="skip-link t-ui-caps" href="#main">{skipToContent}</a>
   <StaticChrome lang={lang} features={features}>
-    <slot name="lang-switch" slot="lang-switch" />
+    {
+      path !== undefined ? (
+        <LangSwitch slot="lang-switch" lang={lang} path={path} />
+      ) : (
+        <slot name="lang-switch" slot="lang-switch" />
+      )
+    }
   </StaticChrome>
   <main id="main" class="panel t-body" tabindex="-1">
     <slot />
