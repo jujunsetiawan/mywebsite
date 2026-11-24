@@ -1,5 +1,7 @@
 ---
 import type { Locale } from '../content/schemas.ts';
+import { loadSiteConfig } from '../../config/load.ts';
+import { beaconToken, isIndexable } from '../../config/site.schema.ts';
 
 interface Props {
   lang: Locale;
@@ -7,6 +9,9 @@ interface Props {
 }
 
 const { lang, title } = Astro.props;
+const site = loadSiteConfig();
+const noindex = !isIndexable(site);
+const token = beaconToken(site);
 ---
 
 <!doctype html>
@@ -14,7 +19,18 @@ const { lang, title } = Astro.props;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {noindex && <meta name="robots" content="noindex" />}
     <title>{title}</title>
+    {
+      token !== null && (
+        <script
+          is:inline
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={JSON.stringify({ token })}
+        />
+      )
+    }
   </head>
   <body>
     <slot />

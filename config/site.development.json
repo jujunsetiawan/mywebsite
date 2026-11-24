@@ -1,0 +1,10 @@
+{
+  "env": "development",
+  "productionOrigin": "https://jun-portfolio.your-subdomain.workers.dev",
+  "mediaBase": "/media",
+  "analyticsToken": null,
+  "features": {
+    "hubLinks": false,
+    "contact": false
+  }
+}

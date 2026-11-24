@@ -10,6 +10,7 @@
     "pipeline",
     "node_modules",
     "tests/unit/fixtures",
+    "worker",
     "_bmad",
     "_bmad-output",
     ".agents",

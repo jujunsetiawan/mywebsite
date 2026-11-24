@@ -1,0 +1,22 @@
+// Cloudflare Workers config (Story 1.2).
+// Static `dist/` is served by Workers static assets; the Worker script in
+// `worker/media.ts` only runs for `/media/*` (read-only R2 proxy).
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "jun-portfolio",
+  "main": "worker/media.ts",
+  "compatibility_date": "2026-11-18",
+  "workers_dev": true,
+  "preview_urls": true,
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/media/*"]
+  },
+  "r2_buckets": [
+    {
+      "binding": "MEDIA",
+      "bucket_name": "jun-portfolio-media"
+    }
+  ]
+}
