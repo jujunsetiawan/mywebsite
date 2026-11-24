@@ -1,0 +1,14 @@
+# Dummy award (fictional issuer). Replace with a real certificate by editing
+# this file and its image in assets/.
+order: 6
+dummy: true
+title:
+  id: Riset UX Terapan (contoh)
+  en: Applied UX Research (sample)
+issuer: Sekolah Desain Contoh
+date: "2023-03-28"
+certificate: ./assets/sertifikasi-riset-ux.svg
+certificateAlt:
+  id: "Sertifikat contoh Riset UX Terapan: bingkai krem dengan segel teal."
+  en: "Sample Applied UX Research certificate: cream frame with a teal seal."
+verifyUrl: https://example.com/verify/sertifikasi-riset-ux

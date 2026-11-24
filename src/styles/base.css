@@ -250,3 +250,58 @@ a {
 .home-section {
   margin-top: var(--space-section);
 }
+
+/* Project and award lists (Story 1.5): items separated by hairline rules. */
+.content-list {
+  margin: var(--space-gutter) 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: var(--space-hairline) solid var(--surface-hairline);
+}
+
+.content-list-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-scrim-pad-y);
+  padding-block: calc(var(--space-gutter) / 2);
+  border-bottom: var(--space-hairline) solid var(--surface-hairline);
+}
+
+/* A whole project row is the link; >= 44px tall. */
+.content-list-link {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-scrim-pad-y);
+  align-self: stretch;
+  min-height: var(--space-min-hit);
+  text-decoration: none;
+}
+
+.content-list-link:hover .content-list-title {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.content-list-body {
+  max-width: 60ch;
+  color: var(--ink-soft);
+}
+
+.content-list-meta {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-gutter);
+  color: var(--ink-muted);
+}
+
+/* Verify link: ui-caps text with a >= 44px hit area through invisible padding. */
+.content-list-action {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--space-min-hit);
+  min-width: var(--space-min-hit);
+  color: var(--ink-primary);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}

@@ -26,6 +26,6 @@ describe('astro build with an invalid content entry', () => {
     expect(run.signal, output).toBeNull();
     expect(run.status, output).not.toBe(0);
     expect(output).toMatch(/projects → broken/);
-    expect(output).toMatch(/title\.en/);
+    expect(output).toMatch(/name\.en/);
   }, 120_000);
 });

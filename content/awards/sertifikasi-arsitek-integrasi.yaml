@@ -1,0 +1,14 @@
+# Dummy award (fictional issuer). Replace with a real certificate by editing
+# this file and its image in assets/.
+order: 1
+dummy: true
+title:
+  id: Arsitek Integrasi Sistem (contoh)
+  en: Systems Integration Architect (sample)
+issuer: Lembaga Sertifikasi Contoh
+date: "2025-09-12"
+certificate: ./assets/sertifikasi-arsitek-integrasi.svg
+certificateAlt:
+  id: "Sertifikat contoh Arsitek Integrasi Sistem: bingkai krem dengan segel hijau."
+  en: "Sample Systems Integration Architect certificate: cream frame with a green seal."
+verifyUrl: https://example.com/verify/sertifikasi-arsitek-integrasi

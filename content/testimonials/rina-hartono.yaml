@@ -1,0 +1,11 @@
+# Dummy testimonial (fictional person and company). Replace with a real one by
+# editing this file and the photo in assets/.
+order: 1
+dummy: true
+photo: ./assets/rina-hartono.svg
+name: Rina Hartono
+company: PT Contoh Distribusi Nusantara
+project: sistem-order-distribusi
+quote:
+  id: Dulu kami menunggu konfirmasi order sampai sore. Sekarang toko tahu stoknya dalam hitungan menit, dan tim kami berhenti mengetik ulang pesanan.
+  en: We used to wait until late afternoon to confirm orders. Now stores know the stock within minutes, and our team stopped retyping orders.

@@ -1,0 +1,14 @@
+# Dummy award (fictional issuer). Replace with a real certificate by editing
+# this file and its image in assets/.
+order: 5
+dummy: true
+title:
+  id: Dasar Komputasi Awan (contoh)
+  en: Cloud Computing Fundamentals (sample)
+issuer: Lembaga Sertifikasi Contoh
+date: "2023-10-17"
+certificate: ./assets/sertifikasi-dasar-cloud.svg
+certificateAlt:
+  id: "Sertifikat contoh Dasar Komputasi Awan: bingkai krem dengan segel cokelat meja."
+  en: "Sample Cloud Computing Fundamentals certificate: cream frame with a desk-brown seal."
+verifyUrl: https://example.com/verify/sertifikasi-dasar-cloud

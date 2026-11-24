@@ -97,18 +97,41 @@ function withBuildLock<T>(fn: () => T): T {
   }
 }
 
+// Astro's content store (cacheDir). Its glob loader reuses a cached entry
+// whenever the file *contents* match, keeping the cached file path, so a build
+// from another content dir (CONTENT_DIR) must not share it.
+const CONTENT_STORE = [
+  path.join(repoRoot, 'node_modules/.astro/data-store.json'),
+  path.join(repoRoot, 'node_modules/.astro/data-store'),
+];
+
+function clearContentStore(): void {
+  for (const target of CONTENT_STORE) rmSync(target, { recursive: true, force: true });
+}
+
+export interface AstroBuildOptions {
+  /** Start from an empty content store and leave none behind (needed with CONTENT_DIR). */
+  freshContentStore?: boolean;
+}
+
 /** `astro build --outDir <outDir>` of the repo root with extra env; returns the spawn result and combined output. */
 export function astroBuild(
   outDir: string,
   env: Record<string, string>,
+  options: AstroBuildOptions = {},
 ): { run: SpawnSyncReturns<string>; output: string } {
   return withBuildLock(() => {
-    const run = spawnSync(process.execPath, [astroBin, 'build', '--outDir', outDir], {
-      cwd: repoRoot,
-      encoding: 'utf8',
-      env: { ...process.env, FORCE_COLOR: '0', NO_COLOR: '1', ...env },
-      timeout: 120_000,
-    });
-    return { run, output: `${run.stdout}\n${run.stderr}` };
+    if (options.freshContentStore) clearContentStore();
+    try {
+      const run = spawnSync(process.execPath, [astroBin, 'build', '--outDir', outDir], {
+        cwd: repoRoot,
+        encoding: 'utf8',
+        env: { ...process.env, FORCE_COLOR: '0', NO_COLOR: '1', ...env },
+        timeout: 120_000,
+      });
+      return { run, output: `${run.stdout}\n${run.stderr}` };
+    } finally {
+      if (options.freshContentStore) clearContentStore();
+    }
   });
 }

@@ -60,7 +60,7 @@ for (const home of HOMES) {
       await expect(page.locator('#main p.home-intro')).toHaveText(home.intro);
       const section = page.locator('section#proyek');
       await expect(section).toBeVisible();
-      await expect(section.locator('ul')).toHaveCount(0);
+      await expect(section.locator('ul')).toHaveCount(1);
       await expect(page.getByRole('region', { name: home.projects })).toBeVisible();
       await expect(section.getByRole('heading', { level: 2 })).toHaveText(home.projects);
       await expect(page.locator('body')).not.toContainText(home.foreignIntro);

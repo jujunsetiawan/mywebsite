@@ -43,7 +43,7 @@ First-time Playwright setup: `npx playwright install chromium webkit`.
 
 ## Layout
 
-- `content/` — all facts as YAML content collections (`projects`, `awards`, `testimonials`, `film-copy`), validated by `src/content/schemas.ts`. `film-copy/<key>.yaml` holds keyed UI copy (`text: { id, en }`); components read it with `t(key, lang)` from `src/i18n/copy.ts` and contain no visible literals
+- `content/` — all facts as YAML content collections (`projects`, `awards`, `testimonials`, `film-copy`), validated by `src/content/schemas.ts` (see Content model). `film-copy/<key>.yaml` holds keyed UI copy (`text: { id, en }`); components read it with `t(key, lang)` from `src/i18n/copy.ts` and contain no visible literals
 - `docs/design/DESIGN.md` — the committed design spec and the source of truth for tokens. Future DESIGN.md edits must be made in (or copied to) this file; `tests/unit/design-tokens.test.ts` fails CI when `src/styles/tokens.css` drifts from its frontmatter
 - `src/styles/` — `tokens.css` (DESIGN.md tokens as `--<group>-<name>` custom properties), `type.css` (`.t-<style>` utilities, weight 400 only), `base.css` (reset, letterbox bars, skip link, focus ring). System font stacks only, no web fonts
 - `src/layouts/StaticLayout.astro` — office-styled static page frame: skip link, top letterbox bar (`src/components/StaticChrome.astro`; named slot `lang-switch`), `<main id="main">` on the panel, footer bar (named slot `privacy`). Hub links and the contact pill render only when `features.hubLinks` / `features.contact` are on
@@ -57,6 +57,21 @@ First-time Playwright setup: `npx playwright install chromium webkit`.
 - `worker/media.ts` — read-only `/media/*` R2 proxy; `wrangler.jsonc` — Workers config
 - `public/_headers` — shared CSP; `public/_redirects` — `/` → `/id/` 301
 - `infra/README.md` — Cloudflare setup, tokens, analytics, rollback
+
+## Content model
+
+Every fact on the site lives in `content/`. Schemas: `src/content/schemas.ts` (pure Zod; image fields come from a factory taking Astro's `image` helper). Cross-entry rules: `src/content/integrity.ts`, run on every build by the homes' data loader (`src/content/home.ts`). Any violation fails `astro build` naming the entry and the field.
+
+- A **localized** field is `{ id, en }`, both non-empty. A **localized list** is `{ id: [...], en: [...] }`, both non-empty, same length, no empty items.
+- **Dates** are ISO `YYYY-MM-DD` and must be **quoted** (`date: "2026-03-12"`): unquoted YAML dates are parsed loosely (`2026-13-40` silently becomes 2027-02-09), so the schema rejects them.
+- `projects/<slug>.yaml` — `slug` (kebab-case, equal to the file name), `order` (positive, unique), `type` (`web | mobile | integrasi`), `year`, `name`, `oneLineOutcome`, `period: { start, end }` (`end` ≥ `start`), `role` (localized), `stack` (non-empty list), `sections` in display order: `outcomes`, `businessFlow`, `process` (localized lists), `techStack` (`{ name, purpose }`), `apiContract` (`{ method: GET|POST|PUT|PATCH|DELETE, path, summary }`), `samplePrd` (localized), `uiux` (`{ image, alt }`), `prototype` (`{ note, url? }`, https), `dummy`.
+- `awards/<id>.yaml` — `order` (unique), `title`, `issuer`, `date`, `certificate` (image), `certificateAlt`, `verifyUrl` (https), `dummy`.
+- `testimonials/<id>.yaml` — `order` (unique), `photo` (image), `name`, `company`, `quote`, `project?` (an existing project slug), `dummy`.
+- Images live in each collection's `assets/` folder and are referenced relative to the entry (`./assets/x.svg`). Every placeholder image is self-made and listed in `licenses/assets.yaml` (`licence: original`, `kind: image`).
+
+The language homes list projects (`#proyek`, name + one-line outcome, linking to `/<lang>/proyek/<slug>/`) and awards (`#penghargaan`, title, issuer, localized date, verify link in a new tab), both sorted by `order`.
+
+**Swapping dummy for real content is a `content/` edit only:** edit or replace the YAML files (and their images in `assets/`), set `dummy: false`, list any new image in `licenses/assets.yaml`, and rebuild. No file in `src/` holds project, award or testimonial text. The current entries are all fictional (`dummy: true`).
 
 ## Routing (ID default, EN mirror)
 

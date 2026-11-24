@@ -1,0 +1,14 @@
+# Dummy award (fictional issuer). Replace with a real certificate by editing
+# this file and its image in assets/.
+order: 2
+dummy: true
+title:
+  id: Manajemen Produk Digital (contoh)
+  en: Digital Product Management (sample)
+issuer: Akademi Produk Contoh
+date: "2025-05-20"
+certificate: ./assets/sertifikasi-manajemen-produk.svg
+certificateAlt:
+  id: "Sertifikat contoh Manajemen Produk Digital: bingkai krem dengan segel amber."
+  en: "Sample Digital Product Management certificate: cream frame with an amber seal."
+verifyUrl: https://example.com/verify/sertifikasi-manajemen-produk

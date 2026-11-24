@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="750" viewBox="0 0 1200 750">
+  <!-- Self-made placeholder wireframe: operations dashboard (no text, fictional). -->
+  <rect width="1200" height="750" fill="#0A1430"/>
+  <rect x="0" y="0" width="1200" height="64" fill="#060504"/>
+  <rect x="32" y="22" width="200" height="20" fill="#F2D3A8"/>
+  <g fill="#12232A" stroke="#2A241E" stroke-width="2">
+    <rect x="32" y="96" width="360" height="160"/>
+    <rect x="420" y="96" width="360" height="160"/>
+    <rect x="808" y="96" width="360" height="160"/>
+    <rect x="32" y="288" width="748" height="430"/>
+    <rect x="808" y="288" width="360" height="430"/>
+  </g>
+  <rect x="64" y="128" width="140" height="48" fill="#F1EBE0"/>
+  <rect x="452" y="128" width="140" height="48" fill="#F1EBE0"/>
+  <rect x="840" y="128" width="140" height="48" fill="#E0A43A"/>
+  <polyline points="64,660 160,600 256,620 352,520 448,560 544,460 640,500 748,400" fill="none" stroke="#5FA37A" stroke-width="6"/>
+  <g fill="#C8392E">
+    <rect x="840" y="320" width="296" height="56"/>
+  </g>
+  <g fill="#CFC8BC">
+    <rect x="840" y="408" width="296" height="12"/>
+    <rect x="840" y="440" width="240" height="12"/>
+    <rect x="840" y="472" width="268" height="12"/>
+  </g>
+</svg>

@@ -1,0 +1,46 @@
+---
+// Award list on the language homes (Story 1.5): title, issuer, localized date
+// and a verify link opening the issuer's page in a new tab. Text comes from
+// `content/awards/` and keyed `film-copy`.
+import type { CollectionEntry } from 'astro:content';
+import type { Locale } from '../content/schemas.ts';
+import { formatDate } from '../i18n/dates.ts';
+import { t } from '../i18n/copy.ts';
+
+interface Props {
+  lang: Locale;
+  /** Already sorted by `order`. */
+  awards: CollectionEntry<'awards'>[];
+}
+
+const { lang, awards } = Astro.props;
+const verify = await t('page.home.verify', lang);
+const newTab = await t('page.home.verify-new-tab', lang);
+---
+
+{
+  awards.length > 0 && (
+    <ul class="content-list">
+      {awards.map(({ id, data }) => (
+        <li class="content-list-item" data-award={id}>
+          <p class="content-list-title t-subtitle-serif" id={`award-${id}`}>
+            {data.title[lang]}
+          </p>
+          <p class="content-list-meta t-ui-caps">
+            <span>{data.issuer}</span>
+            <time datetime={data.date}>{formatDate(data.date, lang)}</time>
+          </p>
+          <a
+            class="content-list-action t-ui-caps"
+            href={data.verifyUrl}
+            target="_blank"
+            rel="noopener"
+            aria-describedby={`award-${id}`}
+          >
+            {verify}<span class="visually-hidden"> {newTab}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}

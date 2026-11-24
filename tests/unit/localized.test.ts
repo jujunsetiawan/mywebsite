@@ -1,23 +1,12 @@
+// Bilingual field helpers (`localized()`, `localizedList()`) and their error
+// messages, as used by the Story 1.5 content model.
 import { describe, expect, it } from 'vitest';
-import {
-  awardSchema,
-  formatIssues,
-  localized,
-  projectSchema,
-  testimonialSchema,
-} from '../../src/content/schemas.ts';
+import { formatIssues, localized, localizedList } from '../../src/content/schemas.ts';
 
-const validProject = {
-  dummy: true,
-  title: { id: 'Contoh Proyek', en: 'Sample Project' },
-  summary: { id: 'Ringkasan', en: 'Summary' },
-  year: 2026,
-};
-
-function issuesFor(entryId: string, data: unknown): string[] {
-  const result = projectSchema.safeParse(data);
+function issues(schema: { safeParse: (data: unknown) => { success: boolean; error?: unknown } }, data: unknown) {
+  const result = schema.safeParse(data);
   expect(result.success).toBe(false);
-  return result.success ? [] : formatIssues(entryId, result.error);
+  return formatIssues('entry', result.error as Parameters<typeof formatIssues>[1]);
 }
 
 describe('localized()', () => {
@@ -25,73 +14,61 @@ describe('localized()', () => {
     expect(localized().parse({ id: 'Halo', en: 'Hello' })).toEqual({ id: 'Halo', en: 'Hello' });
   });
 
+  it('missing en names the field', () => {
+    expect(issues(localized(), { id: 'Halo' })).toEqual(['entry: en — is required']);
+  });
+
+  it('missing id names the field', () => {
+    expect(issues(localized(), { en: 'Hello' })).toEqual(['entry: id — is required']);
+  });
+
+  it('rejects whitespace-only text', () => {
+    expect(issues(localized(), { id: 'Halo', en: '  ' })).toEqual(['entry: en — must be a non-empty string']);
+  });
+
   it('rejects unknown keys', () => {
     expect(localized().safeParse({ id: 'Halo', en: 'Hello', fr: 'Bonjour' }).success).toBe(false);
   });
 
   it('rejects non-string values', () => {
-    expect(localized().safeParse({ id: 1, en: 'Hello' }).success).toBe(false);
+    expect(issues(localized(), { id: 1, en: 'Hello' })).toEqual(['entry: id — must be a string']);
   });
 });
 
-describe('content entry validation (I/O matrix)', () => {
-  it('valid entry parses', () => {
-    expect(projectSchema.parse(validProject).title.en).toBe('Sample Project');
+describe('localizedList()', () => {
+  it('accepts equal-length non-empty lists', () => {
+    const value = { id: ['Satu', 'Dua'], en: ['One', 'Two'] };
+    expect(localizedList().parse(value)).toEqual(value);
   });
 
-  it('missing en fails naming entry id and field path', () => {
-    const issues = issuesFor('sample-project', { ...validProject, title: { id: 'Contoh' } });
-    expect(issues).toContain('sample-project: title.en — is required');
+  it('length mismatch names the en field', () => {
+    expect(issues(localizedList(), { id: ['a', 'b', 'c'], en: ['a', 'b'] })).toEqual([
+      'entry: en — must have the same number of items as id (3), got 2',
+    ]);
   });
 
-  it('missing id fails naming entry id and field path', () => {
-    const issues = issuesFor('sample-project', { ...validProject, title: { en: 'Sample' } });
-    expect(issues).toContain('sample-project: title.id — is required');
+  it('missing en names the field', () => {
+    expect(issues(localizedList(), { id: ['a'] })).toEqual(['entry: en — is required']);
   });
 
-  it('whitespace-only locale fails naming entry id and field path', () => {
-    const issues = issuesFor('sample-project', { ...validProject, title: { id: 'Contoh', en: '  ' } });
-    expect(issues).toContain('sample-project: title.en — must be a non-empty string');
+  it('rejects empty lists', () => {
+    expect(issues(localizedList(), { id: [], en: [] })).toEqual([
+      'entry: id — must be a non-empty list',
+      'entry: en — must be a non-empty list',
+    ]);
   });
 
-  it('dummy defaults to false when omitted', () => {
-    const { dummy: _omit, ...rest } = validProject;
-    expect(projectSchema.parse(rest).dummy).toBe(false);
-  });
-});
-
-describe('schema strictness and field rules', () => {
-  const validAward = { title: { id: 'P', en: 'A' }, issuer: 'X', year: 2026 };
-  const validTestimonial = { title: { id: 'T', en: 'T' }, quote: { id: 'Q', en: 'Q' }, author: 'X' };
-
-  it('rejects unknown top-level keys', () => {
-    expect(projectSchema.safeParse({ ...validProject, summery: 'typo' }).success).toBe(false);
+  it('rejects empty items, naming the item index', () => {
+    expect(issues(localizedList(), { id: ['a', ' '], en: ['a', 'b'] })).toEqual([
+      'entry: id.1 — must be a non-empty string',
+    ]);
   });
 
-  it('rejects whitespace-only issuer and author', () => {
-    expect(awardSchema.safeParse({ ...validAward, issuer: '   ' }).success).toBe(false);
-    expect(testimonialSchema.safeParse({ ...validTestimonial, author: '   ' }).success).toBe(false);
+  it('rejects a plain string instead of a list', () => {
+    expect(issues(localizedList(), { id: 'a', en: ['a'] })).toEqual(['entry: id — must be a list']);
   });
 
-  it('accepts integer years 1900–2100 only', () => {
-    expect(awardSchema.safeParse({ ...validAward, year: 1899 }).success).toBe(false);
-    expect(awardSchema.safeParse({ ...validAward, year: 2101 }).success).toBe(false);
-    expect(awardSchema.safeParse({ ...validAward, year: 2026.5 }).success).toBe(false);
-    expect(projectSchema.safeParse({ ...validProject, year: 1899 }).success).toBe(false);
-    expect(projectSchema.safeParse({ ...validProject, year: 2101 }).success).toBe(false);
-    expect(projectSchema.safeParse({ ...validProject, year: 2026.5 }).success).toBe(false);
-  });
-
-  it('rejects a testimonial quote missing en', () => {
-    expect(testimonialSchema.safeParse({ ...validTestimonial, quote: { id: 'Q' } }).success).toBe(false);
-  });
-});
-
-describe('award and testimonial schemas', () => {
-  it('require a localized title', () => {
-    expect(awardSchema.safeParse({ title: { id: 'A' }, issuer: 'X', year: 2026 }).success).toBe(false);
-    expect(
-      testimonialSchema.safeParse({ title: { id: 'A', en: 'A' }, quote: { id: 'Q', en: 'Q' }, author: 'X' }).success,
-    ).toBe(true);
+  it('rejects unknown keys', () => {
+    expect(localizedList().safeParse({ id: ['a'], en: ['a'], fr: ['a'] }).success).toBe(false);
   });
 });

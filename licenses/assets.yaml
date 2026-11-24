@@ -162,6 +162,102 @@ assets:
     purpose: "desk-top wood (tint toward walnut #3A2A1C)"
     used-in:
       - pipeline/out/scenes/act2_desk_0307.blend (story 0.2 style frame)
+  - id: site-projects-sistem-order-distribusi-ui
+    source: "self-made (Story 1.5): content/projects/assets/sistem-order-distribusi-ui.svg"
+    licence: original
+    proof: content/projects/assets/sistem-order-distribusi-ui.svg
+    kind: image
+    purpose: "dummy UI/UX wireframe placeholder, DESIGN palette shapes only"
+    used-in:
+      - "content/projects/sistem-order-distribusi.yaml (sections.uiux)"
+  - id: site-projects-dashboard-operasional-ui
+    source: "self-made (Story 1.5): content/projects/assets/dashboard-operasional-ui.svg"
+    licence: original
+    proof: content/projects/assets/dashboard-operasional-ui.svg
+    kind: image
+    purpose: "dummy UI/UX wireframe placeholder, DESIGN palette shapes only"
+    used-in:
+      - "content/projects/dashboard-operasional.yaml (sections.uiux)"
+  - id: site-projects-integrasi-pembayaran-ui
+    source: "self-made (Story 1.5): content/projects/assets/integrasi-pembayaran-ui.svg"
+    licence: original
+    proof: content/projects/assets/integrasi-pembayaran-ui.svg
+    kind: image
+    purpose: "dummy UI/UX wireframe placeholder, DESIGN palette shapes only"
+    used-in:
+      - "content/projects/integrasi-pembayaran.yaml (sections.uiux)"
+  - id: site-awards-sertifikasi-arsitek-integrasi
+    source: "self-made (Story 1.5): content/awards/assets/sertifikasi-arsitek-integrasi.svg"
+    licence: original
+    proof: content/awards/assets/sertifikasi-arsitek-integrasi.svg
+    kind: image
+    purpose: "dummy placeholder certificate, DESIGN palette shapes only"
+    used-in:
+      - "content/awards/sertifikasi-arsitek-integrasi.yaml (certificate)"
+  - id: site-awards-sertifikasi-manajemen-produk
+    source: "self-made (Story 1.5): content/awards/assets/sertifikasi-manajemen-produk.svg"
+    licence: original
+    proof: content/awards/assets/sertifikasi-manajemen-produk.svg
+    kind: image
+    purpose: "dummy placeholder certificate, DESIGN palette shapes only"
+    used-in:
+      - "content/awards/sertifikasi-manajemen-produk.yaml (certificate)"
+  - id: site-awards-penghargaan-inovasi-operasional
+    source: "self-made (Story 1.5): content/awards/assets/penghargaan-inovasi-operasional.svg"
+    licence: original
+    proof: content/awards/assets/penghargaan-inovasi-operasional.svg
+    kind: image
+    purpose: "dummy placeholder certificate, DESIGN palette shapes only"
+    used-in:
+      - "content/awards/penghargaan-inovasi-operasional.yaml (certificate)"
+  - id: site-awards-sertifikasi-keamanan-api
+    source: "self-made (Story 1.5): content/awards/assets/sertifikasi-keamanan-api.svg"
+    licence: original
+    proof: content/awards/assets/sertifikasi-keamanan-api.svg
+    kind: image
+    purpose: "dummy placeholder certificate, DESIGN palette shapes only"
+    used-in:
+      - "content/awards/sertifikasi-keamanan-api.yaml (certificate)"
+  - id: site-awards-sertifikasi-dasar-cloud
+    source: "self-made (Story 1.5): content/awards/assets/sertifikasi-dasar-cloud.svg"
+    licence: original
+    proof: content/awards/assets/sertifikasi-dasar-cloud.svg
+    kind: image
+    purpose: "dummy placeholder certificate, DESIGN palette shapes only"
+    used-in:
+      - "content/awards/sertifikasi-dasar-cloud.yaml (certificate)"
+  - id: site-awards-sertifikasi-riset-ux
+    source: "self-made (Story 1.5): content/awards/assets/sertifikasi-riset-ux.svg"
+    licence: original
+    proof: content/awards/assets/sertifikasi-riset-ux.svg
+    kind: image
+    purpose: "dummy placeholder certificate, DESIGN palette shapes only"
+    used-in:
+      - "content/awards/sertifikasi-riset-ux.yaml (certificate)"
+  - id: site-testimonials-rina-hartono
+    source: "self-made (Story 1.5): content/testimonials/assets/rina-hartono.svg"
+    licence: original
+    proof: content/testimonials/assets/rina-hartono.svg
+    kind: image
+    purpose: "dummy placeholder initials portrait, DESIGN palette shapes only"
+    used-in:
+      - "content/testimonials/rina-hartono.yaml (photo)"
+  - id: site-testimonials-bagus-pratama
+    source: "self-made (Story 1.5): content/testimonials/assets/bagus-pratama.svg"
+    licence: original
+    proof: content/testimonials/assets/bagus-pratama.svg
+    kind: image
+    purpose: "dummy placeholder initials portrait, DESIGN palette shapes only"
+    used-in:
+      - "content/testimonials/bagus-pratama.yaml (photo)"
+  - id: site-testimonials-maya-kusumadewi
+    source: "self-made (Story 1.5): content/testimonials/assets/maya-kusumadewi.svg"
+    licence: original
+    proof: content/testimonials/assets/maya-kusumadewi.svg
+    kind: image
+    purpose: "dummy placeholder initials portrait, DESIGN palette shapes only"
+    used-in:
+      - "content/testimonials/maya-kusumadewi.yaml (photo)"
 
 tools:
   - id: blender

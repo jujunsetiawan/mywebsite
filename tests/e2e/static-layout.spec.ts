@@ -1,6 +1,14 @@
 // Story 1.3: office-styled static layout — keyboard, focus, hit areas, flags,
 // bar sizing and reflow. Local build (flags off) served by `wrangler dev`.
+import { readdirSync } from 'node:fs';
+import path from 'node:path';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
+
+/** Number of entries in a content collection (each renders one focusable link on the homes). */
+const entryCount = (collection: string) =>
+  readdirSync(path.join(process.cwd(), 'content', collection)).filter((name) => name.endsWith('.yaml')).length;
+/** Tab steps for the probe walk: fixed chrome/probe base (Story 1.4) + project and award links. */
+const TAB_BUDGET = 10 + entryCount('projects') + entryCount('awards');
 
 const LANGS = [
   { lang: 'id', credit: 'Jun Studio mempersembahkan', projects: 'Proyek', skip: 'Langsung ke konten' },
@@ -82,7 +90,11 @@ for (const copy of LANGS) {
       for (const key of ['skip-story', 'awards', 'contact']) {
         await expect(page.locator(`[data-chrome="${key}"]`)).toHaveCount(0);
       }
-      await expect(page.locator('body')).not.toContainText(/Lewati Cerita|Skip Story|Penghargaan|Awards|Hubungi|Contact/);
+      // The bars hold no hub/contact items; the awards section in the content is Story 1.5's.
+      for (const bar of ['header.bar--top', 'footer.bar--bottom']) {
+        await expect(page.locator(bar)).not.toContainText(/Lewati Cerita|Skip Story|Penghargaan|Awards|Hubungi|Contact/);
+      }
+      await expect(page.locator('body')).not.toContainText(/Lewati Cerita|Skip Story|Hubungi|Contact/);
       await expect(page.locator('button')).toHaveCount(0);
     });
 
@@ -171,10 +183,11 @@ for (const copy of LANGS) {
         return [...probes].sort();
       };
       // Not vacuous: all three probes far below the fold are focused both ways.
-      // Step budget covers skip link + credit + projects + ID/EN switch + 3 probes.
+      // Step budget: the Story 1.4 base (skip link + credit + projects + ID/EN
+      // switch + 3 probes + slack) plus one link per project and award entry.
       const all = ['probe 0', 'probe 1', 'probe 2'];
-      expect(await visit(false, 10)).toEqual(all);
-      expect(await visit(true, 10)).toEqual(all);
+      expect(await visit(false, TAB_BUDGET)).toEqual(all);
+      expect(await visit(true, TAB_BUDGET)).toEqual(all);
       // After the skip link, the top of the content is not hidden under the top bar.
       await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
       await page.locator('.skip-link').focus();

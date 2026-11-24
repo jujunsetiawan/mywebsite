@@ -1,8 +1,43 @@
-# Intentionally invalid: title.en is missing.
-dummy: true
-title:
-  id: Rusak
-summary:
-  id: Ringkasan
-  en: Summary
+# Intentionally invalid: name.en is missing; everything else is valid.
+slug: broken
+order: 1
+type: web
 year: 2026
+dummy: true
+name:
+  id: Rusak
+oneLineOutcome:
+  id: Hasil
+  en: Outcome
+period:
+  start: "2026-01-01"
+  end: "2026-02-01"
+role:
+  id: Peran
+  en: Role
+stack:
+  - TypeScript
+sections:
+  outcomes:
+    id: [Satu]
+    en: [One]
+  businessFlow:
+    id: [Satu]
+    en: [One]
+  process:
+    id: [Satu]
+    en: [One]
+  techStack: []
+  apiContract: []
+  samplePrd:
+    id: PRD
+    en: PRD
+  uiux:
+    - image: ./assets/screen.svg
+      alt:
+        id: Layar
+        en: Screen
+  prototype:
+    note:
+      id: Catatan
+      en: Note

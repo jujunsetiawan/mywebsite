@@ -16,6 +16,9 @@ export const COPY_KEYS = [
   'page.home.title',
   'page.home.intro',
   'page.home.projects-heading',
+  'page.home.awards-heading',
+  'page.home.verify',
+  'page.home.verify-new-tab',
 ] as const;
 
 export type CopyKey = (typeof COPY_KEYS)[number];

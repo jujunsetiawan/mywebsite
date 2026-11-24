@@ -1,0 +1,10 @@
+# Dummy testimonial (fictional person and company). Replace with a real one by
+# editing this file and the photo in assets/.
+order: 3
+dummy: true
+photo: ./assets/maya-kusumadewi.svg
+name: Maya Kusumadewi
+company: CV Contoh Retail Mandiri
+quote:
+  id: Jun bertanya dulu sebelum membangun. Hasilnya sistem yang benar-benar dipakai tim kami setiap hari.
+  en: Jun asks before he builds. The result is a system our team actually uses every day.

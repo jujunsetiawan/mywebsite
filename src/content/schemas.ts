@@ -1,5 +1,7 @@
 // Pure Zod schemas for content collections. This module must not import
-// `astro:content` so that Vitest can load it directly.
+// `astro:content` so that Vitest can load it directly. Collections with image
+// fields export a schema factory that takes Astro's `image` helper (Vitest
+// passes a stub).
 import { z } from 'astro/zod';
 
 export const LOCALES = ['id', 'en'] as const;
@@ -22,38 +24,167 @@ export const localized = () =>
 
 export type Localized = z.infer<ReturnType<typeof localized>>;
 
+const nonEmptyTextList = z
+  .array(nonEmptyText, { error: (issue) => (issue.input === undefined ? 'is required' : 'must be a list') })
+  .min(1, { error: 'must be a non-empty list' });
+
+/**
+ * A bilingual list: `id` and `en` are both non-empty lists of non-empty
+ * strings with the same number of items (item n of `id` translates item n of `en`).
+ */
+export const localizedList = () =>
+  z.strictObject({ id: nonEmptyTextList, en: nonEmptyTextList }).check((ctx) => {
+    const { id, en } = ctx.value;
+    if (id.length !== en.length) {
+      ctx.issues.push({
+        code: 'custom',
+        input: en,
+        path: ['en'],
+        message: `must have the same number of items as id (${id.length}), got ${en.length}`,
+      });
+    }
+  });
+
+export type LocalizedList = z.infer<ReturnType<typeof localizedList>>;
+
+/** Kebab-case slug: lowercase letters and digits in `-`-separated groups. */
+export const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+
+const slug = z
+  .string({ error: (issue) => (issue.input === undefined ? 'is required' : 'must be a string') })
+  .regex(SLUG_PATTERN, { error: 'must be kebab-case (lowercase letters and digits separated by single hyphens)' });
+
+/** True when `value` is `YYYY-MM-DD` naming a real calendar day. */
+export function isIsoDate(value: string): boolean {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (!match) return false;
+  const [year, month, day] = [Number(match[1]), Number(match[2]), Number(match[3])];
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day;
+}
+
+/**
+ * ISO date as a quoted YAML string. Unquoted YAML dates are rejected: the YAML
+ * timestamp parser silently rolls invalid days over (`2026-13-40` → 2027-02-09).
+ */
+const isoDate = z
+  .string({
+    error: (issue) =>
+      issue.input === undefined
+        ? 'is required'
+        : issue.input instanceof Date
+          ? 'must be a quoted ISO date string, e.g. "2026-03-01" (unquoted YAML dates are not checked)'
+          : 'must be a string',
+  })
+  .refine(isIsoDate, { error: 'must be a real calendar date in ISO format YYYY-MM-DD' });
+
+const httpsUrl = z
+  .string({ error: (issue) => (issue.input === undefined ? 'is required' : 'must be a string') })
+  .refine(
+    (value) => {
+      try {
+        return new URL(value).protocol === 'https:';
+      } catch {
+        return false;
+      }
+    },
+    { error: 'must be an absolute https URL' },
+  );
+
 const year = z.number().int().min(1900).max(2100);
+const order = z.number().int().positive();
+const dummy = z.boolean().default(false);
 
-export const projectSchema = z.strictObject({
-  title: localized(),
-  summary: localized(),
-  year,
-  dummy: z.boolean().default(false),
+export const PROJECT_TYPES = ['web', 'mobile', 'integrasi'] as const;
+export const HTTP_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'] as const;
+
+/** Project page sections in their fixed display order. */
+export const SECTION_KEYS = [
+  'outcomes',
+  'businessFlow',
+  'process',
+  'techStack',
+  'apiContract',
+  'samplePrd',
+  'uiux',
+  'prototype',
+] as const;
+
+/** The subset of Astro's `SchemaContext` the factories use; Vitest passes a stub. */
+export interface SchemaHelpers<I extends z.ZodType> {
+  image: () => I;
+}
+
+const period = z.strictObject({ start: isoDate, end: isoDate }).check((ctx) => {
+  const { start, end } = ctx.value;
+  // Only compare two valid dates; an invalid one already has its own issue.
+  if (isIsoDate(start) && isIsoDate(end) && end < start) {
+    ctx.issues.push({ code: 'custom', input: end, path: ['end'], message: `must not be before start (${start})` });
+  }
 });
 
-export const awardSchema = z.strictObject({
-  title: localized(),
-  issuer: nonEmptyText,
-  year,
-  dummy: z.boolean().default(false),
-});
+/** `content/projects/<slug>.yaml`; images in `content/projects/assets/`. */
+export const projectSchema = <I extends z.ZodType>({ image }: SchemaHelpers<I>) =>
+  z.strictObject({
+    slug,
+    order,
+    type: z.enum(PROJECT_TYPES),
+    year,
+    name: localized(),
+    oneLineOutcome: localized(),
+    period,
+    role: localized(),
+    stack: z.array(nonEmptyText).min(1, { error: 'must be a non-empty list' }),
+    sections: z.strictObject({
+      outcomes: localizedList(),
+      businessFlow: localizedList(),
+      process: localizedList(),
+      techStack: z.array(z.strictObject({ name: nonEmptyText, purpose: localized() })),
+      apiContract: z.array(
+        z.strictObject({
+          method: z.enum(HTTP_METHODS),
+          path: nonEmptyText.regex(/^\//, { error: 'must start with "/"' }),
+          summary: localized(),
+        }),
+      ),
+      samplePrd: localized(),
+      uiux: z.array(z.strictObject({ image: image(), alt: localized() })),
+      prototype: z.strictObject({ note: localized(), url: httpsUrl.optional() }),
+    }),
+    dummy,
+  });
 
-export const testimonialSchema = z.strictObject({
-  title: localized(),
-  quote: localized(),
-  author: nonEmptyText,
-  dummy: z.boolean().default(false),
-});
+/** `content/awards/<id>.yaml`; certificate images in `content/awards/assets/`. */
+export const awardSchema = <I extends z.ZodType>({ image }: SchemaHelpers<I>) =>
+  z.strictObject({
+    order,
+    title: localized(),
+    issuer: nonEmptyText,
+    date: isoDate,
+    certificate: image(),
+    certificateAlt: localized(),
+    verifyUrl: httpsUrl,
+    dummy,
+  });
+
+/** `content/testimonials/<id>.yaml`; photos in `content/testimonials/assets/`. */
+export const testimonialSchema = <I extends z.ZodType>({ image }: SchemaHelpers<I>) =>
+  z.strictObject({
+    order,
+    photo: image(),
+    name: nonEmptyText,
+    company: nonEmptyText,
+    quote: localized(),
+    project: slug.optional(),
+    dummy,
+  });
 
 /** One keyed piece of static UI copy (`content/film-copy/<key>.yaml`). */
 export const filmCopySchema = z.strictObject({
   text: localized(),
 });
 
-export type Project = z.infer<typeof projectSchema>;
 export type FilmCopy = z.infer<typeof filmCopySchema>;
-export type Award = z.infer<typeof awardSchema>;
-export type Testimonial = z.infer<typeof testimonialSchema>;
 
 /**
  * Formats Zod issues as `<entryId>: <field.path> — <message>` lines. Used by

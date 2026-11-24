@@ -1,0 +1,14 @@
+# Dummy award (fictional issuer). Replace with a real certificate by editing
+# this file and its image in assets/.
+order: 4
+dummy: true
+title:
+  id: Keamanan API Tingkat Lanjut (contoh)
+  en: Advanced API Security (sample)
+issuer: Institut Keamanan Contoh
+date: "2024-06-03"
+certificate: ./assets/sertifikasi-keamanan-api.svg
+certificateAlt:
+  id: "Sertifikat contoh Keamanan API Tingkat Lanjut: bingkai krem dengan segel biru malam."
+  en: "Sample Advanced API Security certificate: cream frame with a night-blue seal."
+verifyUrl: https://example.com/verify/sertifikasi-keamanan-api

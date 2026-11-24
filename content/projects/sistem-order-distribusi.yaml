@@ -1,0 +1,102 @@
+# Dummy project (fictional client and numbers). Replace with real content by
+# editing this file; keep `slug` equal to the file name.
+slug: sistem-order-distribusi
+order: 1
+type: integrasi
+year: 2025
+dummy: true
+name:
+  id: Sistem Order Distribusi
+  en: Distribution Order System
+oneLineOutcome:
+  id: Order toko ke distributor tersambung langsung ke stok real-time di 3 gudang — proses order turun dari 3 jam menjadi 4 menit.
+  en: Store-to-distributor orders wired straight to real-time stock across 3 warehouses — order processing down from 3 hours to 4 minutes.
+period:
+  start: "2024-08-01"
+  end: "2025-03-31"
+role:
+  id: Product engineer — analisis kebutuhan, desain integrasi, implementasi
+  en: Product engineer — requirements analysis, integration design, implementation
+stack:
+  - TypeScript
+  - Node.js
+  - PostgreSQL
+  - Redis
+  - REST API
+  - Webhook
+sections:
+  outcomes:
+    id:
+      - Waktu proses order turun dari rata-rata 3 jam menjadi 4 menit.
+      - Stok di 3 gudang terlihat real-time oleh toko dan tim distributor.
+      - Order ganda karena input ulang manual hilang sepenuhnya.
+    en:
+      - Average order processing time fell from 3 hours to 4 minutes.
+      - Stock across 3 warehouses is visible in real time to stores and the distributor team.
+      - Duplicate orders caused by manual re-entry disappeared entirely.
+  businessFlow:
+    id:
+      - Toko membuat order dari aplikasi toko.
+      - Sistem memeriksa stok di gudang terdekat lalu gudang cadangan.
+      - Distributor menyetujui order dan sistem memesan stok.
+      - Gudang menyiapkan barang dan memperbarui status pengiriman.
+      - Toko menerima notifikasi setiap perubahan status.
+    en:
+      - The store places an order from the store app.
+      - The system checks stock at the nearest warehouse, then the backup warehouses.
+      - The distributor approves the order and the system reserves the stock.
+      - The warehouse picks the goods and updates the delivery status.
+      - The store is notified of every status change.
+  process:
+    id:
+      - Wawancara dengan admin order, kepala gudang dan 5 pemilik toko.
+      - Memetakan alur lama dari spreadsheet dan grup chat.
+      - Menyusun kontrak API bersama tim aplikasi toko.
+      - Rilis bertahap per gudang dengan pemantauan harian.
+    en:
+      - Interviews with order admins, warehouse leads and 5 store owners.
+      - Mapped the old flow from spreadsheets and chat groups.
+      - Wrote the API contract together with the store-app team.
+      - Rolled out warehouse by warehouse with daily monitoring.
+  techStack:
+    - name: Node.js
+      purpose:
+        id: Layanan order dan integrasi gudang.
+        en: Order service and warehouse integration.
+    - name: PostgreSQL
+      purpose:
+        id: Data order dan stok dengan transaksi yang konsisten.
+        en: Order and stock data with consistent transactions.
+    - name: Redis
+      purpose:
+        id: Antrean pemesanan stok dan cache ketersediaan.
+        en: Stock reservation queue and availability cache.
+  apiContract:
+    - method: POST
+      path: /v1/orders
+      summary:
+        id: Membuat order baru dari toko.
+        en: Creates a new order from a store.
+    - method: GET
+      path: /v1/stock/{sku}
+      summary:
+        id: Ketersediaan stok per gudang untuk satu SKU.
+        en: Stock availability per warehouse for one SKU.
+    - method: PATCH
+      path: /v1/orders/{id}/status
+      summary:
+        id: Memperbarui status order dari gudang.
+        en: Updates an order's status from the warehouse.
+  samplePrd:
+    id: Tujuan — toko dapat memesan barang dan langsung tahu apakah stok tersedia. Masalah — order dikirim lewat chat lalu diketik ulang, sehingga lambat dan sering ganda. Ukuran keberhasilan — order diproses kurang dari 10 menit dan nol order ganda selama sebulan.
+    en: Goal — stores can order goods and know at once whether stock is available. Problem — orders arrive by chat and are retyped, which is slow and often duplicated. Success measure — orders processed in under 10 minutes and zero duplicate orders for a month.
+  uiux:
+    - image: ./assets/sistem-order-distribusi-ui.svg
+      alt:
+        id: Sketsa layar order toko dengan daftar barang dan indikator stok per gudang.
+        en: Sketch of the store order screen with an item list and per-warehouse stock indicators.
+  prototype:
+    note:
+      id: Prototipe klik untuk alur order toko (contoh).
+      en: Click-through prototype of the store order flow (sample).
+    url: https://example.com/prototype/sistem-order-distribusi

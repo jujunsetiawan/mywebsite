@@ -43,7 +43,11 @@ describe('static chrome feature flags', () => {
     for (const lang of ['id', 'en']) {
       const html = read(`${lang}/index.html`);
       for (const key of FLAGGED) expect(chromeItem(html, key), `${lang}: ${key}`).toBe(false);
-      expect(html).not.toMatch(/Lewati Cerita|Skip Story|Penghargaan|>Awards<|Hubungi|>Contact</);
+      // The bar holds no hub/contact items (the awards *section* below is content, Story 1.5).
+      const bar = html.match(/<header class="bar bar--top[\s\S]*?<\/header>/)?.[0];
+      expect(bar, `${lang}: top bar`).toBeDefined();
+      expect(bar).not.toMatch(/Lewati Cerita|Skip Story|Penghargaan|>Awards<|Hubungi|>Contact</);
+      expect(html).not.toMatch(/Lewati Cerita|Skip Story|Hubungi|>Contact</);
       expect(chromeItem(html, 'projects')).toBe(true);
       expect(chromeItem(html, 'credit')).toBe(true);
     }
@@ -74,8 +78,15 @@ describe('static chrome feature flags', () => {
       );
       expect(html.match(/aria-current="true"/g)).toHaveLength(1);
     }
-    // The projects section holds no empty list until Story 1.5 adds items.
-    for (const html of [id, en]) expect(html).not.toMatch(/<section id="proyek"[\s\S]*?<ul[\s\S]*?<\/section>/);
+    // Story 1.5: the projects and awards sections list every content entry.
+    const count = (collection: string) =>
+      readdirSync(path.join(repoRoot, 'content', collection)).filter((name) => name.endsWith('.yaml')).length;
+    for (const html of [id, en]) {
+      expect(html.match(/<li class="content-list-item" data-project=/g) ?? []).toHaveLength(count('projects'));
+      expect(html.match(/<li class="content-list-item" data-award=/g) ?? []).toHaveLength(count('awards'));
+    }
+    expect(id).toMatch(/<h2 id="penghargaan-heading"[^>]*>Penghargaan<\/h2>/);
+    expect(en).toMatch(/<h2 id="penghargaan-heading"[^>]*>Awards<\/h2>/);
     expect(id).toMatch(/aria-current="true" data-chrome="lang-id"/);
     expect(en).toMatch(/aria-current="true" data-chrome="lang-en"/);
     // Keyed home copy: one language per page.
@@ -142,6 +153,14 @@ describe('film-copy keys', () => {
       id: 'Product engineer yang menjaga sistem tetap hidup — dan menceritakannya lewat film pendek.',
       en: 'A product engineer who keeps systems alive — and tells the story as a short film.',
     });
+  });
+
+  it('Story 1.5 keys carry the specified copy', () => {
+    const text = (key: string) =>
+      filmCopySchema.parse(parseYaml(readFileSync(path.join(repoRoot, 'content/film-copy', `${key}.yaml`), 'utf8'))).text;
+    expect(text('page.home.awards-heading')).toEqual({ id: 'Penghargaan', en: 'Awards' });
+    expect(text('page.home.verify')).toEqual({ id: 'Verifikasi', en: 'Verify' });
+    expect(text('page.home.verify-new-tab')).toEqual({ id: '(tab baru)', en: '(new tab)' });
   });
 
   it('the language home holds no visible literals', () => {

@@ -1,0 +1,91 @@
+# Dummy project (fictional client and numbers). Replace with real content by
+# editing this file; keep `slug` equal to the file name.
+slug: dashboard-operasional
+order: 2
+type: web
+year: 2024
+dummy: true
+name:
+  id: Dashboard Operasional
+  en: Operations Dashboard
+oneLineOutcome:
+  id: Semua gudang dalam satu layar — insiden stok kini tertangani dalam 6 menit.
+  en: Every warehouse on one screen — stock incidents are now handled in 6 minutes.
+period:
+  start: "2023-09-01"
+  end: "2024-04-30"
+role:
+  id: Product engineer — desain dasbor, front-end, alur insiden
+  en: Product engineer — dashboard design, front end, incident flow
+stack:
+  - TypeScript
+  - React
+  - Node.js
+  - PostgreSQL
+  - Server-Sent Events
+sections:
+  outcomes:
+    id:
+      - Insiden stok tertangani rata-rata dalam 6 menit.
+      - Supervisor tidak lagi membuka 3 sistem berbeda untuk satu gambaran.
+      - Laporan harian tersusun otomatis setiap pagi.
+    en:
+      - Stock incidents are handled in 6 minutes on average.
+      - Supervisors no longer open 3 different systems for one picture.
+      - The daily report is assembled automatically every morning.
+  businessFlow:
+    id:
+      - Data stok dan pengiriman dari setiap gudang masuk ke dasbor.
+      - Sistem menandai anomali seperti stok minus atau pengiriman terlambat.
+      - Supervisor menerima peringatan dan membuka detail insiden.
+      - Penanganan dicatat sampai insiden ditutup.
+    en:
+      - Stock and delivery data from every warehouse flows into the dashboard.
+      - The system flags anomalies such as negative stock or late deliveries.
+      - The supervisor gets an alert and opens the incident detail.
+      - Handling is logged until the incident is closed.
+  process:
+    id:
+      - Mengamati supervisor selama satu shift malam.
+      - Menentukan 5 metrik utama bersama kepala operasional.
+      - Uji coba di satu gudang selama dua minggu sebelum rilis penuh.
+    en:
+      - Shadowed supervisors for one night shift.
+      - Chose 5 key metrics with the head of operations.
+      - Piloted in one warehouse for two weeks before the full release.
+  techStack:
+    - name: React
+      purpose:
+        id: Antarmuka dasbor dengan pembaruan langsung.
+        en: Dashboard interface with live updates.
+    - name: Server-Sent Events
+      purpose:
+        id: Mengalirkan perubahan stok ke layar tanpa memuat ulang.
+        en: Streams stock changes to the screen without reloading.
+    - name: PostgreSQL
+      purpose:
+        id: Riwayat metrik dan log insiden.
+        en: Metric history and incident log.
+  apiContract:
+    - method: GET
+      path: /v1/warehouses/summary
+      summary:
+        id: Ringkasan stok dan pengiriman semua gudang.
+        en: Stock and delivery summary for all warehouses.
+    - method: POST
+      path: /v1/incidents/{id}/resolve
+      summary:
+        id: Menutup insiden dengan catatan penanganan.
+        en: Closes an incident with a handling note.
+  samplePrd:
+    id: Tujuan — supervisor melihat kondisi semua gudang dalam satu layar. Masalah — data tersebar di tiga sistem sehingga insiden baru ketahuan berjam-jam kemudian. Ukuran keberhasilan — insiden tertangani di bawah 10 menit.
+    en: Goal — supervisors see the state of every warehouse on one screen. Problem — data is spread over three systems, so incidents surface hours late. Success measure — incidents handled in under 10 minutes.
+  uiux:
+    - image: ./assets/dashboard-operasional-ui.svg
+      alt:
+        id: Sketsa dasbor dengan kartu per gudang, grafik stok dan panel peringatan.
+        en: Sketch of the dashboard with per-warehouse cards, a stock chart and an alert panel.
+  prototype:
+    note:
+      id: Prototipe dasbor dengan data contoh; tautan menyusul.
+      en: Dashboard prototype with sample data; link to follow.

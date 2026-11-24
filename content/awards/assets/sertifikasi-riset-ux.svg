@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="566" viewBox="0 0 800 566">
+  <!-- Self-made placeholder certificate (no text, fictional). -->
+  <rect width="800" height="566" fill="#F3D9B8"/>
+  <rect x="24" y="24" width="752" height="518" fill="none" stroke="#3A2A1C" stroke-width="6"/>
+  <rect x="44" y="44" width="712" height="478" fill="none" stroke="#3A2A1C" stroke-width="1"/>
+  <rect x="220" y="110" width="360" height="22" fill="#3A2A1C"/>
+  <rect x="160" y="190" width="480" height="40" fill="#120D09"/>
+  <rect x="250" y="262" width="300" height="12" fill="#A8A196"/>
+  <rect x="200" y="290" width="400" height="12" fill="#A8A196"/>
+  <rect x="120" y="430" width="200" height="2" fill="#3A2A1C"/>
+  <rect x="480" y="430" width="200" height="2" fill="#3A2A1C"/>
+  <circle cx="400" cy="420" r="56" fill="#0F2226"/>
+  <circle cx="400" cy="420" r="42" fill="none" stroke="#F1EBE0" stroke-width="3"/>
+</svg>

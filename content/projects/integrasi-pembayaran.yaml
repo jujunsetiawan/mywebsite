@@ -1,0 +1,94 @@
+# Dummy project (fictional client and numbers). Replace with real content by
+# editing this file; keep `slug` equal to the file name.
+slug: integrasi-pembayaran
+order: 3
+type: integrasi
+year: 2023
+dummy: true
+name:
+  id: Integrasi Pembayaran
+  en: Payment Integration
+oneLineOutcome:
+  id: Webhook pembayaran yang gagal dicoba ulang dengan backoff — kegagalan turun dari 61 % menjadi 0,2 %.
+  en: Failed payment webhooks are retried with backoff — failures down from 61 % to 0.2 %.
+period:
+  start: "2023-01-09"
+  end: "2023-07-31"
+role:
+  id: Product engineer — investigasi insiden, desain retry, pemantauan
+  en: Product engineer — incident investigation, retry design, monitoring
+stack:
+  - TypeScript
+  - Node.js
+  - PostgreSQL
+  - Message queue
+sections:
+  outcomes:
+    id:
+      - Kegagalan webhook pembayaran turun dari 61 % menjadi 0,2 %.
+      - Status pembayaran yang macet bisa dicek dan diulang dari satu halaman.
+      - Tim keuangan berhenti mencocokkan transaksi secara manual.
+    en:
+      - Payment webhook failures dropped from 61 % to 0.2 %.
+      - Stuck payment statuses can be checked and replayed from one page.
+      - The finance team stopped reconciling transactions by hand.
+  businessFlow:
+    id:
+      - Pelanggan membayar melalui penyedia pembayaran.
+      - Penyedia mengirim webhook ke sistem.
+      - Sistem mencatat webhook lalu memprosesnya dari antrean.
+      - Jika gagal, sistem mencoba ulang dengan jeda yang makin panjang.
+      - Webhook yang tetap gagal masuk daftar tinjauan.
+    en:
+      - The customer pays through the payment provider.
+      - The provider sends a webhook to the system.
+      - The system records the webhook, then processes it from a queue.
+      - On failure, the system retries with growing delays.
+      - Webhooks that keep failing land on a review list.
+  process:
+    id:
+      - Menelusuri log satu bulan untuk mencari pola kegagalan.
+      - Menulis ulang penerima webhook agar idempoten.
+      - Menambahkan antrean dengan backoff eksponensial dan batas percobaan.
+      - Memantau tingkat kegagalan harian selama dua bulan.
+    en:
+      - Traced one month of logs to find failure patterns.
+      - Rewrote the webhook receiver to be idempotent.
+      - Added a queue with exponential backoff and a retry limit.
+      - Monitored the daily failure rate for two months.
+  techStack:
+    - name: Node.js
+      purpose:
+        id: Penerima webhook dan pekerja antrean.
+        en: Webhook receiver and queue workers.
+    - name: Message queue
+      purpose:
+        id: Percobaan ulang dengan backoff eksponensial.
+        en: Retries with exponential backoff.
+    - name: PostgreSQL
+      purpose:
+        id: Catatan webhook dan status pembayaran.
+        en: Webhook log and payment status.
+  apiContract:
+    - method: POST
+      path: /v1/webhooks/payments
+      summary:
+        id: Menerima notifikasi pembayaran dari penyedia.
+        en: Receives payment notifications from the provider.
+    - method: POST
+      path: /v1/webhooks/{id}/replay
+      summary:
+        id: Memproses ulang satu webhook dari daftar tinjauan.
+        en: Replays one webhook from the review list.
+  samplePrd:
+    id: Tujuan — setiap pembayaran yang berhasil tercatat tanpa campur tangan manual. Masalah — webhook yang gagal sekali tidak pernah dicoba ulang, sehingga pesanan tertahan. Ukuran keberhasilan — kegagalan webhook di bawah 1 %.
+    en: Goal — every successful payment is recorded without manual work. Problem — a webhook that fails once is never retried, so orders get stuck. Success measure — webhook failures below 1 %.
+  uiux:
+    - image: ./assets/integrasi-pembayaran-ui.svg
+      alt:
+        id: Sketsa halaman tinjauan webhook dengan daftar status dan tombol proses ulang.
+        en: Sketch of the webhook review page with a status list and replay buttons.
+  prototype:
+    note:
+      id: Tidak ada prototipe publik; alur diuji langsung di lingkungan staging.
+      en: No public prototype; the flow was tested directly on staging.

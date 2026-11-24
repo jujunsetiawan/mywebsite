@@ -1,9 +1,0 @@
-# Placeholder entry so the collection is never empty. Replaced in Story 1.5.
-dummy: true
-title:
-  id: Contoh Proyek
-  en: Sample Project
-summary:
-  id: Entri contoh untuk memastikan skema konten berjalan.
-  en: A sample entry that proves the content schema works.
-year: 2026

@@ -1,0 +1,14 @@
+# Dummy award (fictional issuer). Replace with a real certificate by editing
+# this file and its image in assets/.
+order: 3
+dummy: true
+title:
+  id: Inovasi Operasional Terbaik (contoh)
+  en: Best Operational Innovation (sample)
+issuer: Forum Logistik Contoh
+date: "2024-11-08"
+certificate: ./assets/penghargaan-inovasi-operasional.svg
+certificateAlt:
+  id: "Piagam contoh Inovasi Operasional Terbaik: bingkai krem dengan segel jingga fajar."
+  en: "Sample Best Operational Innovation award: cream frame with a dawn-orange seal."
+verifyUrl: https://example.com/verify/penghargaan-inovasi-operasional

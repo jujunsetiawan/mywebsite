@@ -1,0 +1,11 @@
+# Dummy testimonial (fictional person and company). Replace with a real one by
+# editing this file and the photo in assets/.
+order: 2
+dummy: true
+photo: ./assets/bagus-pratama.svg
+name: Bagus Pratama
+company: PT Contoh Gudang Sejahtera
+project: dashboard-operasional
+quote:
+  id: Satu layar untuk semua gudang. Shift malam kami jauh lebih tenang karena masalah ketahuan sebelum jadi besar.
+  en: One screen for every warehouse. Our night shift is much calmer because problems show up before they grow.

@@ -1,0 +1,30 @@
+---
+// Project list on the language homes (Story 1.5): name + one-line outcome,
+// each linking to its project page. All text comes from `content/projects/`.
+import type { CollectionEntry } from 'astro:content';
+import type { Locale } from '../content/schemas.ts';
+import { localePath } from '../i18n/routes.ts';
+
+interface Props {
+  lang: Locale;
+  /** Already sorted by `order`. */
+  projects: CollectionEntry<'projects'>[];
+}
+
+const { lang, projects } = Astro.props;
+---
+
+{
+  projects.length > 0 && (
+    <ul class="content-list">
+      {projects.map(({ data }) => (
+        <li class="content-list-item" data-project={data.slug}>
+          <a class="content-list-link" href={localePath(lang, `proyek/${data.slug}/`)}>
+            <span class="content-list-title t-subtitle-serif">{data.name[lang]}</span>
+            <span class="content-list-body">{data.oneLineOutcome[lang]}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}
