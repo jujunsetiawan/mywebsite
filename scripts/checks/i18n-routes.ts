@@ -7,12 +7,23 @@
 //   `id`/`en` variants of the same route path (`x-default` → the `id` variant);
 // - every canonical/alternate href is on the production origin, has no query
 //   or hash, and, mapped from the origin to dist/, resolves to an existing file.
+// `dist/{id,en}/**/404.html` files (per-language not-found pages, Story 1.6)
+// are not mirrored pages: they are allowed, not counted, and each must have
+// its other-language twin at the same path.
 // Pure core (`checkI18nRoutes`) plus a disk wrapper; wired into `npm run budgets`.
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { LOCALES } from '../../src/content/schemas.ts';
-import { DEFAULT_LOCALE, localePath, mirrorPath, parseLocalePath, type Hreflang } from '../../src/i18n/routes.ts';
+import { LOCALES, type Locale } from '../../src/content/schemas.ts';
+import {
+  DEFAULT_LOCALE,
+  isLocale,
+  localePath,
+  mirrorPath,
+  otherLocale,
+  parseLocalePath,
+  type Hreflang,
+} from '../../src/i18n/routes.ts';
 import { listFiles } from '../budgets/static-assets.ts';
 
 export interface I18nProblem {
@@ -65,6 +76,12 @@ function pageUrlPath(file: string): string | null {
   return parseLocalePath(urlPath) ? urlPath : null;
 }
 
+/** Language of a `<lang>/…/404.html` file (a per-language not-found page); null otherwise. */
+export function notFoundPageLang(file: string): Locale | null {
+  const lang = /^([^/]+)\/(?:[a-z0-9][a-z0-9-]*\/)*404\.html$/.exec(file)?.[1];
+  return lang !== undefined && isLocale(lang) ? lang : null;
+}
+
 /** `/x/y/` → `x/y/index.html` (directory-format build output). */
 function distFileFor(urlPath: string): string {
   return `${urlPath.replace(/^\//, '')}index.html`;
@@ -84,6 +101,14 @@ export function checkI18nRoutes(
   const problems: I18nProblem[] = [];
 
   for (const file of [...files].sort()) {
+    const notFoundLang = notFoundPageLang(file);
+    if (notFoundLang !== null) {
+      // Per-language 404 pages (e.g. the empty archive, Story 1.6) are not
+      // mirrored pages, but each needs its other-language twin.
+      const twin = `${otherLocale(notFoundLang)}/${file.slice(notFoundLang.length + 1)}`;
+      if (!fileSet.has(twin)) problems.push({ page: file, problem: `missing 404 twin dist/${twin}` });
+      continue;
+    }
     const page = pageUrlPath(file);
     if (page === null) {
       // Any other HTML under a language dir is a page outside the mirrored route scheme.

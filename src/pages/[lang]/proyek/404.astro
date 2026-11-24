@@ -1,0 +1,32 @@
+---
+// Empty-archive page (Story 1.6). Built to `<lang>/proyek/404/index.html` and
+// moved to `<lang>/proyek/404.html` by the `site-env` integration, so Workers'
+// nearest-`404.html` handling serves it with status 404 for unknown slugs.
+// Unmirrored (no `path`: no canonical/alternates) and `noindex` in every env.
+import type { GetStaticPaths } from 'astro';
+import StaticLayout from '../../../layouts/StaticLayout.astro';
+import { LOCALES, type Locale } from '../../../content/schemas.ts';
+import { localePath } from '../../../i18n/routes.ts';
+import { t } from '../../../i18n/copy.ts';
+
+export const getStaticPaths = (() => LOCALES.map((lang) => ({ params: { lang } }))) satisfies GetStaticPaths;
+
+const lang = Astro.params.lang as Locale;
+const home = localePath(lang, '');
+const heading = await t('page.archive-empty.title', lang);
+const body = await t('page.archive-empty.body', lang);
+const archiveLink = await t('page.archive-empty.archive-link', lang);
+const homeLink = await t('page.archive-empty.home-link', lang);
+const siteName = await t('page.home.title', lang);
+---
+
+<StaticLayout lang={lang} title={`${heading} — ${siteName}`} noindex>
+  <div class="archive-empty" data-page="archive-empty">
+    <h1 class="t-title-serif">{heading}</h1>
+    <p class="home-intro">{body}</p>
+    <p class="archive-empty-links">
+      <a class="content-list-action t-ui-caps" href={`${home}#proyek`} data-action="archive">{archiveLink}</a>
+      <a class="content-list-action t-ui-caps" href={home} data-action="home">{homeLink}</a>
+    </p>
+  </div>
+</StaticLayout>

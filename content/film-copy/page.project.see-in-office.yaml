@@ -1,0 +1,4 @@
+# Primary pill on project pages; rendered only when features.hubLinks is on.
+text:
+  id: Lihat di kantor 3D →
+  en: See it in the 3D office →

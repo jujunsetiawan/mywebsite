@@ -1,0 +1,27 @@
+---
+// One testimonial on a project page (Story 1.6): round photo, the quote in
+// the page language, name + company. No quote ornaments, no stars. Static
+// markup only; all text comes from `content/testimonials/`.
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import type { Locale } from '../content/schemas.ts';
+
+interface Props {
+  lang: Locale;
+  testimonial: CollectionEntry<'testimonials'>;
+}
+
+const { lang, testimonial } = Astro.props;
+const { id, data } = testimonial;
+---
+
+<figure class="testimonial" data-testimonial={id}>
+  <Image class="testimonial-photo" src={data.photo} alt="" width={56} height={56} />
+  <blockquote class="testimonial-quote t-subtitle-serif">
+    <p>{data.quote[lang]}</p>
+  </blockquote>
+  <figcaption class="testimonial-cite t-ui-caps">
+    <span>{data.name}</span>
+    <span>{data.company}</span>
+  </figcaption>
+</figure>

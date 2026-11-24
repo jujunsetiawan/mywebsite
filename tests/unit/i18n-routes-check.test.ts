@@ -64,6 +64,15 @@ describe('fixture dist trees', () => {
     ]);
   });
 
+  it('404 twin missing: dist has id/proyek/404.html only → fails naming it, exit 1', () => {
+    const result = checkI18nRoutesDir(fixture('missing-404-twin'), ORIGIN);
+    expect(messages(result)).toEqual(['id/proyek/404.html: missing 404 twin dist/en/proyek/404.html']);
+    const script = path.join(repoRoot, 'scripts/checks/i18n-routes.ts');
+    const run = spawnSync(process.execPath, [script, fixture('missing-404-twin'), ORIGIN], { encoding: 'utf8' });
+    expect(run.status, run.stderr).toBe(1);
+    expect(run.stdout).toContain('FAIL id/proyek/404.html: missing 404 twin dist/en/proyek/404.html');
+  }, 30_000);
+
   it('standalone run exits 1 on failure and 0 on a clean tree', () => {
     const script = path.join(repoRoot, 'scripts/checks/i18n-routes.ts');
     const bad = spawnSync(process.execPath, [script, fixture('missing-mirror'), ORIGIN], { encoding: 'utf8' });
@@ -125,6 +134,25 @@ describe('checkI18nRoutes', () => {
       'en/Bad_Slug/index.html: localized HTML is not a valid <lang>/<route>/index.html page',
       'id/about.html: localized HTML is not a valid <lang>/<route>/index.html page',
     ]);
+  });
+
+  it('allows per-language 404.html files with their twin and does not count them as pages', () => {
+    const result = check({
+      ...clean,
+      'id/proyek/404.html': '<html></html>',
+      'en/proyek/404.html': '<html></html>',
+      'id/404.html': '<html></html>',
+      'en/404.html': '<html></html>',
+    });
+    expect(messages(result)).toEqual([]);
+    expect(result.pages).toEqual(['/en/', '/id/']);
+  });
+
+  it('fails a 404.html without its other-language twin, naming it', () => {
+    const result = check({ ...clean, 'id/proyek/404.html': '<html></html>' });
+    expect(result.ok).toBe(false);
+    expect(messages(result)).toEqual(['id/proyek/404.html: missing 404 twin dist/en/proyek/404.html']);
+    expect(formatI18nRoutes(result, ORIGIN)).toContain('FAIL id/proyek/404.html: missing 404 twin');
   });
 
   it('ignores non-localized files and fails an empty dist', () => {

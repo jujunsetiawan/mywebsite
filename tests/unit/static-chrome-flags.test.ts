@@ -35,6 +35,12 @@ function build(name: string, features: { hubLinks: boolean; contact: boolean }) 
 }
 
 const FLAGGED = ['skip-story', 'awards', 'contact'] as const;
+
+/** Project slugs from the committed content (file names). */
+const projectSlugs = () =>
+  readdirSync(path.join(repoRoot, 'content/projects'))
+    .filter((name) => name.endsWith('.yaml'))
+    .map((name) => name.replace(/\.yaml$/, ''));
 const chromeItem = (html: string, key: string) => html.includes(`data-chrome="${key}"`);
 
 describe('static chrome feature flags', () => {
@@ -96,6 +102,16 @@ describe('static chrome feature flags', () => {
     expect(en).not.toContain('Product engineer yang menjaga');
     expect(id).toMatch(/<h2 id="proyek-heading"[^>]*>Proyek<\/h2>/);
     expect(en).toMatch(/<h2 id="proyek-heading"[^>]*>Projects<\/h2>/);
+    // Story 1.6: project pages carry the secondary link but not the flag-gated primary pill.
+    for (const lang of ['id', 'en']) {
+      for (const slug of projectSlugs()) {
+        const html = read(`${lang}/proyek/${slug}/index.html`);
+        expect(html, `${lang}/${slug}`).toContain(`data-action="watch-film"`);
+        expect(html, `${lang}/${slug}`).not.toContain('data-action="see-in-office"');
+        expect(html).not.toMatch(/Lihat di kantor 3D|See it in the 3D office/);
+        expect(html).not.toMatch(/<style|\sstyle=/);
+      }
+    }
   }, 120_000);
 
   it('flags true: skip-story, awards and the contact pill render in the page language', () => {
@@ -111,6 +127,15 @@ describe('static chrome feature flags', () => {
     expect(en).toContain('>Skip Story<');
     expect(en).toContain('>Awards<');
     expect(en).toMatch(/class="chrome-pill">Contact</);
+    // Story 1.6: with hubLinks on, project pages show the primary pill into the 3D office.
+    for (const slug of projectSlugs()) {
+      expect(read(`id/proyek/${slug}/index.html`)).toMatch(
+        /<a class="project-action-primary" href="\/id\/#proyek" data-action="see-in-office"><span class="project-pill t-ui-caps">Lihat di kantor 3D →<\/span><\/a>/,
+      );
+      expect(read(`en/proyek/${slug}/index.html`)).toMatch(
+        /<a class="project-action-primary" href="\/en\/#proyek" data-action="see-in-office"><span class="project-pill t-ui-caps">See it in the 3D office →<\/span><\/a>/,
+      );
+    }
   }, 120_000);
 
   it('only hubLinks: hub links render, the contact pill does not', () => {
@@ -163,9 +188,45 @@ describe('film-copy keys', () => {
     expect(text('page.home.verify-new-tab')).toEqual({ id: '(tab baru)', en: '(new tab)' });
   });
 
-  it('the language home holds no visible literals', () => {
-    const source = readFileSync(path.join(repoRoot, 'src/pages/[lang]/index.astro'), 'utf8');
-    expect(source).not.toContain('Jujun Setiawan');
+  it('Story 1.6 keys carry the specified copy', () => {
+    const text = (key: string) =>
+      filmCopySchema.parse(parseYaml(readFileSync(path.join(repoRoot, 'content/film-copy', `${key}.yaml`), 'utf8'))).text;
+    expect(text('page.project.eyebrow')).toEqual({ id: 'Dari arsip Jun', en: "From Jun's archive" });
+    expect(text('page.project.role-label')).toEqual({ id: 'Peranku:', en: 'My role:' });
+    const headings = {
+      'page.project.outcomes': ['Hasil', 'Outcomes'],
+      'page.project.business-flow': ['Alur bisnis', 'Business flow'],
+      'page.project.process': ['Proses kerja', 'How we worked'],
+      'page.project.tech-stack': ['Teknologi', 'Technology'],
+      'page.project.api-contract': ['Kontrak API', 'API contract'],
+      'page.project.sample-prd': ['Contoh PRD', 'Sample PRD'],
+      'page.project.uiux': ['UI/UX', 'UI/UX'],
+      'page.project.prototype': ['Prototipe', 'Prototype'],
+    } as const;
+    for (const [key, [id, en]] of Object.entries(headings)) expect(text(key), key).toEqual({ id, en });
+    expect(text('page.project.watch-film')).toEqual({ id: 'Tonton filmnya dari awal', en: 'Watch the film from the start' });
+    expect(text('page.project.see-in-office')).toEqual({ id: 'Lihat di kantor 3D →', en: 'See it in the 3D office →' });
+    expect(text('page.archive-empty.title')).toEqual({ id: 'Arsip ini kosong', en: 'This archive is empty' });
+    expect(text('page.archive-empty.body')).toEqual({
+      id: 'Map ini sepertinya terselip. Coba pilih proyek lain.',
+      en: 'This folder seems to have gone missing. Try another project.',
+    });
+  });
+
+  it('the language home, project pages and their components hold no visible literals', () => {
+    for (const file of [
+      'src/pages/[lang]/index.astro',
+      'src/pages/[lang]/proyek/[slug].astro',
+      'src/pages/[lang]/proyek/404.astro',
+      'src/components/ProjectDetail.astro',
+      'src/components/Testimonial.astro',
+    ]) {
+      const source = readFileSync(path.join(repoRoot, file), 'utf8');
+      expect(source, file).not.toContain('Jujun Setiawan');
+      expect(source, file).not.toMatch(
+        /Dari arsip|Jun's archive|Peranku|My role|Tonton filmnya|Watch the film|Lihat di kantor|3D office|Arsip ini kosong|archive is empty|Hasil|Outcomes|Alur bisnis|Business flow|Proses kerja|How we worked|Kontrak API|API contract|Contoh PRD|Sample PRD|Prototipe/,
+      );
+    }
   });
 });
 

@@ -5,6 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadSiteConfig } from '../config/load.ts';
 import { diskReader, formatFirstLoad, measureFirstLoad } from './budgets/first-load.ts';
+import { firstProjectSlug } from './budgets/project-pages.ts';
 import { checkI18nRoutesDir, formatI18nRoutes } from './checks/i18n-routes.ts';
 import { checkLayers, formatLayers } from './budgets/layer-imports.ts';
 import { checkStaticAssets, formatStaticAssets, listFiles } from './budgets/static-assets.ts';
@@ -20,8 +21,12 @@ if (!existsSync(distDir)) {
   process.exit(1);
 }
 
+// Story 1.6: also the first project page (by `order`) in both languages.
+const firstSlug = firstProjectSlug(path.join(process.env.CONTENT_DIR ?? path.join(rootDir, 'content'), 'projects'));
+const PROJECT_PAGES = ['id', 'en'].map((lang) => `${lang}/proyek/${firstSlug}/index.html`);
+
 const read = diskReader(distDir);
-for (const page of HOME_PAGES) {
+for (const page of [...HOME_PAGES, ...PROJECT_PAGES]) {
   const result = measureFirstLoad(page, read);
   console.log(formatFirstLoad(result));
   console.log('');

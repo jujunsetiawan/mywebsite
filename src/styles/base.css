@@ -295,6 +295,14 @@ a {
   color: var(--ink-muted);
 }
 
+/* Empty-archive page links (Story 1.6). */
+.archive-empty-links {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-gutter);
+  margin-top: var(--space-gutter);
+}
+
 /* Verify link: ui-caps text with a >= 44px hit area through invisible padding. */
 .content-list-action {
   display: inline-flex;

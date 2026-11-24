@@ -1,0 +1,193 @@
+/*
+ * Project page body (Story 1.6). Tokens only, except the printed-paper tone
+ * #D8D0C0 from the DESIGN.md set-dressing prose (sticky notes and prints):
+ * the single documented non-token colour, allowed by the style-rule scan and
+ * contrast-tested with ink.on-light. Weight 400, radius 0 except pills, no
+ * drop shadows.
+ */
+
+.project-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-scrim-pad-x);
+}
+
+.project-eyebrow {
+  color: var(--ink-soft);
+}
+
+.project-lede {
+  max-width: 60ch;
+  color: var(--ink-soft);
+}
+
+.project-meta {
+  color: var(--ink-muted);
+}
+
+/* ---------- Actions ---------- */
+
+.project-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--space-gutter);
+  margin-top: var(--space-gutter);
+}
+
+/* Secondary: ui-caps text link with a >= 44px hit area through invisible padding. */
+.project-action-secondary,
+.project-prototype-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--space-min-hit);
+  min-width: var(--space-min-hit);
+  color: var(--ink-primary);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.project-action-primary {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--space-min-hit);
+  min-width: var(--space-min-hit);
+  text-decoration: none;
+}
+
+.project-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--ink-primary);
+  color: var(--ink-on-light);
+}
+
+/* ---------- Sections: auto-fit columns separated by hairline top rules ---------- */
+
+.project-sections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-gutter);
+  margin-top: var(--space-section);
+}
+
+.project-section {
+  min-width: 0;
+  padding-top: calc(var(--space-gutter) / 2);
+  border-top: var(--space-hairline) solid var(--surface-hairline);
+}
+
+.project-section-heading {
+  margin-bottom: calc(var(--space-gutter) / 2);
+}
+
+.project-list {
+  display: grid;
+  gap: calc(var(--space-gutter) / 2);
+  margin: 0;
+  padding-left: 1.25em;
+}
+
+.project-list--plain {
+  padding-left: 0;
+  list-style: none;
+}
+
+.project-list--plain > li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-scrim-pad-y);
+}
+
+.project-tech-name {
+  color: var(--ink-primary);
+}
+
+.project-tech-purpose {
+  color: var(--ink-soft);
+}
+
+.project-uiux-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ---------- Printed paper (sample PRD, API contract) ---------- */
+
+.paper {
+  margin: 0;
+  padding: var(--space-scrim-pad-x);
+  border-radius: 0;
+  box-shadow: none;
+  background: #D8D0C0;
+  color: var(--ink-on-light);
+}
+
+.api-contract {
+  display: grid;
+  gap: var(--space-scrim-pad-x);
+}
+
+.api-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-scrim-pad-y);
+}
+
+.api-endpoint {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--space-scrim-pad-x);
+}
+
+.api-path {
+  font-family: var(--type-terminal-family);
+  font-size: var(--type-terminal-size);
+}
+
+.api-summary {
+  margin: 0;
+}
+
+/* ---------- Testimonials ---------- */
+
+.project-testimonials {
+  display: grid;
+  gap: var(--space-gutter);
+  margin-top: var(--space-section);
+  padding-top: calc(var(--space-gutter) / 2);
+  border-top: var(--space-hairline) solid var(--surface-hairline);
+}
+
+.testimonial {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  column-gap: var(--space-gutter);
+  row-gap: var(--space-scrim-pad-x);
+  margin: 0;
+}
+
+.testimonial-photo {
+  grid-row: span 2;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-pill);
+}
+
+.testimonial-quote {
+  margin: 0;
+  max-width: 60ch;
+  font-style: italic;
+}
+
+.testimonial-cite {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-gutter);
+  color: var(--ink-muted);
+}

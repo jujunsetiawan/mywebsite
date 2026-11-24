@@ -13,11 +13,13 @@ interface Props {
    * absolute on the production origin (also in preview/development builds).
    */
   path?: string | undefined;
+  /** Force `noindex` in every environment (e.g. the empty-archive page, Story 1.6). */
+  noindex?: boolean | undefined;
 }
 
 const { lang, title, path } = Astro.props;
 const site = loadSiteConfig();
-const noindex = !isIndexable(site);
+const noindex = Astro.props.noindex === true || !isIndexable(site);
 const token = beaconToken(site);
 const canonicalHref = path === undefined ? null : canonical(site.productionOrigin, lang, path);
 const alternateLinks = path === undefined ? [] : alternates(site.productionOrigin, path);

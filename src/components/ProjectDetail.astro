@@ -1,0 +1,188 @@
+---
+// Project page body (Story 1.6). Static markup only: no <script>. Header
+// (eyebrow, name, one-line outcome, caps meta), actions, the eight sections in
+// `SECTION_KEYS` order (empty lists hide their section), then the testimonials
+// that reference this project. All text comes from `content/` and `film-copy`.
+import '../styles/project.css';
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { SECTION_KEYS, type Locale } from '../content/schemas.ts';
+import type { SiteConfig } from '../../config/site.schema.ts';
+import type { CopyKey } from '../i18n/copy-keys.ts';
+import { formatDate } from '../i18n/dates.ts';
+import { localePath } from '../i18n/routes.ts';
+import { t } from '../i18n/copy.ts';
+import Testimonial from './Testimonial.astro';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  /** Testimonials referencing this project, sorted by `order`. */
+  testimonials: CollectionEntry<'testimonials'>[];
+  lang: Locale;
+  features: SiteConfig['features'];
+}
+
+const { project, testimonials, lang, features } = Astro.props;
+const { data } = project;
+const { sections } = data;
+const home = localePath(lang, '');
+
+type SectionKey = (typeof SECTION_KEYS)[number];
+
+const HEADING_KEYS: Record<SectionKey, CopyKey> = {
+  outcomes: 'page.project.outcomes',
+  businessFlow: 'page.project.business-flow',
+  process: 'page.project.process',
+  techStack: 'page.project.tech-stack',
+  apiContract: 'page.project.api-contract',
+  samplePrd: 'page.project.sample-prd',
+  uiux: 'page.project.uiux',
+  prototype: 'page.project.prototype',
+};
+
+/** A section renders only when it has something to show. */
+const hasContent: Record<SectionKey, boolean> = {
+  outcomes: sections.outcomes[lang].length > 0,
+  businessFlow: sections.businessFlow[lang].length > 0,
+  process: sections.process[lang].length > 0,
+  techStack: sections.techStack.length > 0,
+  apiContract: sections.apiContract.length > 0,
+  samplePrd: true,
+  uiux: sections.uiux.length > 0,
+  prototype: true,
+};
+
+const visible = SECTION_KEYS.filter((key) => hasContent[key]);
+const headings = Object.fromEntries(
+  await Promise.all(visible.map(async (key) => [key, await t(HEADING_KEYS[key], lang)] as const)),
+) as Partial<Record<SectionKey, string>>;
+
+const eyebrow = await t('page.project.eyebrow', lang);
+const roleLabel = await t('page.project.role-label', lang);
+const watchFilm = await t('page.project.watch-film', lang);
+const seeInOffice = features.hubLinks ? await t('page.project.see-in-office', lang) : null;
+const prototypeLink = await t('page.project.prototype-link', lang);
+const newTab = await t('page.project.new-tab', lang);
+const testimonialsHeading = testimonials.length > 0 ? await t('page.project.testimonials', lang) : null;
+---
+
+<article class="project" data-project-page={data.slug}>
+  <header class="project-header">
+    <p class="project-eyebrow t-ui-caps">{eyebrow}</p>
+    <h1 class="t-title-serif">{data.name[lang]}</h1>
+    <p class="project-lede">{data.oneLineOutcome[lang]}</p>
+    <p class="project-meta t-ui-caps">
+      <span><time datetime={data.period.start}>{formatDate(data.period.start, lang)}</time>{' – '}<time datetime={data.period.end}>{formatDate(data.period.end, lang)}</time></span>{' · '}<span>{`${roleLabel} ${data.role[lang]}`}</span>{' · '}<span>{data.stack.join(' · ')}</span>
+    </p>
+  </header>
+
+  <div class="project-actions">
+    <a class="project-action-secondary t-ui-caps" href={home} data-action="watch-film">{watchFilm}</a>
+    {
+      seeInOffice !== null && (
+        <a class="project-action-primary" href={`${home}#proyek`} data-action="see-in-office">
+          <span class="project-pill t-ui-caps">{seeInOffice}</span>
+        </a>
+      )
+    }
+  </div>
+
+  <div class="project-sections">
+    {
+      visible.map((key) => (
+        <section class="project-section" data-section={key} aria-labelledby={`section-${key}`}>
+          <h2 id={`section-${key}`} class="project-section-heading t-subtitle-serif">
+            {headings[key]}
+          </h2>
+          {key === 'outcomes' && (
+            <ul class="project-list">
+              {sections.outcomes[lang].map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          )}
+          {key === 'businessFlow' && (
+            <ol class="project-list project-list--ordered">
+              {sections.businessFlow[lang].map((item) => (
+                <li>{item}</li>
+              ))}
+            </ol>
+          )}
+          {key === 'process' && (
+            <ol class="project-list project-list--ordered">
+              {sections.process[lang].map((item) => (
+                <li>{item}</li>
+              ))}
+            </ol>
+          )}
+          {key === 'techStack' && (
+            <ul class="project-list project-list--plain">
+              {sections.techStack.map((tech) => (
+                <li>
+                  <span class="project-tech-name t-ui-caps">{tech.name}</span>
+                  <span class="project-tech-purpose">{tech.purpose[lang]}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+          {key === 'apiContract' && (
+            <dl class="paper api-contract">
+              {sections.apiContract.map((endpoint) => (
+                <div class="api-row">
+                  <dt class="api-endpoint">
+                    <span class="api-method t-ui-caps">{endpoint.method}</span>
+                    <code class="api-path">{endpoint.path}</code>
+                  </dt>
+                  <dd class="api-summary">{endpoint.summary[lang]}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+          {key === 'samplePrd' && (
+            <div class="paper sample-prd">
+              <p>{sections.samplePrd[lang]}</p>
+            </div>
+          )}
+          {key === 'uiux' && (
+            <ul class="project-list project-list--plain project-uiux">
+              {sections.uiux.map((shot) => (
+                <li>
+                  <Image class="project-uiux-image" src={shot.image} alt={shot.alt[lang]} />
+                </li>
+              ))}
+            </ul>
+          )}
+          {key === 'prototype' && (
+            <>
+              <p>{sections.prototype.note[lang]}</p>
+              {sections.prototype.url !== undefined && (
+                <a
+                  class="project-prototype-link t-ui-caps"
+                  href={sections.prototype.url}
+                  target="_blank"
+                  rel="noopener"
+                >
+                  {prototypeLink}
+                  <span class="visually-hidden"> {newTab}</span>
+                </a>
+              )}
+            </>
+          )}
+        </section>
+      ))
+    }
+  </div>
+
+  {
+    testimonialsHeading !== null && (
+      <section class="project-testimonials" aria-labelledby="section-testimonials">
+        <h2 id="section-testimonials" class="project-section-heading t-subtitle-serif">
+          {testimonialsHeading}
+        </h2>
+        {testimonials.map((testimonial) => (
+          <Testimonial lang={lang} testimonial={testimonial} />
+        ))}
+      </section>
+    )
+  }
+</article>

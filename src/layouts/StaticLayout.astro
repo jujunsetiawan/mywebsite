@@ -19,15 +19,17 @@ interface Props {
   title: string;
   /** Language-less route path ('' for home, e.g. 'proyek/x/'); omit for unmirrored pages. */
   path?: string;
+  /** `noindex` meta in every environment (unindexable pages such as the empty archive). */
+  noindex?: boolean;
 }
 
-const { lang, title, path } = Astro.props;
+const { lang, title, path, noindex } = Astro.props;
 const { features } = loadSiteConfig();
 const skipToContent = await t('chrome.skip-to-content', lang);
 const footerLabel = await t('chrome.footer-label', lang);
 ---
 
-<BaseLayout lang={lang} title={title} path={path}>
+<BaseLayout lang={lang} title={title} path={path} noindex={noindex}>
   <a class="skip-link t-ui-caps" href="#main">{skipToContent}</a>
   <StaticChrome lang={lang} features={features}>
     {

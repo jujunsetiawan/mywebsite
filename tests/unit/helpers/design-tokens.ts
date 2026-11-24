@@ -130,14 +130,32 @@ const FORBIDDEN_TEXT_COLOR =
 const PURE_WHITE_TEXT = /(?<![\w-])color\s*:[^;}]*?(#fff\b|#ffffff\b|\bwhite\b)/i;
 
 export const FOCUS_HALO = '0 0 0 4px #000';
+
+/**
+ * The single documented non-token colour (Story 1.6): the printed-paper tone
+ * from the DESIGN.md set-dressing prose, used behind the sample PRD and API
+ * contract blocks with ink.on-light text (contrast-tested).
+ */
+export const PAPER_HEX = '#D8D0C0';
+
+/** Hex literals allowed in stylesheets outside tokens.css: the focus halo black and the paper tone. */
+const ALLOWED_HEX = new Set(['#000', PAPER_HEX.toLowerCase()]);
 const ZERO_RADII = new Set(['0', '0px', 'var(--radius-none)', 'var(--radius-card)', 'var(--radius-pill)']);
 
 /** Style-rule violations as `file:line — message`. */
 export function scanStyleRules(sources: SourceFile[]): string[] {
   const problems: string[] = [];
   for (const { file, text } of sources) {
+    // Colours come from tokens: stylesheets other than tokens.css hold no other hex literal.
+    const checkHex = file.endsWith('.css') && file !== 'src/styles/tokens.css';
     text.split(/\r?\n/).forEach((line, index) => {
       const at = `${file}:${index + 1}`;
+      if (checkHex) {
+        for (const m of line.replace(/\/\*.*?\*\//g, '').matchAll(/#[0-9a-f]{3,8}\b/gi)) {
+          if (!ALLOWED_HEX.has(m[0].toLowerCase()))
+            problems.push(`${at} — colour ${m[0]} is not a token (only ${[...ALLOWED_HEX].join(', ')} are allowed)`);
+        }
+      }
       const forbidden = FORBIDDEN_TEXT_COLOR.exec(line);
       if (forbidden) problems.push(`${at} — text colour uses ${forbidden[1]} (fill/light only, never text)`);
       const white = PURE_WHITE_TEXT.exec(line);

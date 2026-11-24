@@ -1,0 +1,4 @@
+# Visually hidden hint after links that open a new tab on project pages.
+text:
+  id: (tab baru)
+  en: (new tab)

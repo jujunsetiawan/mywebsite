@@ -1,0 +1,30 @@
+---
+// Mirrored static project page (Story 1.6): one page per language × project,
+// rendered by the script-free ProjectDetail from `content/`.
+import type { GetStaticPaths } from 'astro';
+import StaticLayout from '../../../layouts/StaticLayout.astro';
+import ProjectDetail from '../../../components/ProjectDetail.astro';
+import { LOCALES } from '../../../content/schemas.ts';
+import { loadProjectContent, testimonialsFor } from '../../../content/home.ts';
+import { loadSiteConfig } from '../../../../config/load.ts';
+import { t } from '../../../i18n/copy.ts';
+
+export const getStaticPaths = (async () => {
+  const { projects, testimonials } = await loadProjectContent();
+  return LOCALES.flatMap((lang) =>
+    projects.map((project) => ({
+      params: { lang, slug: project.data.slug },
+      props: { lang, project, testimonials: testimonialsFor(testimonials, project.data.slug) },
+    })),
+  );
+}) satisfies GetStaticPaths;
+
+const { lang, project, testimonials } = Astro.props;
+const { features } = loadSiteConfig();
+const siteName = await t('page.home.title', lang);
+const title = `${project.data.name[lang]} — ${siteName}`;
+---
+
+<StaticLayout lang={lang} title={title} path={`proyek/${project.data.slug}/`}>
+  <ProjectDetail project={project} testimonials={testimonials} lang={lang} features={features} />
+</StaticLayout>

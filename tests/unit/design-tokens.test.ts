@@ -1,6 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import {
+  DESIGN_MD,
+  PAPER_HEX,
   diffTokens,
   expectedTokens,
   parseCssTokens,
@@ -80,6 +82,26 @@ describe('style rules in src/**/*.{css,astro}', () => {
     expect(problems).toEqual([
       'src/x.css:2 — text colour uses var(--signal-error) (fill/light only, never text)',
       'src/x.css:4 — text colour uses var(--signal-beacon-red) (fill/light only, never text)',
+    ]);
+  });
+
+  it('allows the paper tone as the single documented non-token hex colour (Story 1.6)', () => {
+    // Documented in the DESIGN.md set-dressing prose.
+    expect(readFileSync(DESIGN_MD, 'utf8')).toContain(`\`${PAPER_HEX}\``);
+    const problems = scanStyleRules([
+      {
+        file: 'src/styles/z.css',
+        text: [
+          `.paper { background: ${PAPER_HEX}; color: var(--ink-on-light); }`,
+          '.paper-lower { background: #d8d0c0; }',
+          '.x { background: #B9A774; }',
+          '.y { color: var(--ink-primary); } /* #123456 in a comment */',
+        ].join('\n'),
+      },
+      { file: 'src/styles/tokens.css', text: ':root { --x: #123456; }' },
+    ]);
+    expect(problems).toEqual([
+      'src/styles/z.css:3 — colour #B9A774 is not a token (only #000, #d8d0c0 are allowed)',
     ]);
   });
 

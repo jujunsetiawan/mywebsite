@@ -18,10 +18,12 @@ const baseFor = (name: string) => (contentDir ? pathToFileURL(`${contentDir}/${n
 const yamlIn = (name: string) =>
   glob({ pattern: '**/*.yaml', base: baseFor(name), generateId: ({ entry }) => entry.replace(/\.yaml$/, '') });
 
+// The schema factories are wrapped so their image type is inferred from
+// Astro's `image()` helper (typed `ImageMetadata` in components, Story 1.6).
 export const collections = {
-  projects: defineCollection({ loader: yamlIn('projects'), schema: projectSchema }),
-  awards: defineCollection({ loader: yamlIn('awards'), schema: awardSchema }),
-  testimonials: defineCollection({ loader: yamlIn('testimonials'), schema: testimonialSchema }),
+  projects: defineCollection({ loader: yamlIn('projects'), schema: ({ image }) => projectSchema({ image }) }),
+  awards: defineCollection({ loader: yamlIn('awards'), schema: ({ image }) => awardSchema({ image }) }),
+  testimonials: defineCollection({ loader: yamlIn('testimonials'), schema: ({ image }) => testimonialSchema({ image }) }),
   // Keyed static copy: the file name is the dot-separated key (`chrome.projects.yaml`
   // → `chrome.projects`), kept verbatim instead of slugified.
   'film-copy': defineCollection({

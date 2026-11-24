@@ -1,6 +1,6 @@
 // WCAG 2.x contrast computed from the DESIGN.md token values (Story 1.3).
 import { describe, expect, it } from 'vitest';
-import { composite, contrastRatio, parseHex, readDesign, toHex, type Rgb } from './helpers/design-tokens.ts';
+import { composite, contrastRatio, PAPER_HEX, parseHex, readDesign, toHex, type Rgb } from './helpers/design-tokens.ts';
 
 const design = readDesign();
 const c = (group: string, name: string): string => {
@@ -37,6 +37,8 @@ const textPairs: Pair[] = [
   { name: 'ink.primary on surface.panel', fg: opaque(c('ink', 'primary')), bg: panel, min: 4.5 },
   { name: 'scene.dawn-2 on surface.panel', fg: opaque(c('scene', 'dawn-2')), bg: panel, min: 4.5 },
   { name: 'ink.on-light on ink.primary', fg: opaque(c('ink', 'on-light')), bg: opaque(c('ink', 'primary')), min: 4.5 },
+  // Story 1.6: printed-paper blocks (sample PRD, API contract) on project pages.
+  { name: `ink.on-light on paper ${PAPER_HEX}`, fg: opaque(c('ink', 'on-light')), bg: opaque(PAPER_HEX), min: 4.5 },
   { name: `input rule ${inputRule} on surface.panel`, fg: opaque(inputRule), bg: panel, min: 3.0 },
   // Non-text contrast on the name-card sheet (scrim over a dark frame). Jun's
   // decision (Story 1.3): not required over a full lightning frame (2.72:1).

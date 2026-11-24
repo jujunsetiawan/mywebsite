@@ -1,4 +1,4 @@
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
@@ -112,7 +112,12 @@ describe('astro build per SITE_ENV', () => {
     }
     expect(read('_headers')).toBe(PREVIEW_HEADERS);
     expect(read('robots.txt')).toBe('User-agent: *\nDisallow: /\n');
-    expect(read('_redirects')).toBe('/ /id/ 301\n');
+    expect(read('_redirects')).toBe('/ /id/ 301\n/proyek/* /id/proyek/:splat 301\n');
+    // Story 1.6: the empty-archive pages are moved into place, noindex even in production builds (below).
+    for (const lang of ['id', 'en']) {
+      expect(existsSync(path.join(outDir('preview'), lang, 'proyek/404.html')), lang).toBe(true);
+      expect(existsSync(path.join(outDir('preview'), lang, 'proyek/404')), lang).toBe(false);
+    }
     // Story 1.4: canonical/alternates stay on the production origin in preview builds.
     const origin = JSON.parse(readFileSync(path.join(repoRoot, 'config/site.preview.json'), 'utf8')).productionOrigin;
     for (const lang of ['id', 'en']) {
@@ -144,6 +149,13 @@ describe('astro build per SITE_ENV', () => {
     expect(read('_headers')).toBe(sharedHeaders);
     expect(read('_headers')).not.toContain('X-Robots-Tag');
     expect(read('robots.txt')).toBe('User-agent: *\nAllow: /\n');
+    // Story 1.6: project pages are indexable in production; the empty archive never is.
+    expect(read('id/proyek/sistem-order-distribusi/index.html')).not.toContain('noindex');
+    for (const lang of ['id', 'en']) {
+      const html = read(`${lang}/proyek/404.html`);
+      expect(html.match(/<meta name="robots" content="noindex">/g), lang).toHaveLength(1);
+      expect(html).not.toMatch(/rel="(canonical|alternate)"/);
+    }
   }, 120_000);
 
   it('production with a null token (committed config): no beacon', () => {
