@@ -23,6 +23,7 @@ site build or its tooling.
 | @types/node | 22.20.5 |
 | wrangler | 4.165.0 |
 | @cloudflare/workers-types | 5.20261118.1 |
+| yaml | 2.9.1 (DESIGN.md frontmatter parsing in tests) |
 
 ## Scripts
 
@@ -42,9 +43,13 @@ First-time Playwright setup: `npx playwright install chromium webkit`.
 
 ## Layout
 
-- `content/` — all facts as YAML content collections (`projects`, `awards`, `testimonials`), validated by `src/content/schemas.ts`
+- `content/` — all facts as YAML content collections (`projects`, `awards`, `testimonials`, `film-copy`), validated by `src/content/schemas.ts`. `film-copy/<key>.yaml` holds keyed UI copy (`text: { id, en }`); components read it with `t(key, lang)` from `src/i18n/copy.ts` and contain no visible literals
+- `docs/design/DESIGN.md` — the committed design spec and the source of truth for tokens. Future DESIGN.md edits must be made in (or copied to) this file; `tests/unit/design-tokens.test.ts` fails CI when `src/styles/tokens.css` drifts from its frontmatter
+- `src/styles/` — `tokens.css` (DESIGN.md tokens as `--<group>-<name>` custom properties), `type.css` (`.t-<style>` utilities, weight 400 only), `base.css` (reset, letterbox bars, skip link, focus ring). System font stacks only, no web fonts
+- `src/layouts/StaticLayout.astro` — office-styled static page frame: skip link, top letterbox bar (`src/components/StaticChrome.astro`; named slot `lang-switch`), `<main id="main">` on the panel, footer bar (named slot `privacy`). Hub links and the contact pill render only when `features.hubLinks` / `features.contact` are on
 - `config/` — Zod-validated site config: `site.schema.ts`, `site.{production,preview,development}.json` picked by `SITE_ENV`, optional git-ignored `site.local.json` override
-- `src/pages`, `src/layouts`, `src/components`, `src/styles`
+- `src/pages`, `src/layouts`, `src/components`
+- `src/i18n/copy.ts` — `t(key, lang)` reads keyed copy from the `film-copy` collection; `COPY_KEYS` lists every key and must match `content/film-copy/*.yaml` (unit-tested)
 - `src/integrations/site-env.ts` — writes env-dependent `robots.txt` and `X-Robots-Tag` into `dist/`
 - `src/film/{core,systems,adapters}` — film layers; import rules are enforced by `scripts/budgets/layer-imports.ts`
 - `scripts/` — build-time checks (`node scripts/check-budgets.ts`), local R2 seeding for e2e

@@ -1,0 +1,220 @@
+/*
+ * Reset, page frame, letterbox bars, skip link and focus ring for static
+ * pages (Story 1.3). Rules: weight 400 only, no drop shadows (the focus halo
+ * below is the only box-shadow), radius 0 except pills.
+ */
+
+:root {
+  /* Letterbox bar height: drops to its 40px minimum on tiny or short viewports. */
+  --bar-h: var(--space-letterbox);
+}
+
+@media (max-width: 320px), (max-height: 480px) {
+  :root {
+    --bar-h: 40px;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  /* Focused or anchored content never lands under the sticky bars. */
+  scroll-padding-block: var(--bar-h);
+  background: var(--surface-letterbox);
+  color-scheme: dark;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-panel);
+  color: var(--ink-primary);
+  font-family: var(--type-body-family);
+  font-size: var(--type-body-size);
+  font-weight: 400;
+  line-height: var(--type-body-line-height);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+b,
+strong,
+th {
+  font-weight: 400;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+/* ---------- Focus ---------- */
+
+:focus-visible {
+  outline: 2px solid var(--ink-primary);
+  outline-offset: 0;
+  /* 4px black halo: a ring (zero offset, zero blur), not a drop shadow. */
+  box-shadow: 0 0 0 4px #000;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ---------- Skip link ---------- */
+
+.skip-link {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 30;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--space-min-hit);
+  min-width: var(--space-min-hit);
+  padding: 0 var(--space-gutter);
+  background: var(--surface-letterbox);
+  color: var(--ink-primary);
+  text-decoration: underline;
+  white-space: nowrap;
+}
+
+.skip-link:not(:focus) {
+  width: 1px;
+  height: 1px;
+  min-height: 0;
+  min-width: 0;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- Letterbox bars ---------- */
+
+.bar {
+  position: sticky;
+  z-index: 20;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-gutter);
+  height: var(--bar-h);
+  padding-inline: var(--space-gutter);
+  /* Solid black, never transparent, never blurred. */
+  background: var(--surface-letterbox);
+  color: var(--ink-soft);
+}
+
+.bar--top {
+  top: 0;
+}
+
+.bar--bottom {
+  bottom: 0;
+}
+
+.chrome-credit {
+  flex: none;
+}
+
+.chrome-right {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin-left: auto;
+}
+
+.chrome-nav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.chrome-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* >= 44px hit area through invisible padding; visuals stay ui-caps text. */
+  min-height: var(--space-min-hit);
+  min-width: var(--space-min-hit);
+  color: var(--ink-soft);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.chrome-link:hover,
+.chrome-link[aria-current] {
+  color: var(--ink-primary);
+}
+
+.chrome-link[aria-current] {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.chrome-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  border: 1px solid var(--ink-primary);
+  border-radius: var(--radius-pill);
+  color: var(--ink-primary);
+}
+
+.chrome-link:hover .chrome-pill {
+  background: var(--ink-primary);
+  color: var(--ink-on-light);
+}
+
+/* Condensed: same items, tighter gaps. */
+@media (max-width: 1023.98px) {
+  .chrome-right,
+  .chrome-nav {
+    gap: 12px;
+  }
+}
+
+/* Phone: the credit line is hidden. */
+@media (max-width: 759.98px) {
+  .chrome-credit {
+    display: none;
+  }
+
+  .chrome-right,
+  .chrome-nav {
+    gap: 4px;
+  }
+}
+
+/* ---------- Content panel ---------- */
+
+.panel {
+  flex: 1 0 auto;
+  background: var(--surface-panel);
+  padding: var(--space-section) var(--space-gutter);
+  overflow-wrap: anywhere;
+}

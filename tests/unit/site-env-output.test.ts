@@ -1,13 +1,11 @@
-import { spawnSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import type { SiteConfig } from '../../config/site.schema.ts';
 import { headersFile, NOINDEX_HEADER_LINE, robotsTxt, writeEnvOutput } from '../../src/integrations/site-env.ts';
+import { astroBuild, repoRoot } from './helpers/astro-build.ts';
 
-const repoRoot = path.resolve(import.meta.dirname, '../..');
-const astroBin = path.join(repoRoot, 'node_modules/astro/bin/astro.mjs');
 const sharedHeaders = readFileSync(path.join(repoRoot, 'public/_headers'), 'utf8');
 const tmpRoot = mkdtempSync(path.join(os.tmpdir(), 'site-env-'));
 
@@ -82,13 +80,7 @@ describe('pure env output', () => {
 /** Real `astro build` of the site into a temp outDir. */
 function build(name: string, env: Record<string, string>) {
   const outDir = path.join(tmpRoot, name);
-  const run = spawnSync(process.execPath, [astroBin, 'build', '--outDir', outDir], {
-    cwd: repoRoot,
-    encoding: 'utf8',
-    env: { ...process.env, FORCE_COLOR: '0', NO_COLOR: '1', ...env },
-    timeout: 120_000,
-  });
-  const output = `${run.stdout}\n${run.stderr}`;
+  const { run, output } = astroBuild(outDir, env);
   expect(run.error, output).toBeUndefined();
   expect(run.status, output).toBe(0);
   const read = (file: string) => readFileSync(path.join(outDir, file), 'utf8');

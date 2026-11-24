@@ -1,0 +1,36 @@
+---
+// Office-styled static page frame (Story 1.3): skip link → top letterbox bar →
+// <main id="main"> on surface.panel → footer letterbox bar.
+// Named slots: `lang-switch` (Story 1.4) and `privacy` (Story 1.7).
+import '../styles/tokens.css';
+import '../styles/type.css';
+import '../styles/base.css';
+import BaseLayout from './BaseLayout.astro';
+import StaticChrome from '../components/StaticChrome.astro';
+import type { Locale } from '../content/schemas.ts';
+import { loadSiteConfig } from '../../config/load.ts';
+import { t } from '../i18n/copy.ts';
+
+interface Props {
+  lang: Locale;
+  title: string;
+}
+
+const { lang, title } = Astro.props;
+const { features } = loadSiteConfig();
+const skipToContent = await t('chrome.skip-to-content', lang);
+const footerLabel = await t('chrome.footer-label', lang);
+---
+
+<BaseLayout lang={lang} title={title}>
+  <a class="skip-link t-ui-caps" href="#main">{skipToContent}</a>
+  <StaticChrome lang={lang} features={features}>
+    <slot name="lang-switch" slot="lang-switch" />
+  </StaticChrome>
+  <main id="main" class="panel t-body" tabindex="-1">
+    <slot />
+  </main>
+  <footer class="bar bar--bottom t-ui-caps" aria-label={footerLabel}>
+    <slot name="privacy" />
+  </footer>
+</BaseLayout>

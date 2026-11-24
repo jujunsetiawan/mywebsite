@@ -1,0 +1,70 @@
+/*
+ * One utility class per DESIGN.md typography style (Story 1.3). Weight is
+ * always 400: hierarchy comes from size, italics, tracking and case.
+ * System font stacks only — no web fonts.
+ */
+.t-display-serif {
+  font-family: var(--type-display-serif-family);
+  font-size: var(--type-display-serif-size);
+  font-weight: 400;
+  line-height: var(--type-display-serif-line-height);
+  letter-spacing: var(--type-display-serif-letter-spacing);
+}
+
+.t-title-serif {
+  font-family: var(--type-title-serif-family);
+  font-size: var(--type-title-serif-size);
+  font-weight: 400;
+  line-height: var(--type-title-serif-line-height);
+  letter-spacing: var(--type-title-serif-letter-spacing);
+}
+
+.t-subtitle-serif {
+  font-family: var(--type-subtitle-serif-family);
+  font-size: var(--type-subtitle-serif-size);
+  font-weight: 400;
+  line-height: var(--type-subtitle-serif-line-height);
+  letter-spacing: normal;
+}
+
+.t-kanji-chrome {
+  font-family: var(--type-kanji-chrome-family);
+  font-size: var(--type-kanji-chrome-size);
+  font-weight: 400;
+  line-height: var(--type-kanji-chrome-line-height);
+  letter-spacing: var(--type-kanji-chrome-letter-spacing);
+}
+
+.t-ui-caps {
+  font-family: var(--type-ui-caps-family);
+  font-size: var(--type-ui-caps-size);
+  font-weight: 400;
+  line-height: var(--type-ui-caps-line-height);
+  letter-spacing: var(--type-ui-caps-letter-spacing);
+  text-transform: uppercase;
+}
+
+.t-body {
+  font-family: var(--type-body-family);
+  font-size: var(--type-body-size);
+  font-weight: 400;
+  line-height: var(--type-body-line-height);
+  letter-spacing: normal;
+}
+
+.t-terminal {
+  font-family: var(--type-terminal-family);
+  font-size: var(--type-terminal-size);
+  font-weight: 400;
+  line-height: var(--type-terminal-line-height);
+  letter-spacing: normal;
+}
+
+.t-numeral {
+  font-family: var(--type-numeral-family);
+  font-size: var(--type-numeral-size);
+  font-weight: 400;
+  line-height: var(--type-numeral-line-height);
+  letter-spacing: normal;
+  font-variant-numeric: tabular-nums;
+}

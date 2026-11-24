@@ -1,0 +1,41 @@
+---
+// Top letterbox bar of static pages (Story 1.3): credit line linking home on
+// the left; static chrome on the right. Hub links and the contact pill render
+// only when their site-config flags are on; film-only toggles never render.
+import type { Locale } from '../content/schemas.ts';
+import type { SiteConfig } from '../../config/site.schema.ts';
+import { t } from '../i18n/copy.ts';
+
+interface Props {
+  lang: Locale;
+  features: SiteConfig['features'];
+}
+
+const { lang, features } = Astro.props;
+const home = `/${lang}/`;
+
+const credit = await t('chrome.credit', lang);
+const projects = await t('chrome.projects', lang);
+const skipStory = features.hubLinks ? await t('chrome.skip-story', lang) : null;
+const awards = features.hubLinks ? await t('chrome.awards', lang) : null;
+const contact = features.contact ? await t('chrome.contact', lang) : null;
+---
+
+<header class="bar bar--top t-ui-caps">
+  <a class="chrome-link chrome-credit" href={home} data-chrome="credit">{credit}</a>
+  <div class="chrome-right">
+    <nav class="chrome-nav">
+      {skipStory !== null && <a class="chrome-link" href={`${home}#hub`} data-chrome="skip-story">{skipStory}</a>}
+      <a class="chrome-link" href={`${home}#proyek`} data-chrome="projects">{projects}</a>
+      {awards !== null && <a class="chrome-link" href={`${home}#penghargaan`} data-chrome="awards">{awards}</a>}
+      {
+        contact !== null && (
+          <a class="chrome-link chrome-contact" href={`${home}#hubungi`} data-chrome="contact">
+            <span class="chrome-pill">{contact}</span>
+          </a>
+        )
+      }
+    </nav>
+    <slot name="lang-switch" />
+  </div>
+</header>

@@ -45,7 +45,13 @@ export const testimonialSchema = z.strictObject({
   dummy: z.boolean().default(false),
 });
 
+/** One keyed piece of static UI copy (`content/film-copy/<key>.yaml`). */
+export const filmCopySchema = z.strictObject({
+  text: localized(),
+});
+
 export type Project = z.infer<typeof projectSchema>;
+export type FilmCopy = z.infer<typeof filmCopySchema>;
 export type Award = z.infer<typeof awardSchema>;
 export type Testimonial = z.infer<typeof testimonialSchema>;
 

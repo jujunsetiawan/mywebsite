@@ -2,12 +2,10 @@
 // Placeholder 404 (replaced by the language-aware page in Story 1.8). It must
 // exist so Workers static assets answer unknown paths with `404-page` handling
 // instead of falling through to the `/media` Worker script.
-import BaseLayout from '../layouts/BaseLayout.astro';
+import StaticLayout from '../layouts/StaticLayout.astro';
 ---
 
-<BaseLayout lang="id" title="404 — Jujun Setiawan">
-  <main>
-    <h1>404</h1>
-    <p><a href="/id/">Jujun Setiawan</a></p>
-  </main>
-</BaseLayout>
+<StaticLayout lang="id" title="404 — Jujun Setiawan">
+  <h1 class="t-title-serif">404</h1>
+  <p><a href="/id/">Jujun Setiawan</a></p>
+</StaticLayout>
