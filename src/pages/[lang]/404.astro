@@ -1,0 +1,15 @@
+---
+// Per-language not-found page (Story 1.8). Built to `<lang>/404/index.html`
+// and moved to `<lang>/404.html` by the `site-env` integration, so Workers'
+// nearest-`404.html` handling serves it with status 404 for unknown paths
+// under `/<lang>/` (`/<lang>/proyek/404.html` still wins below `/proyek/`).
+import type { GetStaticPaths } from 'astro';
+import NotFound from '../../components/NotFound.astro';
+import { LOCALES, type Locale } from '../../content/schemas.ts';
+
+export const getStaticPaths = (() => LOCALES.map((lang) => ({ params: { lang } }))) satisfies GetStaticPaths;
+
+const lang = Astro.params.lang as Locale;
+---
+
+<NotFound lang={lang} />

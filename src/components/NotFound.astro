@@ -1,0 +1,45 @@
+---
+// Site-wide not-found page body (Story 1.8), shared by the per-language
+// `src/pages/[lang]/404.astro` and the root `src/pages/404.astro`.
+// Unmirrored (no `path`: no canonical/alternates, no ID/EN switch) and
+// `noindex` in every env. Static markup only, all copy keyed.
+// `englishLink` (root page only) adds a visible link to the English home,
+// labelled in English whatever the page language.
+import StaticLayout from '../layouts/StaticLayout.astro';
+import type { Locale } from '../content/schemas.ts';
+import { localePath } from '../i18n/routes.ts';
+import { t } from '../i18n/copy.ts';
+
+interface Props {
+  lang: Locale;
+  englishLink?: boolean;
+}
+
+const { lang, englishLink = false } = Astro.props;
+const home = localePath(lang, '');
+const heading = await t('page.not-found.title', lang);
+const body = await t('page.not-found.body', lang);
+const homeLink = await t('page.not-found.home-link', lang);
+const projectsLink = await t('page.not-found.projects-link', lang);
+const englishLabel = await t('page.not-found.english-link', 'en');
+const englishHome = localePath('en', '');
+const siteName = await t('page.home.title', lang);
+---
+
+<StaticLayout lang={lang} title={`${heading} — ${siteName}`} noindex>
+  <div class="not-found" data-page="not-found">
+    <h1 class="t-title-serif">{heading}</h1>
+    <p class="home-intro">{body}</p>
+    <p class="archive-empty-links">
+      <a class="content-list-action t-ui-caps" href={home} data-action="home">{homeLink}</a>
+      <a class="content-list-action t-ui-caps" href={`${home}#proyek`} data-action="projects">{projectsLink}</a>
+      {
+        englishLink && (
+          <a class="content-list-action t-ui-caps" href={englishHome} hreflang="en" lang="en" data-action="english">
+            {englishLabel}
+          </a>
+        )
+      }
+    </p>
+  </div>
+</StaticLayout>

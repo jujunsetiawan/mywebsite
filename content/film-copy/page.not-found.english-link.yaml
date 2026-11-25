@@ -1,0 +1,5 @@
+# Root not-found page (/404.html, Indonesian): link to the English home.
+# Always shown in English, so both values are identical.
+text:
+  id: Read this site in English
+  en: Read this site in English

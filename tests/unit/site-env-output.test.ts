@@ -114,9 +114,12 @@ describe('astro build per SITE_ENV', () => {
     expect(read('robots.txt')).toBe('User-agent: *\nDisallow: /\n');
     expect(read('_redirects')).toBe('/ /id/ 301\n/proyek/* /id/proyek/:splat 301\n');
     // Story 1.6: the empty-archive pages are moved into place, noindex even in production builds (below).
+    // Story 1.8: so are the site-wide per-language not-found pages.
     for (const lang of ['id', 'en']) {
-      expect(existsSync(path.join(outDir('preview'), lang, 'proyek/404.html')), lang).toBe(true);
-      expect(existsSync(path.join(outDir('preview'), lang, 'proyek/404')), lang).toBe(false);
+      for (const dir of ['', 'proyek/']) {
+        expect(existsSync(path.join(outDir('preview'), lang, `${dir}404.html`)), `${lang}/${dir}`).toBe(true);
+        expect(existsSync(path.join(outDir('preview'), lang, `${dir}404`)), `${lang}/${dir}`).toBe(false);
+      }
     }
     // Story 1.4: canonical/alternates stay on the production origin in preview builds.
     const origin = JSON.parse(readFileSync(path.join(repoRoot, 'config/site.preview.json'), 'utf8')).productionOrigin;
@@ -151,11 +154,15 @@ describe('astro build per SITE_ENV', () => {
     expect(read('robots.txt')).toBe('User-agent: *\nAllow: /\n');
     // Story 1.6: project pages are indexable in production; the empty archive never is.
     expect(read('id/proyek/sistem-order-distribusi/index.html')).not.toContain('noindex');
-    for (const lang of ['id', 'en']) {
-      const html = read(`${lang}/proyek/404.html`);
-      expect(html.match(/<meta name="robots" content="noindex">/g), lang).toHaveLength(1);
-      expect(html).not.toMatch(/rel="(canonical|alternate)"/);
+    // Story 1.8: every not-found page (root and per language) is noindex in production too.
+    for (const file of ['404.html', 'id/404.html', 'en/404.html', 'id/proyek/404.html', 'en/proyek/404.html']) {
+      const html = read(file);
+      expect(html.match(/<meta name="robots" content="noindex">/g), file).toHaveLength(1);
+      expect(html, file).not.toMatch(/rel="(canonical|alternate)"/);
     }
+    expect(read('id/404.html')).toContain('<html lang="id"');
+    expect(read('en/404.html')).toContain('<html lang="en"');
+    expect(read('404.html')).toContain('<html lang="id"');
   }, 120_000);
 
   it('production with a null token (committed config): no beacon', () => {

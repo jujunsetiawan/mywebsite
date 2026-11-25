@@ -213,11 +213,27 @@ describe('film-copy keys', () => {
     });
   });
 
-  it('the language home, project pages and their components hold no visible literals', () => {
+  it('Story 1.8 keys carry the specified copy', () => {
+    const text = (key: string) =>
+      filmCopySchema.parse(parseYaml(readFileSync(path.join(repoRoot, 'content/film-copy', `${key}.yaml`), 'utf8'))).text;
+    expect(text('page.not-found.title')).toEqual({ id: 'Halaman tidak ditemukan', en: 'Page not found' });
+    expect(text('page.not-found.body')).toEqual({
+      id: 'Tautan ini mungkin salah ketik atau halamannya sudah dipindahkan.',
+      en: 'This link may have a typo, or the page has moved.',
+    });
+    expect(text('page.not-found.home-link')).toEqual({ id: 'Kembali ke beranda', en: 'Back to the home page' });
+    expect(text('page.not-found.projects-link')).toEqual({ id: 'Lihat proyek', en: 'See the projects' });
+    expect(text('page.not-found.english-link')).toEqual({ id: 'Read this site in English', en: 'Read this site in English' });
+  });
+
+  it('the language home, project pages, not-found pages and their components hold no visible literals', () => {
     for (const file of [
       'src/pages/[lang]/index.astro',
       'src/pages/[lang]/proyek/[slug].astro',
       'src/pages/[lang]/proyek/404.astro',
+      'src/pages/404.astro',
+      'src/pages/[lang]/404.astro',
+      'src/components/NotFound.astro',
       'src/components/ProjectDetail.astro',
       'src/components/Testimonial.astro',
     ]) {
@@ -225,6 +241,9 @@ describe('film-copy keys', () => {
       expect(source, file).not.toContain('Jujun Setiawan');
       expect(source, file).not.toMatch(
         /Dari arsip|Jun's archive|Peranku|My role|Tonton filmnya|Watch the film|Lihat di kantor|3D office|Arsip ini kosong|archive is empty|Hasil|Outcomes|Alur bisnis|Business flow|Proses kerja|How we worked|Kontrak API|API contract|Contoh PRD|Sample PRD|Prototipe/,
+      );
+      expect(source, file).not.toMatch(
+        /tidak ditemukan|not found|salah ketik|typo|dipindahkan|has moved|Kembali ke beranda|Back to the home|Lihat proyek|See the projects|this site in English/i,
       );
     }
   });

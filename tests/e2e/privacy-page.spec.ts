@@ -227,7 +227,7 @@ for (const lang of ['id', 'en'] as const) {
   }
 }
 
-test('the site-wide 404 placeholder carries the footer link too', async ({ page }) => {
+test('the root not-found page carries the footer link too', async ({ page }) => {
   const response = await page.goto('/tidak-ada-halaman/');
   expect(response?.status()).toBe(404);
   await expect(page.locator('footer a[data-chrome="privacy"]')).toHaveAttribute('href', '/id/privasi/');

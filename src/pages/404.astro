@@ -1,11 +1,9 @@
 ---
-// Placeholder 404 (replaced by the language-aware page in Story 1.8). It must
-// exist so Workers static assets answer unknown paths with `404-page` handling
-// instead of falling through to the `/media` Worker script.
-import StaticLayout from '../layouts/StaticLayout.astro';
+// Root not-found page (Story 1.8): emitted flat as `dist/404.html`, served by
+// Workers' `404-page` handling for unknown paths outside `/id/` and `/en/`
+// (it must exist so they never fall through to the `/media` Worker script).
+// Indonesian (the default language) plus a visible link to the English home.
+import NotFound from '../components/NotFound.astro';
 ---
 
-<StaticLayout lang="id" title="404 — Jujun Setiawan">
-  <h1 class="t-title-serif">404</h1>
-  <p><a href="/id/">Jujun Setiawan</a></p>
-</StaticLayout>
+<NotFound lang="id" englishLink />

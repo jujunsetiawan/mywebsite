@@ -6,8 +6,8 @@
 // `wrangler dev`: the CSP disappeared), so the line goes into the existing
 // `/*` block; a new block is appended only when there is none.
 //
-// It also moves the per-language empty-archive pages into place (Story 1.6).
-import { readFile, rename, rmdir, stat, writeFile } from 'node:fs/promises';
+// It also moves the per-language not-found pages into place (Stories 1.6, 1.8).
+import { readdir, readFile, rename, rmdir, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { AstroIntegration } from 'astro';
@@ -46,30 +46,53 @@ export async function writeEnvOutput(distDir: string, config: SiteConfig): Promi
   await writeFile(path.join(distDir, 'robots.txt'), robotsTxt(config));
 }
 
+/** Per-language not-found pages: dist-relative directory (under `<lang>/`) and their Astro source. */
+export const NOT_FOUND_PAGES = [
+  // Site-wide not-found page (Story 1.8).
+  { dir: '', source: 'src/pages/[lang]/404.astro' },
+  // Empty-archive page for unknown project slugs (Story 1.6).
+  { dir: 'proyek/', source: 'src/pages/[lang]/proyek/404.astro' },
+] as const;
+
 /**
- * Moves each language's empty-archive page (Story 1.6) from the directory-format
- * `<lang>/proyek/404/index.html` to `<lang>/proyek/404.html`, so Workers'
+ * Moves every expected per-language not-found page from the directory-format
+ * `<lang>/<dir>404/index.html` to `<lang>/<dir>404.html`, so Workers'
  * `not_found_handling: "404-page"` (nearest `404.html` up the path) serves it
- * with status 404 for unknown project slugs. Removes the then-empty `404/` dir.
- * Throws (failing the build) when a source page is missing. Returns the moved
- * dist-relative targets.
+ * with status 404: `<lang>/404.html` for unknown paths under `/<lang>/`, and
+ * `<lang>/proyek/404.html` (nearer, so it wins) for unknown project slugs.
+ * Removes each then-empty `404/` dir. All sources are checked before anything
+ * moves; a missing one, or a source dir holding anything besides `index.html`,
+ * throws (failing the build) naming every offender. Returns the moved
+ * dist-relative targets. The root `dist/404.html` is emitted flat by Astro.
  */
-export async function moveArchiveEmptyPages(distDir: string, locales: readonly string[] = LOCALES): Promise<string[]> {
-  const moved: string[] = [];
-  for (const lang of locales) {
-    const sourceDir = path.join(distDir, lang, 'proyek', '404');
-    const source = path.join(sourceDir, 'index.html');
+export async function moveNotFoundPages(distDir: string, locales: readonly string[] = LOCALES): Promise<string[]> {
+  const moves = locales.flatMap((lang) =>
+    NOT_FOUND_PAGES.map(({ dir, source }) => ({ rel: `${lang}/${dir}404`, source })),
+  );
+  const missing: string[] = [];
+  for (const { rel, source } of moves) {
     try {
-      await stat(source);
+      await stat(path.join(distDir, rel, 'index.html'));
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
-      throw new Error(
-        `site-env: empty-archive page missing: dist/${lang}/proyek/404/index.html (built from src/pages/[lang]/proyek/404.astro)`,
-      );
+      missing.push(`dist/${rel}/index.html (built from ${source})`);
     }
-    await rename(source, path.join(distDir, lang, 'proyek', '404.html'));
+  }
+  if (missing.length > 0) throw new Error(`site-env: not-found page missing: ${missing.join(', ')}`);
+  const cluttered: string[] = [];
+  for (const { rel } of moves) {
+    const extra = (await readdir(path.join(distDir, rel))).filter((name) => name !== 'index.html').sort();
+    if (extra.length > 0) cluttered.push(`dist/${rel}/ (${extra.join(', ')})`);
+  }
+  if (cluttered.length > 0) {
+    throw new Error(`site-env: not-found source dir holds more than index.html: ${cluttered.join(', ')}`);
+  }
+  const moved: string[] = [];
+  for (const { rel } of moves) {
+    const sourceDir = path.join(distDir, rel);
+    await rename(path.join(sourceDir, 'index.html'), path.join(distDir, `${rel}.html`));
     await rmdir(sourceDir);
-    moved.push(`${lang}/proyek/404.html`);
+    moved.push(`${rel}.html`);
   }
   return moved;
 }
@@ -80,8 +103,8 @@ export default function siteEnv(config: SiteConfig): AstroIntegration {
     hooks: {
       'astro:build:done': async ({ dir, logger }) => {
         const distDir = fileURLToPath(dir);
-        const moved = await moveArchiveEmptyPages(distDir);
-        logger.info(`empty-archive pages: ${moved.join(', ')}`);
+        const moved = await moveNotFoundPages(distDir);
+        logger.info(`not-found pages: ${moved.join(', ')}`);
         await writeEnvOutput(distDir, config);
         logger.info(`env "${config.env}": robots.txt ${isIndexable(config) ? 'allows' : 'disallows'} crawling`);
       },
