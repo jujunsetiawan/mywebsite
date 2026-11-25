@@ -1,9 +1,12 @@
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import type { SiteConfig } from '../../config/site.schema.ts';
 import { checkI18nRoutesDir } from '../../scripts/checks/i18n-routes.ts';
+import { checkSeoDir } from '../../scripts/checks/seo.ts';
+import { listFiles } from '../../scripts/budgets/static-assets.ts';
+import { isNotFoundPath } from '../../src/seo/sitemap.ts';
 import { headersFile, NOINDEX_HEADER_LINE, robotsTxt, writeEnvOutput } from '../../src/integrations/site-env.ts';
 import { astroBuild, repoRoot } from './helpers/astro-build.ts';
 
@@ -14,6 +17,8 @@ const BEACON_SRC = 'https://static.cloudflareinsights.com/beacon.min.js';
 const CSP =
   "default-src 'self'; script-src 'self' https://static.cloudflareinsights.com; connect-src 'self' https://cloudflareinsights.com; img-src 'self' data:; style-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'";
 const PREVIEW_HEADERS = `/*\n  X-Robots-Tag: noindex\n  Content-Security-Policy: ${CSP}\n`;
+const PRODUCTION_ROBOTS =
+  'User-agent: *\nAllow: /\nSitemap: https://jun-portfolio.example.workers.dev/sitemap-index.xml\n';
 
 function config(env: SiteConfig['env'], analyticsToken: string | null = null): SiteConfig {
   return {
@@ -39,7 +44,9 @@ describe('pure env output', () => {
   it('robots.txt disallows everything outside production', () => {
     expect(robotsTxt(config('preview'))).toBe('User-agent: *\nDisallow: /\n');
     expect(robotsTxt(config('development'))).toBe('User-agent: *\nDisallow: /\n');
-    expect(robotsTxt(config('production'))).toBe('User-agent: *\nAllow: /\n');
+    // Story 1.9: production points crawlers at the sitemap index on the production origin.
+    expect(robotsTxt(config('production'))).toBe(PRODUCTION_ROBOTS);
+    expect(robotsTxt(config('preview'))).not.toContain('Sitemap');
   });
 
   it('_headers gains X-Robots-Tag: noindex inside the /* rule outside production only', () => {
@@ -74,7 +81,7 @@ describe('pure env output', () => {
     mkdirSync(empty);
     await writeEnvOutput(empty, config('production'));
     expect(readFileSync(path.join(empty, '_headers'), 'utf8')).toBe('');
-    expect(readFileSync(path.join(empty, 'robots.txt'), 'utf8')).toBe('User-agent: *\nAllow: /\n');
+    expect(readFileSync(path.join(empty, 'robots.txt'), 'utf8')).toBe(PRODUCTION_ROBOTS);
   });
 });
 
@@ -134,6 +141,54 @@ describe('astro build per SITE_ENV', () => {
     expect(routes.problems).toEqual([]);
     // The unmirrored top-level 404 carries neither canonical nor alternates.
     expect(read('404.html')).not.toMatch(/rel="(canonical|alternate)"/);
+
+    // Story 1.9 (matrix "Preview build"): sitemap, canonical and JSON-LD on the
+    // production origin; robots disallow-all without a Sitemap line.
+    expect(read('robots.txt')).not.toContain('Sitemap');
+    const seo = checkSeoDir(outDir('preview'), origin, false);
+    expect(seo.problems).toEqual([]);
+    expect(seo.personPages.sort()).toEqual(['en/index.html', 'id/index.html']);
+    expect(read('sitemap-index.xml')).toContain(`<loc>${origin}/sitemap-0.xml</loc>`);
+    const sitemap = read('sitemap-0.xml');
+    const projects = readdirSync(path.join(repoRoot, 'content/projects')).filter((f) => f.endsWith('.yaml'));
+    const expectedPages = ['id', 'en'].flatMap((lang) => [
+      `${origin}/${lang}/`,
+      `${origin}/${lang}/privasi/`,
+      ...projects.map((f) => `${origin}/${lang}/proyek/${f.replace(/\.yaml$/, '')}/`),
+    ]);
+    expect([...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]).sort()).toEqual(expectedPages.sort());
+    for (const page of expectedPages) {
+      const routePath = page.slice(origin.length + 4);
+      const entry = sitemap.match(new RegExp(`<url><loc>${page.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}</loc>[\\s\\S]*?</url>`))?.[0];
+      expect(entry, page).toBeDefined();
+      expect(entry).toContain(`<xhtml:link rel="alternate" hreflang="id" href="${origin}/id/${routePath}"/>`);
+      expect(entry).toContain(`<xhtml:link rel="alternate" hreflang="en" href="${origin}/en/${routePath}"/>`);
+    }
+    for (const [, loc] of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) expect(isNotFoundPath(loc!), loc).toBe(false);
+    expect(sitemap).not.toMatch(/localhost|127\.0\.0\.1/);
+
+    // Titles keep "{page} — Jujun Setiawan" (homes: "Jujun Setiawan"); each home has one H1 with the name.
+    const htmlFiles = listFiles(outDir('preview'))
+      .map((file) => file.path)
+      .filter((file) => file.endsWith('.html'));
+    expect(htmlFiles.length).toBeGreaterThanOrEqual(15);
+    for (const file of htmlFiles) {
+      const html = read(file);
+      const titles = [...html.matchAll(/<title>([^<]*)<\/title>/g)].map((m) => m[1]!);
+      expect(titles, file).toHaveLength(1);
+      expect(titles[0], file).toContain('Jujun Setiawan');
+      // Story 1.9: every page has exactly one non-empty meta description.
+      const descriptions = [...html.matchAll(/<meta name="description" content="([^"]*)">/g)].map((m) => m[1]!);
+      expect(descriptions, file).toHaveLength(1);
+      expect(descriptions[0]!.trim(), file).not.toBe('');
+    }
+    for (const lang of ['id', 'en']) {
+      const html = read(`${lang}/index.html`);
+      expect(html).toContain('<title>Jujun Setiawan</title>');
+      const h1s = [...html.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/g)].map((m) => m[1]!);
+      expect(h1s, lang).toHaveLength(1);
+      expect(h1s[0]).toContain('Jujun Setiawan');
+    }
   }, 120_000);
 
   it('production with a token: no noindex, allow robots, exactly one beacon', () => {
@@ -151,7 +206,7 @@ describe('astro build per SITE_ENV', () => {
     }
     expect(read('_headers')).toBe(sharedHeaders);
     expect(read('_headers')).not.toContain('X-Robots-Tag');
-    expect(read('robots.txt')).toBe('User-agent: *\nAllow: /\n');
+    expect(read('robots.txt')).toBe(PRODUCTION_ROBOTS);
     // Story 1.6: project pages are indexable in production; the empty archive never is.
     expect(read('id/proyek/sistem-order-distribusi/index.html')).not.toContain('noindex');
     // Story 1.8: every not-found page (root and per language) is noindex in production too.
@@ -173,6 +228,9 @@ describe('astro build per SITE_ENV', () => {
     const html = read('id/index.html');
     expect(html).not.toContain('noindex');
     expect(countBeacons(html)).toBe(0);
-    expect(read('robots.txt')).toBe('User-agent: *\nAllow: /\n');
+    // Story 1.9: the committed production origin in the Sitemap line, and a clean SEO check.
+    const origin = JSON.parse(readFileSync(path.join(repoRoot, 'config/site.production.json'), 'utf8')).productionOrigin;
+    expect(read('robots.txt')).toBe(`User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap-index.xml\n`);
+    expect(checkSeoDir(outDir('production-null'), origin, true).problems).toEqual([]);
   }, 120_000);
 });

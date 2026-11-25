@@ -244,6 +244,23 @@ export const privacySchema = z
 
 export type Privacy = z.infer<typeof privacySchema>;
 
+/**
+ * `content/profile/profile.yaml` — the single profile entry feeding the
+ * Person JSON-LD on the language homes (Story 1.9). The page URL is not
+ * stored here: it comes from `productionOrigin` in site config.
+ */
+export const profileSchema = z.strictObject({
+  name: nonEmptyText,
+  jobTitle: localized(),
+  /** Profiles elsewhere (GitHub, LinkedIn, …): absolute https URLs, at least one. */
+  sameAs: z
+    .array(httpsUrl, { error: (issue) => (issue.input === undefined ? 'is required' : 'must be a list') })
+    .min(1, { error: 'must be a non-empty list' }),
+  dummy,
+});
+
+export type Profile = z.infer<typeof profileSchema>;
+
 /** One keyed piece of static UI copy (`content/film-copy/<key>.yaml`). */
 export const filmCopySchema = z.strictObject({
   text: localized(),

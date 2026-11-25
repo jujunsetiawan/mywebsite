@@ -25,6 +25,6 @@ const siteName = await t('page.home.title', lang);
 const title = `${project.data.name[lang]} — ${siteName}`;
 ---
 
-<StaticLayout lang={lang} title={title} path={`proyek/${project.data.slug}/`}>
+<StaticLayout lang={lang} title={title} description={project.data.oneLineOutcome[lang]} path={`proyek/${project.data.slug}/`}>
   <ProjectDetail project={project} testimonials={testimonials} lang={lang} features={features} />
 </StaticLayout>

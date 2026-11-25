@@ -1,12 +1,15 @@
-// Runs all dist/ budget checks, the layer-import check and the i18n route check.
+// Runs all dist/ budget checks, the layer-import check, the i18n route check
+// and the SEO check.
 // Usage: node scripts/check-budgets.ts  (Node native type stripping)
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadSiteConfig } from '../config/load.ts';
+import { isIndexable } from '../config/site.schema.ts';
 import { diskReader, formatFirstLoad, measureFirstLoad } from './budgets/first-load.ts';
 import { firstProjectSlug } from './budgets/project-pages.ts';
 import { checkI18nRoutesDir, formatI18nRoutes } from './checks/i18n-routes.ts';
+import { checkSeoDir, formatSeo } from './checks/seo.ts';
 import { checkLayers, formatLayers } from './budgets/layer-imports.ts';
 import { checkStaticAssets, formatStaticAssets, listFiles } from './budgets/static-assets.ts';
 
@@ -44,10 +47,18 @@ if (violations.length > 0) failed = true;
 console.log('');
 
 // Canonical/hreflang always target the production origin, whatever SITE_ENV built dist/.
-const { productionOrigin } = loadSiteConfig({ configDir: process.env.SITE_CONFIG_DIR ?? path.join(rootDir, 'config') });
+// SITE_ENV must match the build's (it selects the config, and with it the robots rule below).
+const siteConfig = loadSiteConfig({ configDir: process.env.SITE_CONFIG_DIR ?? path.join(rootDir, 'config') });
+const { productionOrigin } = siteConfig;
 const routes = checkI18nRoutesDir(distDir, productionOrigin);
 console.log(formatI18nRoutes(routes, productionOrigin));
 if (!routes.ok) failed = true;
+console.log('');
+
+// Story 1.9: sitemap, JSON-LD and robots Sitemap line on the production origin too.
+const seo = checkSeoDir(distDir, productionOrigin, isIndexable(siteConfig));
+console.log(formatSeo(seo, productionOrigin));
+if (!seo.ok) failed = true;
 
 console.log('');
 console.log(failed ? 'Budgets: FAIL' : 'Budgets: PASS');

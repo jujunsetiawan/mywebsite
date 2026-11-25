@@ -20,13 +20,17 @@ import { localePath, PRIVACY_PATH } from '../i18n/routes.ts';
 interface Props {
   lang: Locale;
   title: string;
+  /** `<meta name="description">` in the page language (Story 1.9). */
+  description: string;
+  /** Serialised Person JSON-LD; language homes only (Story 1.9). */
+  jsonLd?: string;
   /** Language-less route path ('' for home, e.g. 'proyek/x/'); omit for unmirrored pages. */
   path?: string;
   /** `noindex` meta in every environment (unindexable pages such as the empty archive). */
   noindex?: boolean;
 }
 
-const { lang, title, path, noindex } = Astro.props;
+const { lang, title, description, jsonLd, path, noindex } = Astro.props;
 const { features } = loadSiteConfig();
 const skipToContent = await t('chrome.skip-to-content', lang);
 const footerLabel = await t('chrome.footer-label', lang);
@@ -34,7 +38,7 @@ const privacyLabel = await t('chrome.privacy', lang);
 const privacyHref = localePath(lang, PRIVACY_PATH);
 ---
 
-<BaseLayout lang={lang} title={title} path={path} noindex={noindex}>
+<BaseLayout lang={lang} title={title} description={description} jsonLd={jsonLd} path={path} noindex={noindex}>
   <a class="skip-link t-ui-caps" href="#main">{skipToContent}</a>
   <StaticChrome lang={lang} features={features}>
     {

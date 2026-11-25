@@ -7,6 +7,13 @@ import { alternates, canonical } from '../i18n/routes.ts';
 interface Props {
   lang: Locale;
   title: string;
+  /** `<meta name="description">` in the page language (Story 1.9); must be non-empty. */
+  description: string;
+  /**
+   * Serialised JSON-LD (see `serializeJsonLd`) emitted as one
+   * `<script type="application/ld+json">` data block; language homes only (Story 1.9).
+   */
+  jsonLd?: string | undefined;
   /**
    * Language-less route path of a mirrored page ('' for home). When given,
    * the head carries a self-canonical and id/en/x-default alternates, always
@@ -17,7 +24,10 @@ interface Props {
   noindex?: boolean | undefined;
 }
 
-const { lang, title, path } = Astro.props;
+const { lang, title, description, jsonLd, path } = Astro.props;
+if (typeof description !== 'string' || description.trim() === '') {
+  throw new Error(`BaseLayout: empty meta description for "${title}" (${lang})`);
+}
 const site = loadSiteConfig();
 const noindex = Astro.props.noindex === true || !isIndexable(site);
 const token = beaconToken(site);
@@ -32,8 +42,11 @@ const alternateLinks = path === undefined ? [] : alternates(site.productionOrigi
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     {noindex && <meta name="robots" content="noindex" />}
     <title>{title}</title>
+    <meta name="description" content={description} />
     {canonicalHref !== null && <link rel="canonical" href={canonicalHref} />}
     {alternateLinks.map((alt) => <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />)}
+    {/* A non-executed data block: CSP `script-src` does not apply to it. */}
+    {jsonLd !== undefined && <script is:inline type="application/ld+json" set:html={jsonLd} />}
     {
       token !== null && (
         <script

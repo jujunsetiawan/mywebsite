@@ -2,6 +2,8 @@
 //   DEPLOY_URL=https://… SITE_ENV=preview|production npx playwright test --project=chromium
 // Uses the `request` fixture only, so no browser is launched.
 // Requires the smoke object `smoke/ping.bin` in the R2 bucket (see infra/README.md).
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import { expect, test } from '@playwright/test';
 
 const siteEnv = process.env.SITE_ENV ?? 'production';
@@ -24,7 +26,11 @@ test('/media missing key → 404', async ({ request }) => {
 test(`robots rules match SITE_ENV=${siteEnv}`, async ({ request }) => {
   const robots = await request.get('/robots.txt');
   expect(robots.status()).toBe(200);
-  expect(await robots.text()).toBe(indexable ? 'User-agent: *\nAllow: /\n' : 'User-agent: *\nDisallow: /\n');
+  // Story 1.9: production robots points at the sitemap index on the production origin.
+  const origin: string = JSON.parse(readFileSync(path.join(process.cwd(), 'config/site.production.json'), 'utf8')).productionOrigin;
+  expect(await robots.text()).toBe(
+    indexable ? `User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap-index.xml\n` : 'User-agent: *\nDisallow: /\n',
+  );
 
   const home = await request.get('/id/');
   expect(home.status()).toBe(200);

@@ -21,7 +21,7 @@ const policyLink = await t('page.privacy.policy-link', lang);
 const newTab = await t('page.privacy.new-tab', lang);
 ---
 
-<StaticLayout lang={lang} title={`${data.title[lang]} — ${siteName}`} path={PRIVACY_PATH}>
+<StaticLayout lang={lang} title={`${data.title[lang]} — ${siteName}`} description={data.intro[lang]} path={PRIVACY_PATH}>
   <article class="privacy" data-page="privacy">
     <header class="privacy-header">
       <h1 class="t-title-serif">{data.title[lang]}</h1>

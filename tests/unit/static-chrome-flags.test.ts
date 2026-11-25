@@ -226,6 +226,15 @@ describe('film-copy keys', () => {
     expect(text('page.not-found.english-link')).toEqual({ id: 'Read this site in English', en: 'Read this site in English' });
   });
 
+  it('Story 1.9 keys carry the specified copy', () => {
+    const text = (key: string) =>
+      filmCopySchema.parse(parseYaml(readFileSync(path.join(repoRoot, 'content/film-copy', `${key}.yaml`), 'utf8'))).text;
+    expect(text('page.home.description')).toEqual({
+      id: 'Portofolio Jujun Setiawan, product engineer: proyek, penghargaan, dan cerita di balik sistem yang tetap menyala.',
+      en: 'Portfolio of Jujun Setiawan, product engineer: projects, awards and the story behind systems that stay up.',
+    });
+  });
+
   it('the language home, project pages, not-found pages and their components hold no visible literals', () => {
     for (const file of [
       'src/pages/[lang]/index.astro',

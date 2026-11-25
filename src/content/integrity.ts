@@ -69,22 +69,32 @@ export function assertContentIntegrity(input: IntegrityInput): void {
 }
 
 /**
- * The `privacy` collection holds exactly one entry (`content/privacy/privacy.yaml`,
- * Story 1.7). Returns it; throws (failing `astro build`) for zero or several.
+ * A single-entry collection (`content/<collection>/<collection>.yaml`) holds
+ * exactly one entry. Returns it; throws (failing `astro build`) for zero or several.
  */
-export function singlePrivacyEntry<T extends { id: string }>(entries: readonly T[]): T {
+export function singleEntry<T extends { id: string }>(collection: string, entries: readonly T[]): T {
   if (entries.length === 0) {
     throw new ContentIntegrityError(
-      'Content integrity check failed:\n  privacy: (collection) — missing entry (expected content/privacy/privacy.yaml)',
+      `Content integrity check failed:\n  ${collection}: (collection) — missing entry (expected content/${collection}/${collection}.yaml)`,
     );
   }
   if (entries.length > 1) {
     const ids = entries.map((entry) => entry.id).sort();
     throw new ContentIntegrityError(
-      `Content integrity check failed:\n  privacy → ${ids.join(', ')}: (collection) — expected exactly 1 entry, found ${entries.length}`,
+      `Content integrity check failed:\n  ${collection} → ${ids.join(', ')}: (collection) — expected exactly 1 entry, found ${entries.length}`,
     );
   }
   return entries[0]!;
+}
+
+/** The single `content/privacy/privacy.yaml` entry (Story 1.7). */
+export function singlePrivacyEntry<T extends { id: string }>(entries: readonly T[]): T {
+  return singleEntry('privacy', entries);
+}
+
+/** The single `content/profile/profile.yaml` entry (Story 1.9). */
+export function singleProfileEntry<T extends { id: string }>(entries: readonly T[]): T {
+  return singleEntry('profile', entries);
 }
 
 /** Entries sorted by their `order` field (ascending). */

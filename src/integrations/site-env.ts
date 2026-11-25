@@ -1,5 +1,5 @@
 // Writes the environment-dependent deploy files into `dist/` after the build
-// (Story 1.2): `robots.txt`, and for non-production an `X-Robots-Tag: noindex`
+// (Story 1.2): `robots.txt` (with a `Sitemap:` line in production, Story 1.9), and for non-production an `X-Robots-Tag: noindex`
 // line added to the `/*` rule of the shared `_headers` (copied from
 // `public/_headers`). Workers static assets read a single `_headers` file and
 // a second `/*` block replaces the first one's headers (verified with
@@ -13,11 +13,18 @@ import { fileURLToPath } from 'node:url';
 import type { AstroIntegration } from 'astro';
 import { isIndexable, type SiteConfig } from '../../config/site.schema.ts';
 import { LOCALES } from '../content/schemas.ts';
+import { sitemapIndexUrl } from '../seo/sitemap.ts';
 
 export const NOINDEX_HEADER_LINE = '  X-Robots-Tag: noindex';
 
+/**
+ * Production allows crawling and points at the sitemap index on the
+ * production origin (Story 1.9); every other env disallows all, no Sitemap line.
+ */
 export function robotsTxt(config: SiteConfig): string {
-  return isIndexable(config) ? 'User-agent: *\nAllow: /\n' : 'User-agent: *\nDisallow: /\n';
+  return isIndexable(config)
+    ? `User-agent: *\nAllow: /\nSitemap: ${sitemapIndexUrl(config.productionOrigin)}\n`
+    : 'User-agent: *\nDisallow: /\n';
 }
 
 /** `_headers` content for this environment, given the shared committed file (may be empty). */

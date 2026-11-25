@@ -2,7 +2,14 @@ import { existsSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
-import { awardSchema, filmCopySchema, privacySchema, projectSchema, testimonialSchema } from './content/schemas.ts';
+import {
+  awardSchema,
+  filmCopySchema,
+  privacySchema,
+  profileSchema,
+  projectSchema,
+  testimonialSchema,
+} from './content/schemas.ts';
 
 // `CONTENT_DIR` is a test seam only (tests/unit/content-swap.test.ts builds the
 // site from a temp copy of `content/`); real builds always read `./content`.
@@ -43,5 +50,15 @@ export const collections = {
       generateId: ({ entry }) => entry.replace(/\.yaml$/, ''),
     }),
     schema: privacySchema,
+  }),
+  // Jun's profile for the Person JSON-LD (Story 1.9): a single entry,
+  // `content/profile/profile.yaml` (`loadProfileContent()` fails the build for zero or several).
+  profile: defineCollection({
+    loader: glob({
+      pattern: '*.yaml',
+      base: baseFor('profile'),
+      generateId: ({ entry }) => entry.replace(/\.yaml$/, ''),
+    }),
+    schema: profileSchema,
   }),
 };

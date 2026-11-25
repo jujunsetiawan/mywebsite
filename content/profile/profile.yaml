@@ -1,0 +1,13 @@
+# Jun's profile (Story 1.9): feeds the Person JSON-LD on /id/ and /en/.
+# Single entry: this collection must hold exactly this one file.
+# The page URL is not stored here: it is `productionOrigin` from config/site.*.json.
+# `sameAs` holds placeholder profile URLs; replace them with Jun's real
+# profiles and set `dummy: false` (a content/ edit only).
+dummy: true
+name: Jujun Setiawan
+jobTitle:
+  id: Product Engineer
+  en: Product Engineer
+sameAs:
+  - https://github.com/jujunsetiawan
+  - https://www.linkedin.com/in/jujunsetiawan

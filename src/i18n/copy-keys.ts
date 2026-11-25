@@ -16,6 +16,7 @@ export const COPY_KEYS = [
   'chrome.privacy',
   'page.home.title',
   'page.home.intro',
+  'page.home.description',
   'page.home.projects-heading',
   'page.home.awards-heading',
   'page.home.verify',

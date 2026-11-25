@@ -20,7 +20,7 @@ const homeLink = await t('page.archive-empty.home-link', lang);
 const siteName = await t('page.home.title', lang);
 ---
 
-<StaticLayout lang={lang} title={`${heading} — ${siteName}`} noindex>
+<StaticLayout lang={lang} title={`${heading} — ${siteName}`} description={body} noindex>
   <div class="archive-empty" data-page="archive-empty">
     <h1 class="t-title-serif">{heading}</h1>
     <p class="home-intro">{body}</p>

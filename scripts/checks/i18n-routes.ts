@@ -47,7 +47,7 @@ interface HeadLink {
 
 const HREFLANGS: readonly Hreflang[] = [...LOCALES, 'x-default'];
 
-function decodeEntities(value: string): string {
+export function decodeEntities(value: string): string {
   return value
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
@@ -57,7 +57,7 @@ function decodeEntities(value: string): string {
 }
 
 /** Attributes of one tag (lower-cased names, entity-decoded values). */
-function tagAttrs(tag: string): Record<string, string> {
+export function tagAttrs(tag: string): Record<string, string> {
   const attrs: Record<string, string> = {};
   for (const m of tag.matchAll(/([^\s=<>"'/]+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+))/g)) {
     attrs[m[1]!.toLowerCase()] = decodeEntities(m[2] ?? m[3] ?? m[4] ?? '');

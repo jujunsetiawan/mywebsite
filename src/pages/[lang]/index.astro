@@ -1,12 +1,16 @@
 ---
 // Language home: keyed title and intro (Story 1.4), the project list and the
-// awards list from content (Story 1.5). The film island arrives in Epic 3.
+// awards list from content (Story 1.5), meta description and Person JSON-LD
+// (Story 1.9). The film island arrives in Epic 3.
 import type { GetStaticPaths } from 'astro';
 import StaticLayout from '../../layouts/StaticLayout.astro';
 import ProjectList from '../../components/ProjectList.astro';
 import AwardList from '../../components/AwardList.astro';
 import { LOCALES, type Locale } from '../../content/schemas.ts';
 import { loadHomeContent } from '../../content/home.ts';
+import { loadProfileContent } from '../../content/profile.ts';
+import { loadSiteConfig } from '../../../config/load.ts';
+import { personJsonLd, serializeJsonLd } from '../../seo/person.ts';
 import { t } from '../../i18n/copy.ts';
 
 export const getStaticPaths = (() =>
@@ -17,10 +21,14 @@ const title = await t('page.home.title', lang);
 const intro = await t('page.home.intro', lang);
 const projectsHeading = await t('page.home.projects-heading', lang);
 const awardsHeading = await t('page.home.awards-heading', lang);
+const description = await t('page.home.description', lang);
 const { projects, awards } = await loadHomeContent();
+// Story 1.9: one Person JSON-LD per language home, url on the production origin.
+const { data: profile } = await loadProfileContent();
+const jsonLd = serializeJsonLd(personJsonLd(profile, lang, loadSiteConfig().productionOrigin));
 ---
 
-<StaticLayout lang={lang} title={title} path="">
+<StaticLayout lang={lang} title={title} description={description} jsonLd={jsonLd} path="">
   <h1 class="t-title-serif">{title}</h1>
   <p class="home-intro">{intro}</p>
   <section id="proyek" class="home-section" aria-labelledby="proyek-heading">
