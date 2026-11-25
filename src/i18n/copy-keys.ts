@@ -13,6 +13,7 @@ export const COPY_KEYS = [
   'chrome.lang-id-name',
   'chrome.lang-en-name',
   'chrome.lang-switch-label',
+  'chrome.privacy',
   'page.home.title',
   'page.home.intro',
   'page.home.projects-heading',
@@ -38,6 +39,9 @@ export const COPY_KEYS = [
   'page.archive-empty.body',
   'page.archive-empty.archive-link',
   'page.archive-empty.home-link',
+  'page.privacy.last-updated',
+  'page.privacy.policy-link',
+  'page.privacy.new-tab',
 ] as const;
 
 export type CopyKey = (typeof COPY_KEYS)[number];

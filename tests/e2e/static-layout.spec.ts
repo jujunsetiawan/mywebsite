@@ -7,8 +7,12 @@ import { expect, test, type Page, type TestInfo } from '@playwright/test';
 /** Number of entries in a content collection (each renders one focusable link on the homes). */
 const entryCount = (collection: string) =>
   readdirSync(path.join(process.cwd(), 'content', collection)).filter((name) => name.endsWith('.yaml')).length;
-/** Tab steps for the probe walk: fixed chrome/probe base (Story 1.4) + project and award links. */
-const TAB_BUDGET = 10 + entryCount('projects') + entryCount('awards');
+/**
+ * Tab steps for the probe walk: fixed chrome/probe base (Story 1.4) + the
+ * footer privacy link (Story 1.7; the backward walk starts past it) + project
+ * and award links.
+ */
+const TAB_BUDGET = 10 + 1 + entryCount('projects') + entryCount('awards');
 
 const LANGS = [
   { lang: 'id', credit: 'Jun Studio mempersembahkan', projects: 'Proyek', skip: 'Langsung ke konten' },

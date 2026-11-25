@@ -179,6 +179,71 @@ export const testimonialSchema = <I extends z.ZodType>({ image }: SchemaHelpers<
     dummy,
   });
 
+/**
+ * A plain email address safe to put in a `mailto:` link: local part of
+ * letters, digits, `_`, `+`, `-` in dot-separated groups (no leading, trailing
+ * or consecutive dots; no `?`, `&`, `#`, `%`, `/` that could add headers), and
+ * a hostname of dot-separated labels ending in a letters-only TLD.
+ */
+export const EMAIL_PATTERN =
+  /^[A-Za-z0-9_+-]+(?:\.[A-Za-z0-9_+-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z]{2,}$/;
+
+const email = z
+  .string({ error: (issue) => (issue.input === undefined ? 'is required' : 'must be a string') })
+  .regex(EMAIL_PATTERN, { error: 'must be an email address, e.g. "name@example.com"' });
+
+/** One privacy-page section: kebab-case `id` (HTML anchor), heading and paragraphs. */
+const privacySection = z.strictObject({
+  id: slug,
+  heading: localized(),
+  paragraphs: localizedList(),
+  /** The processor's own privacy policy, linked in a new tab (processor sections only). */
+  policyUrl: httpsUrl.optional(),
+});
+
+/** Section id whose section carries the `contactEmail` mailto link. */
+export const PRIVACY_CONTACT_SECTION = 'contact';
+
+/**
+ * `content/privacy/privacy.yaml` — the single privacy-page entry (Story 1.7).
+ * Section ids must be unique (they become anchors) and one must be
+ * `contact` (the page renders `contactEmail` there).
+ */
+export const privacySchema = z
+  .strictObject({
+    lastUpdated: isoDate,
+    title: localized(),
+    intro: localized(),
+    contactEmail: email,
+    sections: z
+      .array(privacySection, { error: (issue) => (issue.input === undefined ? 'is required' : 'must be a list') })
+      .min(1, { error: 'must be a non-empty list' }),
+    dummy,
+  })
+  .check((ctx) => {
+    // Checks also run when other fields already failed: only inspect a usable list.
+    const sections: unknown = ctx.value.sections;
+    if (!Array.isArray(sections) || sections.length === 0) return;
+    const ids = sections.map((section: unknown) =>
+      typeof section === 'object' && section !== null ? (section as { id?: unknown }).id : undefined,
+    );
+    ids.forEach((id, index) => {
+      if (typeof id === 'string' && ids.indexOf(id) !== index) {
+        ctx.issues.push({ code: 'custom', input: id, path: ['sections', index, 'id'], message: `duplicate section id "${id}"` });
+      }
+    });
+    if (!ids.includes(PRIVACY_CONTACT_SECTION)) {
+      ctx.issues.push({
+        code: 'custom',
+        input: ids,
+        path: ['sections'],
+        message: `must include a section with id "${PRIVACY_CONTACT_SECTION}" (it carries contactEmail)`,
+      });
+    }
+  });
+
+export type Privacy = z.infer<typeof privacySchema>;
+
 /** One keyed piece of static UI copy (`content/film-copy/<key>.yaml`). */
 export const filmCopySchema = z.strictObject({
   text: localized(),

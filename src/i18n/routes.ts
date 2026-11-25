@@ -9,6 +9,9 @@ import { LOCALES, type Locale } from '../content/schemas.ts';
 /** Language served by `x-default` (and by `/` via `public/_redirects`). */
 export const DEFAULT_LOCALE: Locale = 'id';
 
+/** Route path of the privacy page (`/<lang>/privasi/`, Story 1.7). */
+export const PRIVACY_PATH = 'privasi/';
+
 export type Hreflang = Locale | 'x-default';
 
 export interface Alternate {

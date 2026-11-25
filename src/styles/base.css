@@ -303,6 +303,47 @@ a {
   margin-top: var(--space-gutter);
 }
 
+/* ---------- Privacy page (Story 1.7) ---------- */
+
+.privacy {
+  max-width: 68ch;
+}
+
+.privacy-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-scrim-pad-x);
+}
+
+.privacy-updated {
+  color: var(--ink-muted);
+}
+
+.privacy-intro {
+  color: var(--ink-soft);
+}
+
+/* Sections separated by hairline top rules, as on the project pages. */
+.privacy-section {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--space-gutter) / 2);
+  margin-top: var(--space-gutter);
+  padding-top: calc(var(--space-gutter) / 2);
+  border-top: var(--space-hairline) solid var(--surface-hairline);
+}
+
+/* Policy and mailto links: >= 44px hit area through invisible padding. */
+.privacy-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--space-min-hit);
+  min-width: var(--space-min-hit);
+  color: var(--ink-primary);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
 /* Verify link: ui-caps text with a >= 44px hit area through invisible padding. */
 .content-list-action {
   display: inline-flex;

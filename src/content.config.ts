@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
-import { awardSchema, filmCopySchema, projectSchema, testimonialSchema } from './content/schemas.ts';
+import { awardSchema, filmCopySchema, privacySchema, projectSchema, testimonialSchema } from './content/schemas.ts';
 
 // `CONTENT_DIR` is a test seam only (tests/unit/content-swap.test.ts builds the
 // site from a temp copy of `content/`); real builds always read `./content`.
@@ -33,5 +33,15 @@ export const collections = {
       generateId: ({ entry }) => entry.replace(/\.yaml$/, ''),
     }),
     schema: filmCopySchema,
+  }),
+  // Privacy page copy (Story 1.7): a single entry, `content/privacy/privacy.yaml`
+  // (`loadPrivacyContent()` fails the build for zero or several entries).
+  privacy: defineCollection({
+    loader: glob({
+      pattern: '*.yaml',
+      base: baseFor('privacy'),
+      generateId: ({ entry }) => entry.replace(/\.yaml$/, ''),
+    }),
+    schema: privacySchema,
   }),
 };

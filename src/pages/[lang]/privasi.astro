@@ -1,0 +1,68 @@
+---
+// Privacy page (Story 1.7): mirrored at /id/privasi/ and /en/privasi/, all
+// copy from `content/privacy/privacy.yaml` and `film-copy`. Static markup
+// only, no client JS. Processor sections link the processor's own policy
+// (target _blank); the `contact` section carries the `contactEmail` mailto link.
+import type { GetStaticPaths } from 'astro';
+import StaticLayout from '../../layouts/StaticLayout.astro';
+import { LOCALES, PRIVACY_CONTACT_SECTION, type Locale } from '../../content/schemas.ts';
+import { loadPrivacyContent } from '../../content/privacy.ts';
+import { formatDate } from '../../i18n/dates.ts';
+import { PRIVACY_PATH } from '../../i18n/routes.ts';
+import { t } from '../../i18n/copy.ts';
+
+export const getStaticPaths = (() => LOCALES.map((lang) => ({ params: { lang } }))) satisfies GetStaticPaths;
+
+const lang = Astro.params.lang as Locale;
+const { data } = await loadPrivacyContent();
+const siteName = await t('page.home.title', lang);
+const lastUpdated = await t('page.privacy.last-updated', lang);
+const policyLink = await t('page.privacy.policy-link', lang);
+const newTab = await t('page.privacy.new-tab', lang);
+---
+
+<StaticLayout lang={lang} title={`${data.title[lang]} — ${siteName}`} path={PRIVACY_PATH}>
+  <article class="privacy" data-page="privacy">
+    <header class="privacy-header">
+      <h1 class="t-title-serif">{data.title[lang]}</h1>
+      <p class="privacy-updated t-ui-caps">
+        {lastUpdated} <time datetime={data.lastUpdated}>{formatDate(data.lastUpdated, lang)}</time>
+      </p>
+      <p class="privacy-intro">{data.intro[lang]}</p>
+    </header>
+    {
+      data.sections.map((section) => (
+        <section class="privacy-section" data-section={section.id} aria-labelledby={`privacy-${section.id}`}>
+          <h2 id={`privacy-${section.id}`} class="t-subtitle-serif">
+            {section.heading[lang]}
+          </h2>
+          {section.paragraphs[lang].map((paragraph) => (
+            <p>{paragraph}</p>
+          ))}
+          {section.id === PRIVACY_CONTACT_SECTION && (
+            <p>
+              <a class="privacy-link" href={`mailto:${data.contactEmail}`} data-action="contact-email">
+                {data.contactEmail}
+              </a>
+            </p>
+          )}
+          {section.policyUrl !== undefined && (
+            <p>
+              <a
+                class="privacy-link t-ui-caps"
+                href={section.policyUrl}
+                target="_blank"
+                rel="noopener"
+                aria-describedby={`privacy-${section.id}`}
+                data-action="policy"
+              >
+                {policyLink}
+                <span class="visually-hidden"> {newTab}</span>
+              </a>
+            </p>
+          )}
+        </section>
+      ))
+    }
+  </article>
+</StaticLayout>

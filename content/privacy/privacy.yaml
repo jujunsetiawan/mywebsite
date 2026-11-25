@@ -1,0 +1,87 @@
+# Privacy page copy (Story 1.7), rendered at /id/privasi/ and /en/privasi/.
+# Single entry: this collection must hold exactly this one file.
+# `contactEmail` is a placeholder (Jun approved it without an address); replace
+# it with the real address and set `dummy: false` (Epic 10).
+lastUpdated: "2026-11-25"
+dummy: true
+contactEmail: jun@example.com
+title:
+  id: Privasi
+  en: Privacy
+intro:
+  id: Halaman ini menjelaskan layanan mana yang memproses datamu saat kamu membuka situs ini atau menghubungi Jun, untuk apa, dan data apa saja.
+  en: This page explains which services process your data when you open this site or contact Jun, what for, and which data.
+sections:
+  - id: cloudflare
+    heading:
+      id: Cloudflare
+      en: Cloudflare
+    paragraphs:
+      id:
+        - Cloudflare menjadi tempat situs ini berjalan (Workers static assets), mengirimkan media film dari R2, dan menghitung jumlah kunjungan halaman secara agregat dengan Cloudflare Web Analytics. Web Analytics tidak memakai cookie dan tidak membangun profil pribadi.
+        - "Data yang diproses: alamat IP dan data permintaan (misalnya alamat halaman dan jenis peramban), untuk mengirimkan situs dan menjaga keamanannya."
+        - Data permintaan diproses di jaringan global Cloudflare, sehingga bisa saja diproses di luar Indonesia.
+      en:
+        - Cloudflare hosts this site (Workers static assets), delivers the film media from R2 and counts aggregated page views with Cloudflare Web Analytics. Web Analytics is cookieless and builds no personal profile.
+        - "Data processed: your IP address and request data (such as the page address and browser type), to deliver the site and keep it secure."
+        - Request data is processed on Cloudflare's global network, so it may be processed outside Indonesia.
+    policyUrl: https://www.cloudflare.com/privacypolicy/
+  - id: web3forms
+    heading:
+      id: Web3Forms
+      en: Web3Forms
+    paragraphs:
+      id:
+        - Web3Forms mengantarkan isi formulir kontak ke kotak masuk Jun. Pemrosesannya berlangsung di Amerika Serikat.
+        - "Data yang dikirim: nama, email atau nomor WhatsApp, perusahaan, dan pesan."
+      en:
+        - Web3Forms delivers the contact form to Jun's inbox. Processing happens in the United States.
+        - "Data sent: your name, email or WhatsApp number, company and message."
+    policyUrl: https://web3forms.com/privacy
+  - id: hcaptcha
+    heading:
+      id: hCaptcha
+      en: hCaptcha
+    paragraphs:
+      id:
+        - hCaptcha dari Intuition Machines melindungi formulir kontak dari spam. hCaptcha baru dimuat saat kamu mulai memakai formulir kontak, dan hanya pada saat itu hCaptcha dapat memasang cookie-nya sendiri.
+        - "Data yang diproses: alamat IP serta sinyal perangkat dan interaksi, bisa saja di luar Indonesia."
+      en:
+        - hCaptcha by Intuition Machines protects the contact form from spam. It loads only when you start using the contact form, and only then may it set its own cookies.
+        - "Data processed: your IP address and device and interaction signals, possibly outside Indonesia."
+    policyUrl: https://www.hcaptcha.com/privacy
+  - id: browser-storage
+    heading:
+      id: Penyimpanan di peramban
+      en: Browser storage
+    paragraphs:
+      id:
+        - Situs ini sendiri tidak memasang cookie dan tidak memakai sessionStorage.
+        - "Situs ini hanya menyimpan empat nilai di penyimpanan perambanmu sendiri, tidak pernah di server: nama pengunjung, penanda bahwa film sudah selesai ditonton, babak terakhir yang dicapai, dan preferensi gerak."
+        - Menghapus data situs di peramban akan menghapus keempat nilai itu.
+      en:
+        - The site itself sets no cookies and uses no sessionStorage.
+        - "It keeps only four values in your own browser storage, never on a server: the visitor name, the completion flag, the last act reached and the motion preference."
+        - Clearing the site data in your browser removes them.
+  - id: controller-rights
+    heading:
+      id: Pengendali data dan hakmu
+      en: Data controller and your rights
+    paragraphs:
+      id:
+        - Pengendali datamu adalah Jujun Setiawan, pemilik situs ini.
+        - Data formulir kontak diproses atas persetujuanmu saat kamu mengirim formulir.
+        - Kamu boleh meminta untuk mengakses, memperbaiki, atau menghapus datamu, dan boleh menarik persetujuanmu kapan saja, cukup dengan mengirim email ke Jun.
+      en:
+        - The controller of your data is Jujun Setiawan, the owner of this site.
+        - Contact form data is processed on your consent when you send the form.
+        - You may ask to access, correct or delete your data, and you may withdraw your consent at any time, simply by emailing Jun.
+  - id: contact
+    heading:
+      id: Pertanyaan tentang datamu
+      en: Questions about your data
+    paragraphs:
+      id:
+        - "Kirim email ke Jun:"
+      en:
+        - "Send Jun an email:"

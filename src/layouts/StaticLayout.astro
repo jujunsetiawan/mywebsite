@@ -1,9 +1,11 @@
 ---
 // Office-styled static page frame (Story 1.3): skip link → top letterbox bar →
 // <main id="main"> on surface.panel → footer letterbox bar.
-// Named slots: `lang-switch` and `privacy` (Story 1.7). When `path` is given
-// (a mirrored route, Story 1.4) the layout fills `lang-switch` itself with the
-// ID/EN switch and BaseLayout emits canonical + hreflang alternates.
+// Named slot: `lang-switch`. When `path` is given (a mirrored route, Story 1.4)
+// the layout fills `lang-switch` itself with the ID/EN switch and BaseLayout
+// emits canonical + hreflang alternates. The footer bar always holds the
+// "Privasi"/"Privacy" link to `/<lang>/privasi/` (Story 1.7), marked
+// `aria-current="page"` on the privacy page itself.
 import '../styles/tokens.css';
 import '../styles/type.css';
 import '../styles/base.css';
@@ -13,6 +15,7 @@ import LangSwitch from '../components/LangSwitch.astro';
 import type { Locale } from '../content/schemas.ts';
 import { loadSiteConfig } from '../../config/load.ts';
 import { t } from '../i18n/copy.ts';
+import { localePath, PRIVACY_PATH } from '../i18n/routes.ts';
 
 interface Props {
   lang: Locale;
@@ -27,6 +30,8 @@ const { lang, title, path, noindex } = Astro.props;
 const { features } = loadSiteConfig();
 const skipToContent = await t('chrome.skip-to-content', lang);
 const footerLabel = await t('chrome.footer-label', lang);
+const privacyLabel = await t('chrome.privacy', lang);
+const privacyHref = localePath(lang, PRIVACY_PATH);
 ---
 
 <BaseLayout lang={lang} title={title} path={path} noindex={noindex}>
@@ -44,6 +49,6 @@ const footerLabel = await t('chrome.footer-label', lang);
     <slot />
   </main>
   <footer class="bar bar--bottom t-ui-caps" aria-label={footerLabel}>
-    <slot name="privacy" />
+    <a class="chrome-link" href={privacyHref} aria-current={path === PRIVACY_PATH ? 'page' : undefined} data-chrome="privacy">{privacyLabel}</a>
   </footer>
 </BaseLayout>

@@ -44,10 +44,10 @@ First-time Playwright setup: `npx playwright install chromium webkit`.
 
 ## Layout
 
-- `content/` — all facts as YAML content collections (`projects`, `awards`, `testimonials`, `film-copy`), validated by `src/content/schemas.ts` (see Content model). `film-copy/<key>.yaml` holds keyed UI copy (`text: { id, en }`); components read it with `t(key, lang)` from `src/i18n/copy.ts` and contain no visible literals
+- `content/` — all facts as YAML content collections (`projects`, `awards`, `testimonials`, `film-copy`, `privacy`), validated by `src/content/schemas.ts` (see Content model). `film-copy/<key>.yaml` holds keyed UI copy (`text: { id, en }`); components read it with `t(key, lang)` from `src/i18n/copy.ts` and contain no visible literals
 - `docs/design/DESIGN.md` — the committed design spec and the source of truth for tokens. Future DESIGN.md edits must be made in (or copied to) this file; `tests/unit/design-tokens.test.ts` fails CI when `src/styles/tokens.css` drifts from its frontmatter
 - `src/styles/` — `tokens.css` (DESIGN.md tokens as `--<group>-<name>` custom properties), `type.css` (`.t-<style>` utilities, weight 400 only), `base.css` (reset, letterbox bars, skip link, focus ring). System font stacks only, no web fonts
-- `src/layouts/StaticLayout.astro` — office-styled static page frame: skip link, top letterbox bar (`src/components/StaticChrome.astro`; named slot `lang-switch`), `<main id="main">` on the panel, footer bar (named slot `privacy`). Hub links and the contact pill render only when `features.hubLinks` / `features.contact` are on
+- `src/layouts/StaticLayout.astro` — office-styled static page frame: skip link, top letterbox bar (`src/components/StaticChrome.astro`; named slot `lang-switch`), `<main id="main">` on the panel, footer bar with the "Privasi"/"Privacy" link to `/<lang>/privasi/` (`aria-current="page"` on the privacy page). Hub links and the contact pill render only when `features.hubLinks` / `features.contact` are on
 - `config/` — Zod-validated site config: `site.schema.ts`, `site.{production,preview,development}.json` picked by `SITE_ENV`, optional git-ignored `site.local.json` override
 - `src/pages`, `src/layouts`, `src/components`
 - `src/i18n/copy.ts` — `t(key, lang)` reads keyed copy from the `film-copy` collection; `COPY_KEYS` (`src/i18n/copy-keys.ts`) lists every key and must match `content/film-copy/*.yaml` (unit-tested). `src/i18n/routes.ts` — mirrored-route helpers (see Routing)
@@ -68,6 +68,7 @@ Every fact on the site lives in `content/`. Schemas: `src/content/schemas.ts` (p
 - `projects/<slug>.yaml` — `slug` (kebab-case, equal to the file name), `order` (positive, unique), `type` (`web | mobile | integrasi`), `year`, `name`, `oneLineOutcome`, `period: { start, end }` (`end` ≥ `start`), `role` (localized), `stack` (non-empty list), `sections` in display order: `outcomes`, `businessFlow`, `process` (localized lists), `techStack` (`{ name, purpose }`), `apiContract` (`{ method: GET|POST|PUT|PATCH|DELETE, path, summary }`), `samplePrd` (localized), `uiux` (`{ image, alt }`), `prototype` (`{ note, url? }`, https), `dummy`.
 - `awards/<id>.yaml` — `order` (unique), `title`, `issuer`, `date`, `certificate` (image), `certificateAlt`, `verifyUrl` (https), `dummy`.
 - `testimonials/<id>.yaml` — `order` (unique), `photo` (image), `name`, `company`, `quote`, `project?` (an existing project slug), `dummy`.
+- `privacy/privacy.yaml` — exactly one entry (zero or several fail the build): `lastUpdated` (quoted date), `title`, `intro`, `contactEmail` (email; currently the placeholder `jun@example.com`, `dummy: true`, replaced in Epic 10), `sections` (non-empty; each `{ id: kebab-case, heading, paragraphs: localized list, policyUrl?: https }`, ids unique, one must be `contact` — the page renders the `mailto:` link there), `dummy`.
 - Images live in each collection's `assets/` folder and are referenced relative to the entry (`./assets/x.svg`). Every placeholder image is self-made and listed in `licenses/assets.yaml` (`licence: original`, `kind: image`).
 
 The language homes list projects (`#proyek`, name + one-line outcome, linking to `/<lang>/proyek/<slug>/`) and awards (`#penghargaan`, title, issuer, localized date, verify link in a new tab), both sorted by `order`.
@@ -82,6 +83,7 @@ The language homes list projects (`#proyek`, name + one-line outcome, linking to
 | `/proyek/<slug>` | `public/_redirects` (`/proyek/* /id/proyek/:splat 301`) | 301 → `/id/proyek/<slug>` |
 | `/id/`, `/en/` | `src/pages/[lang]/index.astro` | Language home: project list (`#proyek`), awards (`#penghargaan`) |
 | `/id/proyek/<slug>/`, `/en/proyek/<slug>/` | `src/pages/[lang]/proyek/[slug].astro` → `src/components/ProjectDetail.astro` | Static project page (one per language × project in `content/projects/`), no client JS |
+| `/id/privasi/`, `/en/privasi/` | `src/pages/[lang]/privasi.astro` ← `content/privacy/privacy.yaml` | Privacy page: last-updated date, one section per processor (Cloudflare, Web3Forms, hCaptcha) with a link to its own policy, browser storage, controller and rights, contact `mailto:`; no client JS |
 | `/id/proyek/<anything else>`, `/en/proyek/<anything else>` | `src/pages/[lang]/proyek/404.astro` → `dist/<lang>/proyek/404.html` | 404 "Arsip ini kosong" / "This archive is empty", `noindex` in every env |
 | any other unknown path | `src/pages/404.astro` | 404 placeholder (language-aware page in Story 1.8) |
 
