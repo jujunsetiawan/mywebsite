@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import { loadSiteConfig } from './config/load.ts';
+import ogImages from './src/integrations/og-images.ts';
 import siteEnv from './src/integrations/site-env.ts';
 import { SITEMAP_I18N, sitemapFilter } from './src/seo/sitemap.ts';
 
@@ -26,7 +27,8 @@ export default defineConfig({
   },
   // The sitemap lists every page from Astro's route list with id/en alternates;
   // `sitemapFilter` drops the not-found pages (`siteEnv` moving them does not matter).
-  integrations: [siteEnv(siteConfig), sitemap({ i18n: SITEMAP_I18N, filter: sitemapFilter })],
+  // Story 1.10: `ogImages` only writes `dist/og/` (build-only renderer, never shipped to pages).
+  integrations: [siteEnv(siteConfig), sitemap({ i18n: SITEMAP_I18N, filter: sitemapFilter }), ogImages()],
   vite: {
     server: {
       watch: {

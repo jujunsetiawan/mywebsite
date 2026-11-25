@@ -8,6 +8,7 @@ import { LOCALES } from '../../../content/schemas.ts';
 import { loadProjectContent, testimonialsFor } from '../../../content/home.ts';
 import { loadSiteConfig } from '../../../../config/load.ts';
 import { t } from '../../../i18n/copy.ts';
+import { projectImagePath } from '../../../og/paths.ts';
 
 export const getStaticPaths = (async () => {
   const { projects, testimonials } = await loadProjectContent();
@@ -25,6 +26,12 @@ const siteName = await t('page.home.title', lang);
 const title = `${project.data.name[lang]} — ${siteName}`;
 ---
 
-<StaticLayout lang={lang} title={title} description={project.data.oneLineOutcome[lang]} path={`proyek/${project.data.slug}/`}>
+<StaticLayout
+  lang={lang}
+  title={title}
+  description={project.data.oneLineOutcome[lang]}
+  path={`proyek/${project.data.slug}/`}
+  ogImage={projectImagePath(lang, project.data.slug)}
+>
   <ProjectDetail project={project} testimonials={testimonials} lang={lang} features={features} />
 </StaticLayout>

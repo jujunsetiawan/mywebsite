@@ -258,6 +258,22 @@ assets:
     purpose: "dummy placeholder initials portrait, DESIGN palette shapes only"
     used-in:
       - "content/testimonials/maya-kusumadewi.yaml (photo)"
+  - id: fontsource-source-serif-4
+    source: "npm @fontsource/source-serif-4 5.3.1"
+    licence: OFL-1.1
+    proof: "https://github.com/adobe-fonts/source-serif/blob/main/LICENSE.md (SIL Open Font License 1.1; also node_modules/@fontsource/source-serif-4/LICENSE)"
+    kind: font
+    purpose: "Open Graph image serif (weight 400, latin + latin-ext, normal and italic .woff); build-only, never served"
+    used-in:
+      - og-images
+  - id: fontsource-inter
+    source: "npm @fontsource/inter 5.3.0"
+    licence: OFL-1.1
+    proof: "https://github.com/rsms/inter/blob/master/LICENSE.txt (SIL Open Font License 1.1; also node_modules/@fontsource/inter/LICENSE)"
+    kind: font
+    purpose: "Open Graph image caps line (weight 400, latin + latin-ext .woff); build-only, never served"
+    used-in:
+      - og-images
 
 tools:
   - id: blender

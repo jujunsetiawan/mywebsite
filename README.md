@@ -26,6 +26,10 @@ site build or its tooling.
 | yaml | 2.9.1 (DESIGN.md frontmatter parsing in tests) |
 | @axe-core/playwright | 4.14.0 (accessibility scans in e2e) |
 | @astrojs/sitemap | 3.7.6 (sitemap with id/en alternates) |
+| satori | 0.63.2 (build-only OG image layout) |
+| @resvg/resvg-js | 2.6.2 (build-only OG image rasteriser) |
+| @fontsource/source-serif-4 | 5.3.1 (OFL-1.1, OG images only) |
+| @fontsource/inter | 5.3.0 (OFL-1.1, OG images only) |
 
 ## Scripts
 
@@ -38,7 +42,7 @@ site build or its tooling.
 | `npm run typecheck` | `tsc --noEmit` for the site and `tsc --noEmit -p worker` for the Worker |
 | `npm run test:unit` | Vitest (`tests/unit/`), including the `/media` Worker in Wrangler's local runtime |
 | `npm run test:e2e` | Playwright against `wrangler dev --local` serving the built `dist/` (Chromium, WebKit, 390×844, 844×390); seeds local R2 first. With `DEPLOY_URL` set, runs only `tests/e2e/deployed/` against that URL |
-| `npm run budgets` | First-load (≤ 204,800 gzip-9 bytes per language home and per language for the first project page by `order`), static-asset limits (≤ 20,000 files, no file > 25 MiB), layer-import checks, the i18n route check (see Routing) and the SEO check (see SEO) |
+| `npm run budgets` | First-load (≤ 204,800 gzip-9 bytes per language home and per language for the first project page by `order`), static-asset limits (≤ 20,000 files, no file > 25 MiB), layer-import checks, the i18n route check (see Routing), the SEO check (see SEO) and the OG image check (see Open Graph images) |
 | `npm run ci` | Everything above in CI order |
 
 First-time Playwright setup: `npx playwright install chromium webkit`.
@@ -54,6 +58,7 @@ First-time Playwright setup: `npx playwright install chromium webkit`.
 - `src/i18n/copy.ts` — `t(key, lang)` reads keyed copy from the `film-copy` collection; `COPY_KEYS` (`src/i18n/copy-keys.ts`) lists every key and must match `content/film-copy/*.yaml` (unit-tested). `src/i18n/routes.ts` — mirrored-route helpers (see Routing)
 - `src/seo/` — pure SEO helpers: `person.ts` (Person JSON-LD builder and `<`-escaping serialiser), `sitemap.ts` (sitemap i18n option and not-found filter)
 - `src/integrations/site-env.ts` — writes env-dependent `robots.txt` (with the `Sitemap:` line in production) and `X-Robots-Tag` into `dist/`, and moves the per-language not-found pages to `<lang>/404.html` and `<lang>/proyek/404.html`
+- `src/og/` — build-only Open Graph image generator (see Open Graph images); `src/integrations/og-images.ts` writes `dist/og/`
 - `src/film/{core,systems,adapters}` — film layers; import rules are enforced by `scripts/budgets/layer-imports.ts`
 - `scripts/` — build-time checks (`node scripts/check-budgets.ts`, `scripts/budgets/`, `scripts/checks/`), local R2 seeding for e2e
 - `tests/unit`, `tests/e2e` (`tests/e2e/deployed/` runs only with `DEPLOY_URL`)
@@ -104,11 +109,20 @@ The language homes list projects (`#proyek`, name + one-line outcome, linking to
 ## SEO
 
 - **Titles:** "{page} — Jujun Setiawan"; the language homes are titled "Jujun Setiawan" and carry exactly one H1 with the name (unit-tested on every built `.html`).
-- **Meta description:** `BaseLayout`/`StaticLayout` require a `description` prop, rendered as `<meta name="description">` in the page language: homes `page.home.description` (film-copy), project pages the project's `oneLineOutcome`, privacy pages the privacy `intro`, not-found and empty-archive pages their body copy. No `<meta name="keywords">`, no OG/Twitter tags yet (Story 1.10).
+- **Meta description:** `BaseLayout`/`StaticLayout` require a `description` prop, rendered as `<meta name="description">` in the page language: homes `page.home.description` (film-copy), project pages the project's `oneLineOutcome`, privacy pages the privacy `intro`, not-found and empty-archive pages their body copy. No `<meta name="keywords">`. OG/Twitter tags: see Open Graph images.
 - **Person JSON-LD:** only `/id/` and `/en/` carry one `<script type="application/ld+json">` with `@context`, `@type: Person`, `name`, `jobTitle` (page language), `url` (`<productionOrigin>/<lang>/`) and `sameAs`, built from `content/profile/profile.yaml` by `src/seo/person.ts` (`JSON.stringify`, every `<` escaped as `\u003c`). It is a non-executed data block, so the CSP `script-src` does not apply (the homes' zero-CSP-violation e2e covers it).
 - **Sitemap:** `site` in `astro.config.mjs` is `productionOrigin` in every env; `@astrojs/sitemap` writes `dist/sitemap-index.xml` + `dist/sitemap-0.xml` listing both homes, every project page and both privacy pages, each with `xhtml:link` alternates for `id` and `en`; the not-found pages are filtered out (`src/seo/sitemap.ts`).
 - **robots.txt:** production → `User-agent: *`, `Allow: /`, `Sitemap: <productionOrigin>/sitemap-index.xml`; preview/development → disallow all, no `Sitemap:` line.
 - `scripts/checks/seo.ts` (run by `npm run budgets`, or standalone: `node scripts/checks/seo.ts <distDir> <productionOrigin> [--indexable]`) fails when any canonical, hreflang alternate, JSON-LD `url` or sitemap `<loc>`/`xhtml:link` is off the production origin, when `robots.txt` is missing, lacks exactly one `Sitemap: <productionOrigin>/sitemap-index.xml` line in an indexable (production) build or has any `Sitemap:` line otherwise, when the sitemap does not list exactly the built `index.html` pages (or lists a not-found page), or when a language home lacks exactly one valid Person JSON-LD or any other page carries JSON-LD.
 - **Search Console** registration is an Epic 10 release-gate item on the real domain; it is not done on `*.workers.dev`.
+
+## Open Graph images
+
+- **What:** 1200×630 8-bit RGB PNGs in the Film Credit look (background `surface.panel`, 64 px safe margin, caps credit line "JUN STUDIO MEMPERSEMBAHKAN"/"JUN STUDIO PRESENTS" from `chrome.credit`, serif text, weight 400 only, colours read from `src/styles/tokens.css`): `dist/og/site-id.png`, `dist/og/site-en.png` (profile `name` + `jobTitle`) and `dist/og/<lang>/proyek/<slug>.png` for every project (project `name`, max 2 lines then "…"; `oneLineOutcome`, max 3 lines; "Jujun Setiawan" above a hairline rule). All text is in the image's language.
+- **Generator (build-only):** the `og-images` integration (`src/integrations/og-images.ts`, `astro:build:done`) reads the same YAML the site uses (`content/`, or `CONTENT_DIR`), validates it with the content schemas, and renders with `src/og/render.ts`: satori (markup → SVG, text as paths) → @resvg/resvg-js (SVG → pixels, no system fonts) → `src/og/png.ts` (8-bit RGB PNG without alpha). Lines are wrapped beforehand by `src/og/text.ts` from real font advance widths (`src/og/fonts.ts`). Any render error (missing font, satori error) fails the build naming the image. Nothing of this is imported by pages or client code, and no font is served: first load is unchanged apart from the head tags.
+- **Fonts and licences:** `@fontsource/source-serif-4` 5.3.1 (weight 400, latin + latin-ext, normal + italic `.woff`) and `@fontsource/inter` 5.3.0 (weight 400, latin + latin-ext `.woff`, caps line), both OFL-1.1 devDependencies, listed in `licenses/assets.yaml` (`kind: font`, `used-in: [og-images]`). Renderer pins: `satori` 0.63.2, `@resvg/resvg-js` 2.6.2.
+- **Head tags** (`BaseLayout`, every page incl. 404s): `og:type` `website`, `og:site_name`, `og:title` (= `<title>`), `og:description` (= meta description), `og:url` (= canonical; not-found pages use `<productionOrigin>/<lang>/`), `og:image` (absolute on `productionOrigin`; project pages their own per-language image, every other page the site image of its language), `og:image:width`/`height` 1200/630, `og:image:alt` (= title), `og:locale` `id_ID`/`en_US` + `og:locale:alternate`, `twitter:card` `summary_large_image`. No `twitter:site`/handles.
+- **How images update:** they are rebuilt from content on every `npm run build`, so renaming a project or editing its outcome, the profile or `chrome.credit` is a `content/` edit only. Images never live in `public/` or git.
+- `scripts/checks/og.ts` (run by `npm run budgets` after the static-asset check, which counts the images toward the file-count and per-file limits; standalone: `node scripts/checks/og.ts <distDir> <productionOrigin>`) fails when a page's `og:image` is off the production origin, is not the page's expected image, does not resolve to a file in `dist/`, or its width/height tags are not 1200/630; when an image is not a 1200×630 8-bit RGB PNG (IHDR); when an expected image is missing; or when a file under `dist/og/` is orphaned.
 
 CI (`.github/workflows/ci.yml`): the `check` job runs `npm ci` → `astro check` → `tsc --noEmit` → Vitest → `astro build` → budgets → Playwright. After it passes, `deploy-preview` (pull requests) or `deploy-production` (push to `main`) deploys to Cloudflare Workers — see `infra/README.md`.

@@ -2,7 +2,9 @@
 import type { Locale } from '../content/schemas.ts';
 import { loadSiteConfig } from '../../config/load.ts';
 import { beaconToken, isIndexable } from '../../config/site.schema.ts';
-import { alternates, canonical } from '../i18n/routes.ts';
+import { alternates, canonical, otherLocale } from '../i18n/routes.ts';
+import { t } from '../i18n/copy.ts';
+import { OG_HEIGHT, OG_LOCALES, OG_WIDTH, ogImageUrl, siteImagePath } from '../og/paths.ts';
 
 interface Props {
   lang: Locale;
@@ -22,6 +24,11 @@ interface Props {
   path?: string | undefined;
   /** Force `noindex` in every environment (e.g. the empty-archive page, Story 1.6). */
   noindex?: boolean | undefined;
+  /**
+   * dist-relative Open Graph image (Story 1.10), e.g. `projectImagePath(lang, slug)`;
+   * defaults to the site image of the page language.
+   */
+  ogImage?: string | undefined;
 }
 
 const { lang, title, description, jsonLd, path } = Astro.props;
@@ -33,6 +40,11 @@ const noindex = Astro.props.noindex === true || !isIndexable(site);
 const token = beaconToken(site);
 const canonicalHref = path === undefined ? null : canonical(site.productionOrigin, lang, path);
 const alternateLinks = path === undefined ? [] : alternates(site.productionOrigin, path);
+// Open Graph / Twitter (Story 1.10): absolute on the production origin in every env;
+// pages without `path` (not-found pages) use their language home as og:url.
+const ogUrl = canonicalHref ?? canonical(site.productionOrigin, lang, '');
+const ogImage = ogImageUrl(site.productionOrigin, Astro.props.ogImage ?? siteImagePath(lang));
+const siteName = await t('page.home.title', lang);
 ---
 
 <!doctype html>
@@ -45,6 +57,18 @@ const alternateLinks = path === undefined ? [] : alternates(site.productionOrigi
     <meta name="description" content={description} />
     {canonicalHref !== null && <link rel="canonical" href={canonicalHref} />}
     {alternateLinks.map((alt) => <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />)}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={ogUrl} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content={String(OG_WIDTH)} />
+    <meta property="og:image:height" content={String(OG_HEIGHT)} />
+    <meta property="og:image:alt" content={title} />
+    <meta property="og:locale" content={OG_LOCALES[lang]} />
+    <meta property="og:locale:alternate" content={OG_LOCALES[otherLocale(lang)]} />
+    <meta name="twitter:card" content="summary_large_image" />
     {/* A non-executed data block: CSP `script-src` does not apply to it. */}
     {jsonLd !== undefined && <script is:inline type="application/ld+json" set:html={jsonLd} />}
     {

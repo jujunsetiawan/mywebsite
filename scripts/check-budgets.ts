@@ -1,5 +1,5 @@
-// Runs all dist/ budget checks, the layer-import check, the i18n route check
-// and the SEO check.
+// Runs all dist/ budget checks, the layer-import check, the i18n route check,
+// the SEO check and the Open Graph image check.
 // Usage: node scripts/check-budgets.ts  (Node native type stripping)
 import { existsSync } from 'node:fs';
 import path from 'node:path';
@@ -9,6 +9,7 @@ import { isIndexable } from '../config/site.schema.ts';
 import { diskReader, formatFirstLoad, measureFirstLoad } from './budgets/first-load.ts';
 import { firstProjectSlug } from './budgets/project-pages.ts';
 import { checkI18nRoutesDir, formatI18nRoutes } from './checks/i18n-routes.ts';
+import { checkOgDir, formatOg } from './checks/og.ts';
 import { checkSeoDir, formatSeo } from './checks/seo.ts';
 import { checkLayers, formatLayers } from './budgets/layer-imports.ts';
 import { checkStaticAssets, formatStaticAssets, listFiles } from './budgets/static-assets.ts';
@@ -59,6 +60,12 @@ console.log('');
 const seo = checkSeoDir(distDir, productionOrigin, isIndexable(siteConfig));
 console.log(formatSeo(seo, productionOrigin));
 if (!seo.ok) failed = true;
+console.log('');
+
+// Story 1.10: og:image on the production origin, resolving to a 1200×630 PNG; no missing/orphaned image.
+const og = checkOgDir(distDir, productionOrigin);
+console.log(formatOg(og, productionOrigin));
+if (!og.ok) failed = true;
 
 console.log('');
 console.log(failed ? 'Budgets: FAIL' : 'Budgets: PASS');

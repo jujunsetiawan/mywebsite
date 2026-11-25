@@ -74,17 +74,8 @@ export function expectedTokens(front: DesignFrontmatter): Map<string, string> {
   return tokens;
 }
 
-/** Custom properties declared in `:root` blocks of a stylesheet. */
-export function parseCssTokens(css: string): Map<string, string> {
-  const tokens = new Map<string, string>();
-  const clean = css.replace(/\/\*[\s\S]*?\*\//g, '');
-  for (const block of clean.matchAll(/:root\s*\{([^}]*)\}/g)) {
-    for (const decl of (block[1] ?? '').matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)) {
-      tokens.set(decl[1] ?? '', (decl[2] ?? '').trim());
-    }
-  }
-  return tokens;
-}
+/** Custom properties declared in `:root` blocks of a stylesheet (moved to `src/og/tokens.ts`, Story 1.10). */
+export { parseCssTokens } from '../../../src/og/tokens.ts';
 
 export function normalizeValue(value: string): string {
   return value
